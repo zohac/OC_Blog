@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset name="ZCFram">
+    <description>A custom coding standard</description>
+
+    <arg name="colors"/>
+    <arg value="p"/>
+
+    <file>vendor/ZCFram</file>
+    <file>app</file>
+    <file>web</file>
+
+    <rule ref="PSR2" />
+</ruleset>

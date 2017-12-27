@@ -1,0 +1,9 @@
+avana
+diagrammes
+vendor/bin
+vendor/composer
+vendor/guzzlehttp
+vendor/http-interop
+vendor/psr
+vendor/squizlabs
+composer.lock
