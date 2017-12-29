@@ -1,8 +1,7 @@
 <?php
-
+//Autoloader
 require '../vendor/autoload.php';
 
-$app = new \app\App();
-
-$response = $app->run(\GuzzleHttp\Psr7\ServerRequest::fromGlobals());
-\Http\Response\send($response);
+$app = new \ZCFram\App();
+$app->run();
+\Http\Response\send($app->getResponse());
