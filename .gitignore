@@ -6,4 +6,7 @@ vendor/guzzlehttp
 vendor/http-interop
 vendor/psr
 vendor/squizlabs
+vendor/twig
+vendor/symfony
+web/frontend
 composer.lock

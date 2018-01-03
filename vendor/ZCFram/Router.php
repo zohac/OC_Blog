@@ -7,6 +7,10 @@ namespace ZCFram;
 class Router
 {
 
+    /**
+     * [NO_ROUTE description]
+     * @var integer
+     */
     const NO_ROUTE = 1;
 
     /**
@@ -69,7 +73,7 @@ class Router
     /**
      * Check if a path exists in the configuration file
      * @param  string $uri path to test
-     * @return boolean
+     * @return boolean [or raise an exception if the route does not exist]
      */
     public function match($uri)
     {
