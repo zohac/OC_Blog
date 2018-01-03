@@ -6,15 +6,22 @@ use \Psr\Http\Message\ResponseInterface;
 use \GuzzleHttp\Psr7\Response;
 
 /**
- *
+ * Main application.
+ * The entry point of the application.
  */
 class App
 {
 
-    protected $appName;
-    protected $moduleName;
-    protected $params;
+    /**
+     * Instance of the ServerRequest class
+     * @var ServerRequest
+     */
     protected $request;
+
+    /**
+     * Instance of the Response class
+     * @var Response
+     */
     protected $reponse;
 
     /**
@@ -29,12 +36,15 @@ class App
 
     /**
      * Launch the application.
-     * Check the uri and get the corresponding view
+     * Check the uri and get the corresponding view.
      */
     public function run()
     {
         $uri = $this->request->getUri()->getPath();
 
+        // format the end of the url without '\'
+        // and redirect to the correct url if necessary
+        // else, launch the application
         if (!empty($uri) && $uri[-1] === '/' && strlen($uri) > 1) {
             $this->reponse = (new Response())
                                 ->withStatus(301)
@@ -57,13 +67,11 @@ class App
      */
     public function getController()
     {
-        $routeFromXML = realpath(__DIR__.'/../../app/config/routes.xml');
-
         /**
          * We instantiate the router, and we check if the url
          * corresponds to a route in the configuration file.
          */
-        $router = new Router($routeFromXML);
+        $router = new Router(realpath(__DIR__.'/../../app/config/routes.xml'));
         $router->match($this->request->getUri()->getPath());
 
         // We add the variables of the URL to the $ _GET array.

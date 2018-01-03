@@ -2,7 +2,7 @@
 namespace ZCFram;
 
 /**
- * [Router description]
+ * The Router
  */
 class Router
 {
@@ -15,15 +15,9 @@ class Router
 
     /**
      * set of xml file paths
-     * @var [type]
+     * @var \DOMDocument
      */
     protected $routes;
-
-    /**
-     * The name of the application
-     * @var string
-     */
-    protected $app;
 
     /**
      * The name of the module
@@ -39,7 +33,7 @@ class Router
 
     /**
      * set of variables
-     * @var string[]
+     * @var array
      */
     protected $vars = [];
 
@@ -50,22 +44,29 @@ class Router
         $this->routes = $xml->getElementsByTagName('route');
     }
 
-    public function getApp()
-    {
-        return $this->app;
-    }
-
-    public function getModule()
+    /**
+     * Get the module name
+     * @return string
+     */
+    public function getModule(): string
     {
         return $this->module;
     }
 
-    public function getAction()
+    /**
+     * Get the action name
+     * @return string
+     */
+    public function getAction(): string
     {
         return $this->action;
     }
 
-    public function getVars()
+    /**
+     * Get the variables in the url
+     * @return array
+     */
+    public function getVars(): array
     {
         return $this->vars;
     }

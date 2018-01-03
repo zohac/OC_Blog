@@ -8,5 +8,7 @@
     <file>app</file>
     <file>web</file>
 
+    <exclude-pattern>web/frontend/*</exclude-pattern>
+
     <rule ref="PSR2" />
 </ruleset>

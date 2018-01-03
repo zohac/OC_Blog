@@ -1,6 +1,5 @@
 <?php
 /**
- * The entry point of the application.
  * This file loads the autoloader and launches the application.
  */
 

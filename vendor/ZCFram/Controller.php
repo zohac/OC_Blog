@@ -2,27 +2,26 @@
 namespace ZCFram;
 
 /**
- * [abstract description]
- * @var [type]
+ * Manages all controllers in the application
  */
 abstract class Controller
 {
 
     /**
-     * [protected description]
-     * @var [type]
+     * The name of the method to invoke.
+     * @var string
      */
     protected $action;
 
     /**
-     * [protected description]
-     * @var [type]
+     * An instance of the view controller
+     * @var ViewController
      */
     protected $view;
 
     /**
-     * [__construct description]
-     * @param [type] $action [description]
+     * Set the variable name
+     * @param string
      */
     public function __construct($action)
     {
@@ -30,8 +29,7 @@ abstract class Controller
     }
 
     /**
-     * [execute description]
-     * @return [type] [description]
+     * Execute the method
      */
     public function execute()
     {
@@ -45,8 +43,8 @@ abstract class Controller
     }
 
     /**
-     * [setAction description]
-     * @param [type] $action [description]
+     * Set the variable name
+     * @param string
      */
     protected function setAction($action)
     {
@@ -58,8 +56,8 @@ abstract class Controller
     }
 
     /**
-     * [getView description]
-     * @return [type] [description]
+     * Return the view
+     * @return ViewController
      */
     public function getView()
     {

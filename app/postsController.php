@@ -5,31 +5,31 @@ use \ZCFram\Controller;
 use \ZCFram\viewController;
 
 /**
- * [postsController description]
+ * Controller who manages the index and blog posts
  */
-class postsController extends Controller
+class PostsController extends Controller
 {
 
     public function __construct($action)
     {
         parent::__construct($action);
 
-        $this->view = new viewController();
+        $this->view = new ViewController();
     }
 
     /**
-     * [executeIndex description]
+     * Execute the index page
      */
     public function executeIndex()
     {
-        $this->view->setContent('index.twig');
+        $this->view->setviewName('index.twig');
     }
 
     /**
-     * [getView description]
-     * @return [type] [description]
+     * Override the methode of Controller
+     * @return string
      */
-    public function getView()
+    public function getView(): string
     {
         return $this->view->getView();
     }
