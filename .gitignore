@@ -8,5 +8,4 @@ vendor/psr
 vendor/squizlabs
 vendor/twig
 vendor/symfony
-web/frontend
 composer.lock
