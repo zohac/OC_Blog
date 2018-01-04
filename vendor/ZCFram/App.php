@@ -56,7 +56,17 @@ class App
                 $view = $controller->getView();
                 $this->reponse->getBody()->write($view);
             } catch (\Exception $e) {
-                    var_dump($e->getMessage());
+                    $this->reponse = (new Response())
+                                        ->withStatus(404);
+                                        //->withHeader('Location', '404.html');
+
+                    $params = ['params' => $e->getMessage()];
+
+                    $view = new ViewController();
+                    $view->setviewName('404.twig');
+                    $view->setParams($params);
+                    $view = $view->getView();
+                    $this->reponse->getBody()->write($view);
             }
         }
     }
