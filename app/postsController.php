@@ -2,13 +2,19 @@
 namespace app;
 
 use \ZCFram\Controller;
-use \ZCFram\viewController;
+use \ZCFram\ViewController;
 
 /**
  * Controller who manages the index and blog posts
  */
 class PostsController extends Controller
 {
+
+    /**
+     * An instance of the view controller
+     * @var ViewController
+     */
+    protected $view;
 
     public function __construct($action)
     {
@@ -22,7 +28,7 @@ class PostsController extends Controller
      */
     public function executeIndex()
     {
-        $this->view->setviewName('index.twig');
+        $this->view->setviewName(\strtolower($this->action).'.twig');
     }
 
     /**

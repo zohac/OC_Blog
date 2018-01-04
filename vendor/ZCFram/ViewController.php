@@ -30,7 +30,7 @@ class ViewController
      */
     public function __construct()
     {
-        $loader = new \Twig_Loader_Filesystem(__DIR__.'/../../app/views');
+        $loader = new \Twig_Loader_Filesystem(realpath(__DIR__.'/../../app/views'));
         $this->twig = new \Twig_Environment($loader, []);
     }
 

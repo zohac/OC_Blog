@@ -14,12 +14,6 @@ abstract class Controller
     protected $action;
 
     /**
-     * An instance of the view controller
-     * @var ViewController
-     */
-    protected $view;
-
-    /**
      * Set the variable name
      * @param string
      */
@@ -53,14 +47,5 @@ abstract class Controller
         }
 
         $this->action = $action;
-    }
-
-    /**
-     * Return the view
-     * @return ViewController
-     */
-    public function getView()
-    {
-        return $this->view;
     }
 }
