@@ -14,6 +14,18 @@ abstract class Controller
     protected $action;
 
     /**
+     * An instance of the view controller
+     * @var
+     */
+    protected $view;
+
+    /**
+     * The parameters to pass to twig
+     * @var array
+     */
+    protected $params = [];
+
+    /**
      * Set the variable name
      * @param string
      */
@@ -30,7 +42,7 @@ abstract class Controller
         $method = 'execute'.ucfirst($this->action);
 
         if (!is_callable([$this, $method])) {
-            throw new \RuntimeException('L\'action "'.$this->action.'" n\'est pas définie sur ce module');
+            throw new \RuntimeException(500);
         }
 
         $this->$method();
@@ -43,9 +55,43 @@ abstract class Controller
     protected function setAction($action)
     {
         if (!is_string($action) || empty($action)) {
-            throw new \InvalidArgumentException('L\'action doit être une chaine de caractères valide');
+            throw new \InvalidArgumentException(500);
         }
 
         $this->action = $action;
+    }
+
+    /**
+     * [setParams description]
+     * @param array $params [description]
+     */
+    protected function setParams(array $params)
+    {
+        if (!is_array($params)) {
+            throw new \InvalidArgumentException(500);
+        }
+
+        $this->params = $params;
+    }
+
+    public function setView(string $view)
+    {
+        if (!is_string($view) || empty($view)) {
+            throw new \InvalidArgumentException(500);
+        }
+
+        $this->view = $view;
+    }
+
+    /**
+     * Generate the requested view with twig.
+     * @return string Return the view
+     */
+    public function getView(): string
+    {
+        $loader = new \Twig_Loader_Filesystem(realpath(__DIR__.'/../../app/views'));
+        $this->twig = new \Twig_Environment($loader, []);
+
+        return $this->twig->render($this->view, $this->params);
     }
 }
