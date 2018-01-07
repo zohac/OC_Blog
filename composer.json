@@ -13,8 +13,6 @@
         }
     },
     "require": {
-        "guzzlehttp/psr7": "^1.4",
-        "http-interop/response-sender": "^1.0",
         "twig/twig": "^2.4"
     },
     "require-dev": {
