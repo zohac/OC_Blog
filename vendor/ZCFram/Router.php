@@ -8,12 +8,6 @@ class Router
 {
 
     /**
-     * [NO_ROUTE description]
-     * @var integer
-     */
-    const NO_ROUTE = 1;
-
-    /**
      * set of xml file paths
      * @var \DOMDocument
      */
@@ -94,6 +88,6 @@ class Router
                 return true;
             }
         }
-        throw new \RuntimeException('Aucune route ne correspond à l\'URL', self::NO_ROUTE);
+        throw new \RuntimeException(404);
     }
 }
