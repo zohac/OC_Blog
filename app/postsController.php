@@ -17,4 +17,14 @@ class PostsController extends Controller
     {
         $this->setView(\strtolower($this->action).'.twig');
     }
+
+    /**
+     * [executeListPosts description]
+     * @return [type] [description]
+     */
+    public function executeListPosts()
+    {
+        $manager = $this->getManager($this->action);
+        $this->setView(\strtolower($this->action).'.twig');
+    }
 }

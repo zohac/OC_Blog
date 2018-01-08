@@ -37,7 +37,7 @@ class App
 
         // format the end of the url without '/'
         // and redirect to the correct url if necessary
-        if (!empty($uri) && $uri[-1] === '/' && strlen($uri) > 1) {
+        if (!empty($uri) && substr($uri, 0, -1) === '/' && strlen($uri) > 1) {
             $this->reponse->setStatus(301);
             $this->reponse->redirection(substr($uri, 0, -1));
         }
@@ -58,12 +58,13 @@ class App
             $view = $controller->getView();
             $this->reponse->send($view);
         } catch (\Exception $e) {
+            var_dump($e);
             $error = (int) $e->getMessage();
 
             //$url = $this->request->serverName().'/'.$error.'.html';
             $url = '/'.$error.'.html';
             $this->reponse->setStatus($error);
-            $this->reponse->redirection($url);
+            //$this->reponse->redirection($url);
         }
     }
 
