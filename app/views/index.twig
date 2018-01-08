@@ -1,97 +1,84 @@
 {% extends 'layout.twig' %}
 
 {% block content %}
-        <!-- main -->
-        <main role="main-inner-wrapper" class="container">
-            <div class="row">
-            	<section class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                	<article role="pge-title-content">
-                    	<header>
-                        	<h2><span>We Do</span> What we love to do.</h2>
-                        </header>
-                        <p>Over 40,000 customers use our themes to power their websites and we love them.</p>
-                    </article>
-                </section>
-                <section class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                	<article class="about-content">
-                    	<p>Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc, fiant sollemnes in futurum.</p>
-                        <p>Claritas est etiam processus dynamicus, qui sequitur mutationem consueum formas humanitatis per seacula quarta deciEodem modo tythepi, qui nunc, fiant sollemnes in futurum.</p>
-                    </article>
-                </section>
-                <div class="clearfix"></div>
+<!-- main -->
+<main role="main-inner-wrapper" class="container">
+    <div class="row">
+        <section class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+            <article role="pge-title-content">
+                <header>
+                    <h2><span>I Do</span> What I love to do.</h2>
+                </header>
+            </article>
+        </section>
+        <section class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <article class="about-content">
+                <p>Création de site web, développement de fonctionnalitées web sur mesure. Pas d'engagement, pas de contraintes, vous souhaitez une prestation web, je vous livre.</p>
+            </article>
+        </section>
+        <div class="clearfix"></div>
 
-                <!-- thumbnails -->
-                	<div class="thumbnails-pan">
-                    	<section class="col-xs-12 col-sm-4 col-md-4 col-lg-4 ">
-                        	<figure>
-                            	<img src="frontend/images/about-images/about-image-1.jpg" class="img-responsive"/>
-                            	<figcaption>
-                                	<h3>John Doe</h3>
-                                    <h5>The designer</h5>
-                                </figcaption>
-                            </figure>
-                        </section>
-                        <section class="col-xs-12 col-sm-4 col-md-4 col-lg-4 ">
-                        	<figure>
-                            	<img src="frontend/images/about-images/about-image-2.jpg" class="img-responsive"/>
-                            	<figcaption>
-                                	<h3>kristy Roan</h3>
-                                    <h5>The Manager</h5>
-                                </figcaption>
-                            </figure>
-                        </section>
-                        <section class="col-xs-12 col-sm-4 col-md-4 col-lg-4 ">
-                        	<figure>
-                            	<img src="frontend/images/about-images/about-image-3.jpg" class="img-responsive"/>
-                            	<figcaption>
-                                	<h3>Jason takas</h3>
-                                    <h5>The Founder</h5>
-                                </figcaption>
-                            </figure>
-                        </section>
+        <!-- thumbnails -->
+        <div class="thumbnails-pan">
+            <section class="col-xs-12">
+                <article class="about-content col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <p>Après 10 ans d'expériences comme métrologue, j'effectue une reconversion professionnelle.</p>
+                    <p>Actuellement en formation chez <a href="https://openclassrooms.com/paths/developpeur-se-d-application-php-symfony">OpenClassrooms</a>, je suis le parcours de formation "Développeur d'application - PHP / Symfony". Je deviendrais ainsi Développeur Web.</p>
+                    <p>Plus d'info sur mon parcours ? C'est par <a href="#">ici!</a></p>
+                </article>
+                <figure class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div>
+                        <img src="frontend/images/about-images/about-image-1.jpg" class="img-responsive"/>
                     </div>
-                <!-- thumbnails -->
+                    <figcaption>
+                        <h3>Simon JOUAN</h3>
+                        <h5>The developper</h5>
+                    </figcaption>
+                </figure>
+            </section>
+        </div>
+        <div class="clearfix"></div>
+        <!-- thumbnails -->
 
-                <div class="row">
-                	<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                    	<article role="pge-title-content" class="contact-header">
-                        	<header>
-                            	<h2><span>Hey Thr!</span> we love to hear you.</h2>
-                            </header>
-                            <p><a href="tel:8197654321"><i class="fa fa-phone" aria-hidden="true"></i> +8197654321</a><a href="mailto:contact@avana.com"><i class="fa fa-envelope" aria-hidden="true"></i> contact@avana.com</a></p>
-                        </article>
-                    </div>
-                    <!-- map -->
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                            <div class="demo-wrapper">
-                            	<div id="surabaya"></div>
-                            </div>
-                    </div>
-                    <!-- map -->
-                    <div class="clearfix"></div>
-
-                   <!-- contat-from-wrapper -->
-                   <div class="contat-from-wrapper">
-                   		  <div id="message"></div>
-                                    <form method="post" action="php/contactfrom.php" name="cform" id="cform">
-                                <div class="row">
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
-                                    <input  name="name" id="name" type="text" placeholder="Whats your name">
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
-                                    <input  name="email" id="email" type="email"  placeholder="Whats your email">
-                                    </div>
-                                </div>
-                                <div class="clearfix"></div>
-                                <textarea name="comments" id="comments" cols="" rows="" placeholder="Whats in your mind"></textarea>
-                                <div class="clearfix"></div>
-                                <input name="" type="submit" value="Send email">
-                                <div id="simple-msg"></div>
-                            </form>
-                   </div>
-                   <!-- contat-from-wrapper -->
-                </div>
+        <div class="thumbnails-pan">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+                <article role="pge-title-content" class="contact-header">
+                    <header>
+                        <h2><span>Hey Thr!</span>Discutons ensemble.</h2>
+                    </header>
+                    <p><a href="mailto:contact@jouan.ovh"><i class="fa fa-envelope" aria-hidden="true"></i> contact@jouan.ovh</a></p>
+                </article>
             </div>
-        </main>
-    	<!-- main -->
-{% endblock %}
+            <!-- map -->
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="demo-wrapper">
+                        <div id="surabaya"></div>
+                    </div>
+            </div>
+            <!-- map -->
+            <div class="clearfix"></div>
+
+           <!-- contat-from-wrapper -->
+           <div class="contat-from-wrapper">
+                  <div id="message"></div>
+                            <form method="post" action="php/contactfrom.php" name="cform" id="cform">
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
+                            <input  name="name" id="name" type="text" placeholder="Votre nom">
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
+                            <input  name="email" id="email" type="email"  placeholder="Votre email">
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <textarea name="comments" id="comments" cols="" rows="" placeholder="Qu'avez-vous en tête"></textarea>
+                        <div class="clearfix"></div>
+                        <input name="" type="submit" value="Envoyer">
+                        <div id="simple-msg"></div>
+                    </form>
+           </div>
+           <!-- contat-from-wrapper -->
+        </div>
+    </div>
+</main>
+<!-- main -->{% endblock %}
