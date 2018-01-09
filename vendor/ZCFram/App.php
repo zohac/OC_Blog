@@ -1,10 +1,6 @@
 <?php
 namespace ZCFram;
 
-use \Psr\Http\Message\ServerRequestInterface;
-use \Psr\Http\Message\ResponseInterface;
-use \GuzzleHttp\Psr7\Response;
-
 /**
  * Main application.
  * The entry point of the application.
@@ -55,17 +51,15 @@ class App
         try {
             $controller = $this->getController();
             $controller->execute();
-            $view = $controller->getView();
-            $this->reponse->send($view);
         } catch (\Exception $e) {
-            var_dump($e);
-            $error = (int) $e->getMessage();
-
-            //$url = $this->request->serverName().'/'.$error.'.html';
-            $url = '/'.$error.'.html';
-            $this->reponse->setStatus($error);
-            //$this->reponse->redirection($url);
+            //var_dump(get_class($e));
+            $controller = new \app\ErrorController($e);
+            $controller->execute();
+            $this->reponse->setStatus($controller->getErrorCode());
         }
+
+        $view = $controller->getView();
+        $this->reponse->send($view);
     }
 
     /**
@@ -87,6 +81,6 @@ class App
 
         // We instantiate the controller.
         $controllerClass = 'app\\'.$router->getModule().'Controller';
-        return new $controllerClass($router->getAction());
+        return new $controllerClass($router->getAction(), $router->getModule());
     }
 }

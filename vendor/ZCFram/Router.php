@@ -88,6 +88,6 @@ class Router
                 return true;
             }
         }
-        throw new \RuntimeException(404);
+        throw new \RuntimeException('L\'URL demandée n\'existe pas.');
     }
 }

@@ -13,6 +13,12 @@ abstract class Controller
      */
     protected $action;
 
+	/**
+     * The name of the manager to invoke.
+     * @var string
+     */
+    protected $manager;
+
     /**
      * An instance of the view controller
      * @var
@@ -29,9 +35,10 @@ abstract class Controller
      * Set the variable name
      * @param string
      */
-    public function __construct($action)
+    public function __construct($action, $manager)
     {
         $this->setAction($action);
+        $this->setManager($manager);
     }
 
     /**
@@ -42,20 +49,33 @@ abstract class Controller
         $method = 'execute'.ucfirst($this->action);
 
         if (!is_callable([$this, $method])) {
-            throw new \RuntimeException(500);
+            throw new \BadFunctionCallException('La méthode utilisée n\'existe pas.');
         }
 
         $this->$method();
     }
 
     /**
-     * Set the variable name
+     *
      * @param string
      */
-    protected function setAction($action)
+    protected function setAction($manager)
+    {
+        if (!is_string($manager) || empty($manager)) {
+            throw new \InvalidArgumentException('L\'action demandée n\'existe pas.');
+        }
+
+        $this->manager = $manager;
+    }
+
+    /**
+     *
+     * @param string
+     */
+    protected function setManager($action)
     {
         if (!is_string($action) || empty($action)) {
-            throw new \InvalidArgumentException(500);
+            throw new \InvalidArgumentException('L\'action demandée n\'existe pas.');
         }
 
         $this->action = $action;
@@ -68,19 +88,26 @@ abstract class Controller
     protected function setParams(array $params)
     {
         if (!is_array($params)) {
-            throw new \InvalidArgumentException(500);
+            throw new \InvalidArgumentException('Les paramètres ne sont pas au bon format.');
         }
 
         $this->params = $params;
     }
 
-    public function setView(string $view)
+    protected function setView()
     {
-        if (!is_string($view) || empty($view)) {
-            throw new \InvalidArgumentException(500);
-        }
-
+		$view = \strtolower($this->action).'.twig';
         $this->view = $view;
+    }
+
+    /**
+     * Generate the requested view with twig.
+     * @return
+     */
+    protected function getManager()
+    {
+        $managerClass = '\app\\model\\'.$this->manager.'Manager';
+        return new $managerClass();
     }
 
     /**

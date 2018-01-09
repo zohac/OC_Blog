@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <routes>
-    <route url="/([4,5]0[0,1,3,4])\.html" module="error" action="Error" vars="error"/>
-    <route url="/" app="frontend" module="posts" action="Index"/>
-    <route url="/blog" app="frontend" module="posts" action="ListPosts"/>
-    <route url="/blog/post-([0-9]+)\.html" app="frontend" module="posts" action="Post" vars="id"/>
+    <route url="/" app="frontend" module="Posts" action="Index"/>
+    <route url="/blog" app="frontend" module="Posts" action="ListPosts"/>
+    <route url="/blog/post-([0-9]+)\.html" app="frontend" module="Posts" action="Post" vars="id"/>
 </routes>
