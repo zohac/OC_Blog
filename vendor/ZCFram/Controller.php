@@ -13,7 +13,7 @@ abstract class Controller
      */
     protected $action;
 
-	/**
+    /**
      * The name of the manager to invoke.
      * @var string
      */
@@ -59,7 +59,7 @@ abstract class Controller
      *
      * @param string
      */
-    protected function setAction($manager)
+    protected function setManager($manager)
     {
         if (!is_string($manager) || empty($manager)) {
             throw new \InvalidArgumentException('L\'action demandée n\'existe pas.');
@@ -72,10 +72,10 @@ abstract class Controller
      *
      * @param string
      */
-    protected function setManager($action)
+    protected function setAction($action)
     {
         if (!is_string($action) || empty($action)) {
-            throw new \InvalidArgumentException('L\'action demandée n\'existe pas.');
+            throw new \InvalidArgumentException('Le manager demandé n\'existe pas.');
         }
 
         $this->action = $action;
@@ -96,7 +96,7 @@ abstract class Controller
 
     protected function setView()
     {
-		$view = \strtolower($this->action).'.twig';
+        $view = \strtolower($this->action).'.twig';
         $this->view = $view;
     }
 
@@ -107,14 +107,14 @@ abstract class Controller
     protected function getManager()
     {
         $managerClass = '\app\\model\\'.$this->manager.'Manager';
-        return new $managerClass();
+        return new $managerClass(Container::getConnexionDB());
     }
 
     /**
      * Generate the requested view with twig.
      * @return string Return the view
      */
-    public function getView(): string
+    public function getView()
     {
         $loader = new \Twig_Loader_Filesystem(realpath(__DIR__.'/../../app/views'));
         $this->twig = new \Twig_Environment($loader, []);
