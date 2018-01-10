@@ -9,7 +9,7 @@ class Router
 
     /**
      * set of xml file paths
-     * @var \DOMDocument
+     * @var object \DOMDocument
      */
     protected $routes;
 
@@ -68,7 +68,7 @@ class Router
     /**
      * Check if a path exists in the configuration file
      * @param  string $uri path to test
-     * @return boolean [or raise an exception if the route does not exist]
+     * @return boolean|object an exception if the route does not exist
      */
     public function match($uri)
     {
