@@ -1,8 +1,7 @@
 <?php
 namespace app;
 
-use \ZCFram\Controller;
-use \ZCFram\ViewController;
+use ZCFram\Controller;
 
 /**
  * Controller who manages the index and blog posts
@@ -15,7 +14,7 @@ class PostsController extends Controller
      */
     public function executeIndex()
     {
-        $this->setView(\strtolower($this->action).'.twig');
+        $this->setView();
     }
 
     /**
@@ -24,7 +23,24 @@ class PostsController extends Controller
      */
     public function executeListPosts()
     {
-        $manager = $this->getManager($this->action);
-        $this->setView(\strtolower($this->action).'.twig');
+        $manager = $this->getManager();
+        $listPosts = $manager->getList();
+
+        $listLeft = [];
+        $listRight = [];
+
+        foreach ($listPosts as $key => $list) {
+            if (($key % 2) == 0) {
+                $listRight[] = $list;
+            } else {
+                $listLeft[] = $list;
+            }
+        }
+
+        $this->setParams([
+            'left' => $listLeft,
+            'right' => $listRight
+        ]);
+        $this->setView();
     }
 }

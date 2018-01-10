@@ -24,6 +24,23 @@ class PostsController extends Controller
     public function executeListPosts()
     {
         $manager = $this->getManager();
+        $listPosts = $manager->getList();
+
+        $listLeft = [];
+        $listRight = [];
+
+        foreach ($listPosts as $key => $list) {
+            if (($key % 2) == 0) {
+                $listRight[] = $list;
+            } else {
+                $listLeft[] = $list;
+            }
+        }
+
+        $this->setParams([
+            'left' => $listLeft,
+            'right' => $listRight
+        ]);
         $this->setView();
     }
 }
