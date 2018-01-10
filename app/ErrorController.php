@@ -60,7 +60,6 @@ class ErrorController extends Controller
         }
 
         $this->setView();
-        $this->getView();
     }
 
     private function getStatusCode()
@@ -69,7 +68,7 @@ class ErrorController extends Controller
             case 'RuntimeException':
                 $this->errorCode = 404;
                 break;
-            case 'BadFunctionCallException' OR 'InvalidArgumentException':
+            case 'BadFunctionCallException' or 'InvalidArgumentException':
                 $this->errorCode = 500;
                 break;
         }
