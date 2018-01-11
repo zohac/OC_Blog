@@ -43,4 +43,17 @@ class PostsController extends Controller
         ]);
         $this->setView();
     }
+
+    /**
+     * [executeListPosts description]
+     * @return [type] [description]
+     */
+    public function executePost()
+    {
+        $manager = $this->getManager();
+        $Post = $manager->getPost($_GET['id']);
+
+        $this->setParams($Post);
+        $this->setView();
+    }
 }

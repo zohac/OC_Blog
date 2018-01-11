@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <config>
     <bdd host="localhost" dbname="blog" user="root" password="root" />
+    <blog title="" author="" />
+    <blog numberOfPost="6" />
 </config>

@@ -1,0 +1,27 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+        <!-- main -->
+        <main role="main-inner-wrapper" class="container">
+            <div class="blog-details">
+                <article class="post-details" id="post-details">
+                    <header role="bog-header" class="bog-header text-center">
+                        <h3><span>{{ title }}</span> par {{ author }}</h3>
+                        <h2>{{ chapo }}...</h2>
+                    </header>
+                    <section class="blog-content">
+                        <figure>
+                            <div class="post-date">
+                                <span>{{ day }}</span> {{ monthYear }}
+                            </div>
+                            <img src="{{ app.request.server.get('SERVER_NAME') }}/frontend/images/blog-images/blog-details-image.jpg" alt="" class="img-responsive"/>
+                        </figure>
+                    </section>
+                    <div class="enter-content">
+                        <p>{{ post }}</p>
+                    </div>
+                </article>
+            </div>
+        </main>
+        <!-- main -->
+{% endblock %}

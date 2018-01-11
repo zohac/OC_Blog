@@ -52,7 +52,6 @@ class App
             $controller = $this->getController();
             $controller->execute();
         } catch (\Exception $e) {
-            //var_dump(get_class($e));
             $controller = new \app\ErrorController($e);
             $controller->execute();
             $this->reponse->setStatus($controller->getErrorCode());
@@ -78,7 +77,7 @@ class App
 
         // We add the variables of the URL to the $ _GET array.
         $_GET = array_merge($_GET, $router->getVars());
-
+        
         // We instantiate the controller.
         $controllerClass = 'app\\'.$router->getModule().'Controller';
         return new $controllerClass($router->getAction(), $router->getModule());

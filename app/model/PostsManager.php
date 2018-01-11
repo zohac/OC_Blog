@@ -34,4 +34,29 @@ class PostsManager extends Manager
 
         return $listPosts;
     }
+
+    public function getPost(int $id)
+    {
+        $sql = "
+        SELECT
+            title,
+            SUBSTRING(post FROM 1 FOR 160) AS chapo,
+            post,
+            DATE_FORMAT(modificationDate, '%e') AS day,
+            DATE_FORMAT(modificationDate, '%M %Y') AS monthYear,
+            user.pseudo AS author
+        FROM blog.post
+        INNER JOIN user
+            ON user.id = post.author_id
+        WHERE post.status = 'Publish' AND post.id = :id";
+
+        //transition from date to french
+        $this->DB->query("SET lc_time_names = 'fr_FR'");
+        $requete = $this->DB->prepare($sql);
+        $requete->bindValue(':id', $id, \PDO::PARAM_INT);
+        $requete->execute();
+        $PostInfo = $requete->fetch();
+
+        return $PostInfo;
+    }
 }

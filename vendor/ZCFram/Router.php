@@ -73,14 +73,17 @@ class Router
     public function match($uri)
     {
         foreach ($this->routes as $route) {
-            if (preg_match('`^'.$route->getAttribute('url').'$`', $uri, $matches)) {
+            if (preg_match('`^'.$route->getAttribute('url').'$`', $uri)) {
                 $vars = [];
+
+                $parts = \explode('-', $uri);
+                $id = (int)str_replace('.html', '', \end($parts));
 
                 // On regarde si des variables sont présentes dans l'URL.
                 if ($route->hasAttribute('vars')) {
-                    $vars = explode(',', $route->getAttribute('vars'));
+                    $vars[$route->getAttribute('vars')] = $id;
                 }
-
+                
                 $this->app = $route->getAttribute('app');
                 $this->module = $route->getAttribute('module');
                 $this->action = $route->getAttribute('action');
