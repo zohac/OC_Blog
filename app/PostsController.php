@@ -14,7 +14,7 @@ class PostsController extends Controller
      */
     public function executeIndex()
     {
-        $this->setView();
+
     }
 
     /**
@@ -41,7 +41,6 @@ class PostsController extends Controller
             'left' => $listLeft,
             'right' => $listRight
         ]);
-        $this->setView();
     }
 
     /**
@@ -54,6 +53,5 @@ class PostsController extends Controller
         $Post = $manager->getPost($_GET['id']);
 
         $this->setParams($Post);
-        $this->setView();
     }
 }

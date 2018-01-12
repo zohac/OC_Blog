@@ -39,6 +39,7 @@ abstract class Controller
     {
         $this->setAction($action);
         $this->setManager($manager);
+        $this->setView();
     }
 
     /**

@@ -58,8 +58,6 @@ class ErrorController extends Controller
                 'message' => $this->e->getMessage()
             ]);
         }
-
-        $this->setView();
     }
 
     private function getStatusCode()
