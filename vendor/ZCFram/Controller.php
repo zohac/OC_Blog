@@ -39,7 +39,7 @@ abstract class Controller
     {
         $this->setAction($action);
         $this->setManager($manager);
-        $this->setView();
+        $this->setView($this->action);
     }
 
     /**
@@ -57,34 +57,34 @@ abstract class Controller
     }
 
     /**
-     *
+     * Set the name of the manager
      * @param string
      */
     protected function setManager($manager)
     {
         if (!is_string($manager) || empty($manager)) {
-            throw new \InvalidArgumentException('L\'action demandée n\'existe pas.');
+            throw new \InvalidArgumentException('Le manager demandé n\'existe pas.');
         }
 
         $this->manager = $manager;
     }
 
     /**
-     *
+     * Set the name of the action to do
      * @param string
      */
     protected function setAction($action)
     {
         if (!is_string($action) || empty($action)) {
-            throw new \InvalidArgumentException('Le manager demandé n\'existe pas.');
+            throw new \InvalidArgumentException('L\'action demandée n\'existe pas.');
         }
 
         $this->action = $action;
     }
 
     /**
-     * [setParams description]
-     * @param array $params [description]
+     * Set the parameters for the views
+     * @param array $params
      */
     protected function setParams(array $params)
     {
@@ -92,18 +92,21 @@ abstract class Controller
             throw new \InvalidArgumentException('Les paramètres ne sont pas au bon format.');
         }
 
-        $this->params = $params;
+        $this->params = array_merge($this->params, $params);
     }
 
-    protected function setView()
+    /**
+     * Set the name of the view for the renderer
+     * @param string $view
+     */
+    protected function setView(string $view = null)
     {
-        $view = \strtolower($this->action).'.twig';
-        $this->view = $view;
+        $this->view = \strtolower($view).'.twig';
     }
 
     /**
      * Generate the requested view with twig.
-     * @return
+     * @return object Return of an instance of a manager
      */
     protected function getManager()
     {

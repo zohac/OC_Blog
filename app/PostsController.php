@@ -2,6 +2,7 @@
 namespace app;
 
 use ZCFram\Controller;
+use ZCFram\Container;
 
 /**
  * Controller who manages the index and blog posts
@@ -11,15 +12,28 @@ class PostsController extends Controller
 
     /**
      * Execute the index page
+     * Validation of the contact form.
      */
     public function executeIndex()
     {
+        if (!empty($_POST)) {
+            $Validator = Container::getValidator();
 
+            $Validator->required('name', 'text');
+            $Validator->required('email', 'email');
+            $Validator->required('comments', 'text');
+
+            if (!$Validator->hasError()) {
+                // TO DO : swiftMail
+            }
+
+            $this->setParams($Validator->getParams());
+            $this->setView('alertControlForm');
+        }
     }
 
     /**
-     * [executeListPosts description]
-     * @return [type] [description]
+     * Execute the blog page
      */
     public function executeListPosts()
     {
@@ -44,8 +58,7 @@ class PostsController extends Controller
     }
 
     /**
-     * [executeListPosts description]
-     * @return [type] [description]
+     * Execute the blog post page
      */
     public function executePost()
     {

@@ -5,4 +5,7 @@ vendor/composer
 vendor/squizlabs
 vendor/twig
 vendor/symfony
+vendor/doctrine
+vendor/egulias
+vendor/swiftmailer
 composer.lock
