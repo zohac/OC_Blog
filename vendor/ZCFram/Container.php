@@ -37,7 +37,6 @@ abstract class Container
                 }
                 break;
             case 'mail':
-
                 break;
         }
 

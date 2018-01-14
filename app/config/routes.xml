@@ -3,4 +3,5 @@
     <route url="/" app="frontend" module="Posts" action="Index"/>
     <route url="/blog" app="frontend" module="Posts" action="ListPosts"/>
     <route url="/blog/post-([0-9]+)\.html" app="frontend" module="Posts" action="Post" vars="id"/>
+    <route url="/admin" app="backend" module="Admin" action="Dashboard"/>
 </routes>

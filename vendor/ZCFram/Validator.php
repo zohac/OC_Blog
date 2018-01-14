@@ -26,7 +26,7 @@ class Validator
      */
     public function required(string $value, string $type)
     {
-        if (empty($_POST[$value]) === true){
+        if (empty($_POST[$value]) === true) {
             $this->setError(['error'. \ucfirst($value) => 'Le champ ' . $value . ' est requis']);
         } else {
             $this->check($value, $type);

@@ -39,7 +39,6 @@ class PostsController extends Controller
 
                 $this->setParams($Validator->getParams());
                 $this->setView('successcontrolform');
-
             } else {
                 $this->setParams($Validator->getParams());
                 $this->setView('alertControlForm');
