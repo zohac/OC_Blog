@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <config>
     <bdd host="localhost" dbname="blog" user="root" password="root" />
+    <mail name"jouan.ovh" contact="contact@jouan.ovh" />
     <blog title="" author="" />
     <blog numberOfPost="6" />
 </config>

@@ -24,11 +24,26 @@ class PostsController extends Controller
             $Validator->required('comments', 'text');
 
             if (!$Validator->hasError()) {
-                // TO DO : swiftMail
-            }
+                $mailer = Container::getMailer();
+                $message = Container::getSwiftMessage();
 
-            $this->setParams($Validator->getParams());
-            $this->setView('alertControlForm');
+                $params = $Validator->getParams();
+                // Give the message a subject
+                $message->setBody('
+                    De : '.$params['name'].'
+                    Email : '.$params['email'].'
+                    Content : '.$params['comments']);
+
+                // Send the message
+                $mailer->send($message);
+
+                $this->setParams($Validator->getParams());
+                $this->setView('successcontrolform');
+
+            } else {
+                $this->setParams($Validator->getParams());
+                $this->setView('alertControlForm');
+            }
         }
     }
 
