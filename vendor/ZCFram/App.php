@@ -26,8 +26,8 @@ class App
      */
     public function __construct()
     {
-        $this->request = new HTTPRequest;
-        $this->reponse = new HTTPResponse();
+        $this->request = new HTTPRequest();
+        $this->reponse = Container::getHTTPResponse();
 
         $uri = $this->request->requestURI();
 

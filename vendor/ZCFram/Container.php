@@ -12,6 +12,20 @@ abstract class Container
      */
     const CONFIG_PATH = '/../../app/config/config.xml';
 
+    private static $HTTPResponse = null;
+
+    /**
+     * Returns a connection object to the database
+     * @return object PDOManager
+     */
+    public static function getHTTPResponse()
+    {
+        if (self::$HTTPResponse === null) {
+            self::$HTTPResponse = new HTTPResponse();
+        }
+        return self::$HTTPResponse;
+    }
+
     /**
      * Returns the parameters in the config file
      * @param string $config The name of the tag to find
