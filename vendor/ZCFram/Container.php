@@ -12,11 +12,15 @@ abstract class Container
      */
     const CONFIG_PATH = '/../../app/config/config.xml';
 
+    /**
+     * Variable representing the HTTP response as a singleton
+     * @var objet|null
+     */
     private static $HTTPResponse = null;
 
     /**
-     * Returns a connection object to the database
-     * @return object PDOManager
+     * Returns a HTTPResponse object
+     * @return object HTTPResponse
      */
     public static function getHTTPResponse()
     {

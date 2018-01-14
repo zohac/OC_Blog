@@ -38,6 +38,12 @@ abstract class Controller
     protected $params = [];
 
     /**
+     * Represents a user.
+     * @var object user
+     */
+    protected $user;
+
+    /**
      * Set the variable name
      * @param string
      */
@@ -47,6 +53,7 @@ abstract class Controller
         $this->setManager($router->getModule());
         $this->setApplication($router->getApp());
         $this->setView($this->action);
+        $this->user = new User;
     }
 
     /**

@@ -38,10 +38,10 @@ class ErrorController extends Controller
     public function __construct(\Exception $e)
     {
         $this->e = $e;
-        $action = 'error';
-        $module = 'error';
-
-        parent::__construct($action, $module);
+        $this->setAction('error');
+        $this->setManager('error');
+        $this->setApplication('frontend');
+        $this->setView('error');
     }
 
     /**
