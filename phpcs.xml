@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ruleset name="ZCFram">
     <description>A custom coding standard</description>
-    
+
     <arg name="colors"/>
     <arg value="p"/>
 
@@ -10,6 +10,7 @@
     <file>web</file>
 
     <exclude-pattern>web/frontend/*</exclude-pattern>
+    <exclude-pattern>web/backend/*</exclude-pattern>
 
     <rule ref="PSR2" />
 </ruleset>
