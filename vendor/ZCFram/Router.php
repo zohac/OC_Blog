@@ -26,6 +26,12 @@ class Router
     protected $action;
 
     /**
+     * The name of the application
+     * @var string
+     */
+    protected $application;
+
+    /**
      * set of variables
      * @var array
      */
@@ -66,6 +72,15 @@ class Router
     }
 
     /**
+     * Get the name of the application
+     * @return string
+     */
+    public function getApp(): string
+    {
+        return $this->application;
+    }
+
+    /**
      * Check if a path exists in the configuration file
      * @param  string $uri path to test
      * @return boolean|object an exception if the route does not exist
@@ -83,8 +98,8 @@ class Router
                 if ($route->hasAttribute('vars')) {
                     $vars[$route->getAttribute('vars')] = $id;
                 }
-                
-                $this->app = $route->getAttribute('app');
+
+                $this->application = $route->getAttribute('app');
                 $this->module = $route->getAttribute('module');
                 $this->action = $route->getAttribute('action');
                 $this->vars = $vars;

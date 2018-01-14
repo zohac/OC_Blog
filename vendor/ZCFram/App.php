@@ -77,9 +77,9 @@ class App
 
         // We add the variables of the URL to the $ _GET array.
         $_GET = array_merge($_GET, $router->getVars());
-        
+
         // We instantiate the controller.
         $controllerClass = 'app\\'.$router->getModule().'Controller';
-        return new $controllerClass($router->getAction(), $router->getModule());
+        return new $controllerClass($router);
     }
 }

@@ -20,6 +20,12 @@ abstract class Controller
     protected $manager;
 
     /**
+     * The name of the application.
+     * @var string
+     */
+    protected $app;
+
+    /**
      * An instance of the view controller
      * @var
      */
@@ -35,10 +41,11 @@ abstract class Controller
      * Set the variable name
      * @param string
      */
-    public function __construct($action, $manager)
+    public function __construct(Router $router)
     {
-        $this->setAction($action);
-        $this->setManager($manager);
+        $this->setAction($router->getAction());
+        $this->setManager($router->getModule());
+        $this->setApplication($router->getApp());
         $this->setView($this->action);
     }
 
@@ -83,6 +90,19 @@ abstract class Controller
     }
 
     /**
+     * Set the name of the action to do
+     * @param string
+     */
+    protected function setApplication($app)
+    {
+        if (!is_string($app) || empty($app)) {
+            throw new \InvalidArgumentException('L\'application demandée n\'existe pas.');
+        }
+
+        $this->app = $app;
+    }
+
+    /**
      * Set the parameters for the views
      * @param array $params
      */
@@ -120,7 +140,7 @@ abstract class Controller
      */
     public function getView()
     {
-        $loader = new \Twig_Loader_Filesystem(realpath(__DIR__.'/../../app/views'));
+        $loader = new \Twig_Loader_Filesystem(realpath(__DIR__.'/../../app/views/'.$this->app));
         $this->twig = new \Twig_Environment($loader, []);
 
         return $this->twig->render($this->view, $this->params);
