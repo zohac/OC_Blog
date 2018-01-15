@@ -16,3 +16,49 @@ a.logo {
 .thumbnails-pan section article {
 	flex: 1;
 }
+
+input, textarea {
+	-webkit-appearance: none;
+	-webkit-border-radius: 0;
+}
+
+button, html input[type="button"],/* 1 */ input[type="reset"], input[type="submit"] {
+	-webkit-appearance: button;
+	cursor: pointer;
+	*overflow:visible;
+}
+
+body,
+img,
+.commentys-form input[type="text"],
+.commentys-form input[type="email"],
+.commentys-form input[type="url"],
+.commentys-form input[type="password"],
+.commentys-form textarea {
+	transition: all .2s linear;
+	-o-transition: all .2s linear;
+	-moz-transition: all .2s linear;
+	-webkit-transition: all .2s linear;
+}
+
+.contat-from-wrapper input[type="text"],
+.contat-from-wrapper input[type="email"],
+.contat-from-wrapper input[type="password"],
+.contat-from-wrapper textarea {
+	width:100%;
+	display:block;
+	outline:none;
+	border-bottom:1px solid #bbbbbb;
+	background-color:inherit;
+	color:#404040;
+	font-size:21px;
+	line-height:23px;
+	padding-bottom:24px;
+}
+
+.contat-from-wrapper input[type="text"]:focus,
+.contat-from-wrapper input[type="email"]:focus,
+.contat-from-wrapper input[type="passwor"]:focus,
+.contat-from-wrapper textarea:focus {
+	border-bottom-color:#9f9e9e
+}

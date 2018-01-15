@@ -44,6 +44,8 @@ class PostsController extends Controller
                 $this->setView('alertControlForm');
             }
         }
+        $this->getView();
+        $this->send();
     }
 
     /**
@@ -69,6 +71,9 @@ class PostsController extends Controller
             'left' => $listLeft,
             'right' => $listRight
         ]);
+
+        $this->getView();
+        $this->send();
     }
 
     /**
@@ -80,5 +85,8 @@ class PostsController extends Controller
         $Post = $manager->getPost($_GET['id']);
 
         $this->setParams($Post);
+
+        $this->getView();
+        $this->send();
     }
 }

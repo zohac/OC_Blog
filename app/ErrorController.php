@@ -2,6 +2,8 @@
 namespace app;
 
 use \ZCFram\Controller;
+use \ZCFram\Container;
+
 
 /**
  * Controller who manages the index and blog posts
@@ -45,7 +47,8 @@ class ErrorController extends Controller
     }
 
     /**
-     * Execute the index page
+     * Execute the error page
+     * @return 'The view'
      */
     public function executeError()
     {
@@ -58,8 +61,17 @@ class ErrorController extends Controller
                 'message' => $this->e->getMessage()
             ]);
         }
+
+        Container::getHTTPResponse()->setStatus($this->errorCode);
+
+        $this->getView();
+        $this->send();
     }
 
+    /**
+     * Define the status code
+     * @return int The status code
+     */
     private function getStatusCode()
     {
         switch (get_class($this->e)) {
@@ -70,10 +82,5 @@ class ErrorController extends Controller
                 $this->errorCode = 500;
                 break;
         }
-    }
-
-    public function getErrorCode()
-    {
-        return $this->errorCode;
     }
 }

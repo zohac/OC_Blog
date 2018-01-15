@@ -147,9 +147,15 @@ abstract class Controller
      */
     public function getView()
     {
-        $loader = new \Twig_Loader_Filesystem(realpath(__DIR__.'/../../app/views/'.$this->app));
+        $loader = new \Twig_Loader_Filesystem(realpath(__DIR__.'/../../app/views'));
         $this->twig = new \Twig_Environment($loader, []);
 
-        return $this->twig->render($this->view, $this->params);
+        $this->view =  $this->twig->render($this->view, $this->params);
+    }
+
+    public function send()
+    {
+        $response = Container::getHTTPResponse();
+        $response->send($this->view);
     }
 }

@@ -37,5 +37,7 @@ class AdminController extends Controller
                 //$this->setView('alertControlForm');
             }
         }
+        $this->getView();
+        $this->send();
     }
 }

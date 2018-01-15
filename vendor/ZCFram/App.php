@@ -27,7 +27,6 @@ class App
     public function __construct()
     {
         $this->request = new HTTPRequest();
-        $this->reponse = Container::getHTTPResponse();
 
         $uri = $this->request->requestURI();
 
@@ -54,11 +53,7 @@ class App
         } catch (\Exception $e) {
             $controller = new \app\ErrorController($e);
             $controller->execute();
-            $this->reponse->setStatus($controller->getErrorCode());
         }
-
-        $view = $controller->getView();
-        $this->reponse->send($view);
     }
 
     /**

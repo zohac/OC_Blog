@@ -73,6 +73,19 @@ class Validator
     }
 
     /**
+     * Sanitize an input type text
+     * @param  string $text
+     */
+    protected function checkPassword(string $password)
+    {
+        if (strlen($password) < 6) {
+            $this->setError(['errorPassword' => 'Mot de passe trop court!']);
+        } else {
+            $this->setField(['password' => $password]);
+        }
+    }
+
+    /**
      * Set the field variable
      * @param array $field
      */
