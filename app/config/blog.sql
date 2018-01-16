@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `blog`.`user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `pseudo` VARCHAR(45) NOT NULL,
   `email` VARCHAR(255) NULL,
-  `mdp` VARCHAR(45) NULL,
+  `password` VARCHAR(64) NULL,
   `role` ENUM('Administrator', 'Subscriber') NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `pseudo_UNIQUE` (`pseudo` ASC),

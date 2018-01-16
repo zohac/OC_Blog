@@ -4,7 +4,7 @@
 INSERT INTO `blog`.`user`
     (pseudo, email, mdp, role)
 VALUES
-    ('zohac', 'fenrir0680@gmail.com', '123456', 'Administrator')
+    ('zohac', 'fenrir0680@gmail.com', 'e33dd1f9cb677e6726e619e02b30518cc2a8eed2d2accb9cb3b7732e0b23e6ce', 'Administrator')
 ;
 
 -- -----------------------------------------------------
