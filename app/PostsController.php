@@ -36,13 +36,8 @@ class PostsController extends Controller
 
                 // Send the message
                 $mailer->send($message);
-
-                $this->setParams($Validator->getParams());
-                $this->setView('successcontrolform');
-            } else {
-                $this->setParams($Validator->getParams());
-                $this->setView('alertControlForm');
             }
+            $this->setParams($Validator->getParams());
         }
         $this->getView();
         $this->send();

@@ -17,27 +17,8 @@ class AdminController extends Controller
             $reponse->setStatus(301);
             $reponse->redirection('/login');
         } else {
-            # code...
+            $this->getView();
+            $this->send();
         }
-    }
-
-    public function executeLogin()
-    {
-        if (!empty($_POST)) {
-            $Validator = Container::getValidator();
-
-            $Validator->required('email', 'email');
-            $Validator->required('password', 'text');
-
-            if (!$Validator->hasError()) {
-                echo 'no error';
-            } else {
-                echo 'error';
-                $this->setParams($Validator->getParams());
-                //$this->setView('alertControlForm');
-            }
-        }
-        $this->getView();
-        $this->send();
     }
 }

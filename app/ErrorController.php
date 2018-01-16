@@ -4,7 +4,6 @@ namespace app;
 use \ZCFram\Controller;
 use \ZCFram\Container;
 
-
 /**
  * Controller who manages the index and blog posts
  */

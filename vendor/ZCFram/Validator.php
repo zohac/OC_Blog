@@ -68,20 +68,20 @@ class Validator
      */
     protected function checkText(string $text)
     {
-        $field = filter_input(INPUT_POST, $text, FILTER_SANITIZE_SPECIAL_CHARS);
+        $field = filter_input(INPUT_POST, $_POST[$text], FILTER_SANITIZE_SPECIAL_CHARS);
         $this->setField([$text => $field]);
     }
 
     /**
-     * Sanitize an input type text
-     * @param  string $text
+     * Check a password
+     * @param  string $password
      */
     protected function checkPassword(string $password)
     {
-        if (strlen($password) < 6) {
+        if (strlen($_POST[$password]) < 6) {
             $this->setError(['errorPassword' => 'Mot de passe trop court!']);
         } else {
-            $this->setField(['password' => $password]);
+            $this->setField(['password' => $_POST[$password]]);
         }
     }
 

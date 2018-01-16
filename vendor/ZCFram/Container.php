@@ -108,4 +108,13 @@ abstract class Container
             ->setTo(['fenrir0680@gmail.com' => 'jouan.ovh']);
         return $message;
     }
+
+    /**
+     * Returns an instance of the Encryption Controller
+     * @return object Encryption
+     */
+    public static function getEncryption()
+    {
+        return new Encryption();
+    }
 }
