@@ -38,8 +38,8 @@
                     </section>
                 </div>
                 <div class="clearfix"></div>
-                <!-- thumbnails -->
 
+                <!-- thumbnails -->
                 <div class="thumbnails-pan">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                         <article role="pge-title-content" class="contact-header">
@@ -60,8 +60,18 @@
 
                     <!-- contat-from-wrapper -->
                     <div class="contat-from-wrapper">
-                        <div id="message"></div>
-                        <form method="post" action="/" name="cform" id="cform">
+                        <div id="message">
+                            {% if errorName %}<div class="error_message">{{ errorName }}</div>{% endif %}
+                            {% if errorEmail %}<div class="error_message">{{ errorEmail }}</div>{% endif %}
+                            {% if errorComments %}<div class="error_message">{{ errorComments }}</div>{% endif %}
+                            {% if name %}
+                            <div id='success_page'>
+                                <h3 class='succes_message'E-mail envoyé avec succès.</h3>
+                                <p>Merci <strong>{{ name }}</strong>, votre message nous a été envoyé.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <form method="post" action="/#message" name="cform" id="cform">
                             <div class="row">
                                 <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
                                     <input  name="name" id="name" type="text" placeholder="Votre nom" >
@@ -73,8 +83,7 @@
                             <div class="clearfix"></div>
                             <textarea name="comments" id="comments" cols="" rows="" placeholder="Qu'avez-vous en tête" ></textarea>
                             <div class="clearfix"></div>
-                            <input name="" type="submit" value="Envoyer">
-                            <div id="simple-msg"></div>
+                            <input type="submit" value="Envoyer">
                         </form>
                     </div>
                     <!-- contat-from-wrapper -->
