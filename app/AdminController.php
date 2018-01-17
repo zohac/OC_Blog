@@ -17,8 +17,26 @@ class AdminController extends Controller
             $reponse->setStatus(301);
             $reponse->redirection('/login');
         } else {
-            $this->getView();
-            $this->send();
+            switch ($this->user->getRole()) {
+                case 'Administrator':
+                    $manager = $this->getManager();
+                    $listPosts = $manager->getList();
+                    $numberOfUsers = $manager->getNumberOfUsers();
+                    $numberOfPosts = $manager->getNumberOfPosts();
+
+                    $this->setParams(
+                        array_merge(
+                            ['listPosts' => $listPosts],
+                            $numberOfUsers,
+                            $numberOfPosts
+                        )
+                    );
+                    break;
+                case 'Subscriber':
+                    break;
+            }
         }
+        $this->getView();
+        $this->send();
     }
 }

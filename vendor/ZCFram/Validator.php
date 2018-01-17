@@ -68,7 +68,7 @@ class Validator
      */
     protected function checkText(string $text)
     {
-        $field = filter_input(INPUT_POST, $_POST[$text], FILTER_SANITIZE_SPECIAL_CHARS);
+        $field = filter_input(INPUT_POST, $text, FILTER_SANITIZE_SPECIAL_CHARS);
         $this->setField([$text => $field]);
     }
 

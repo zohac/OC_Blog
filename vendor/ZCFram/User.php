@@ -33,4 +33,31 @@ class User
         }
         $_SESSION['auth'] = $authenticated;
     }
+
+    /**
+     * Session variable authenticating a user role
+     * @param string $role
+     */
+    public function setRole(string $role = 'Subscriber')
+    {
+        if (!in_array($role, ['Subscriber', 'Administrator'])) {
+            $message = 'La valeur spécifiée à la méthode User::setRole() n\'est pas conforme.';
+            throw new \InvalidArgumentException($message);
+        }
+        $_SESSION['role'] = $role;
+    }
+
+    /**
+     * Session variable authenticating a user role
+     * @return string $role
+     */
+    public function getRole()
+    {
+        $role = (isset($_SESSION['role'])) ? $_SESSION['role'] : false;
+        if (!in_array($role, ['Subscriber', 'Administrator'])) {
+            $message = 'La variable de session \'role\' n\'est pas conforme.';
+            throw new \InvalidArgumentException($message);
+        }
+        return $role;
+    }
 }

@@ -15,7 +15,7 @@ class LoginManager extends Manager
 
         $requete = $this->DB->prepare($sql);
         $requete->bindValue(':email', $email, \PDO::PARAM_STR);
-		$requete->bindValue(':password', $password, \PDO::PARAM_STR);
+        $requete->bindValue(':password', $password, \PDO::PARAM_STR);
         $requete->execute();
         $userInfo = $requete->fetch();
         

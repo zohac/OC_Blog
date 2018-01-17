@@ -29,6 +29,8 @@ class LoginController extends Controller
                     $this->setParams(['errorLogin' => 'Il existe une erreur dans le couple email/Mot de passe!']);
                 } else {
                     $this->user->setAuthenticated();
+                    \var_dump($user['role']);
+                    $this->user->setRole($user['role']);
 
                     $reponse = Container::getHTTPResponse();
                     $reponse->setStatus(301);
@@ -37,8 +39,15 @@ class LoginController extends Controller
             }
             $this->setParams($Validator->getParams());
         }
-
         $this->getView();
         $this->send();
+    }
+
+    public function executeLogout()
+    {
+        $this->user->setAuthenticated(false);
+        $reponse = Container::getHTTPResponse();
+        $reponse->setStatus(301);
+        $reponse->redirection('/');
     }
 }
