@@ -23,14 +23,13 @@ class LoginController extends Controller
 
                 $encryptedPassword = Container::getEncryption()->hash($params);
                 $manager = $this->getManager();
-                $user = $manager->getUser($params['email'], $encryptedPassword);
+                $userInfo = $manager->getUser($params['email'], $encryptedPassword);
 
-                if ($user === false) {
+                if ($userInfo === false) {
                     $this->setParams(['errorLogin' => 'Il existe une erreur dans le couple email/Mot de passe!']);
                 } else {
                     $this->user->setAuthenticated();
-                    \var_dump($user['role']);
-                    $this->user->setRole($user['role']);
+                    $this->user->hydrateUser($userInfo);
 
                     $reponse = Container::getHTTPResponse();
                     $reponse->setStatus(301);

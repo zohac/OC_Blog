@@ -8,5 +8,6 @@
 	<route url="/registration" app="backoffice" module="Registration" action="Registration"/>
     <route url="/admin" app="backoffice" module="Admin" action="Dashboard"/>
     <route url="/admin/post-([0-9]+)\.html" app="backoffice" module="Admin" action="AdminPost"/>
+	<route url="/admin/delete-post-([0-9]+)\.html" app="backoffice" module="Admin" action="DeletePost"/>
     <route url="/admin/users.html" app="backoffice" module="Admin" action="AdminUsers"/>
 </routes>
