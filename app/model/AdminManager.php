@@ -49,7 +49,7 @@ class AdminManager extends Manager
 
         return $numberOfPosts;
     }
-    
+
     public function getNumberOfComments()
     {
         $sql = "SELECT COUNT(*) AS numberOfComments FROM blog.comment";
@@ -85,23 +85,23 @@ class AdminManager extends Manager
 
         return $PostInfo;
     }
-    
+
     public function getListOfComments()
     {
         $sql = "
         SELECT
-            id,
-            title,
+            comment.id,
+            comment.title,
 			comment,
-            DATE_FORMAT(creationDate, '%e/%m/%Y') AS date,
-            user.pseudo AS author
-			blog.title AS blogTitle
-			blog.id AS blog_id
+            DATE_FORMAT(comment.creationDate, '%e/%m/%Y') AS date,
+            user.pseudo AS author,
+			post.title AS blogTitle,
+			post.id AS blog_id
         FROM blog.comment
         INNER JOIN user
             ON user.id = comment.author_id
-		INNER JOIN blog
-            ON blog.id = comment.post_id
+		INNER JOIN post
+            ON post.id = comment.post_id
 		WHERE comment.status = 'hold'";
 
         //transition from date to french
@@ -112,23 +112,23 @@ class AdminManager extends Manager
 
         return $listOfComments;
     }
-    
+
     public function getMyComments(int $userID)
     {
         $sql = "
         SELECT
-            id,
-            title,
+            comment.id,
+            comment.title,
 			comment,
-            DATE_FORMAT(creationDate, '%e/%m/%Y') AS date,
-            user.pseudo AS author
-			blog.title AS blogTitle
-			blog.id AS blog_id
+            DATE_FORMAT(comment.creationDate, '%e/%m/%Y') AS date,
+            user.pseudo AS author,
+			post.title AS blogTitle,
+			post.id AS blog_id
         FROM blog.comment
         INNER JOIN user
             ON user.id = comment.author_id
-		INNER JOIN blog
-            ON blog.id = comment.post_id
+		INNER JOIN post
+            ON post.id = comment.post_id
 		WHERE user.id = :userID";
 
         //transition from date to french
@@ -136,8 +136,8 @@ class AdminManager extends Manager
         $requete = $this->DB->prepare($sql);
         $requete->bindValue(':userID', $userID, \PDO::PARAM_INT);
         $requete->execute();
-        $PostInfo = $requete->fetch();
+        $myComments = $requete->fetch();
 
-        return $listOfComments;
+        return $myComments;
     }
 }

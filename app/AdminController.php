@@ -1,6 +1,7 @@
 <?php
 namespace app;
 
+use ZCFram\Router;
 use ZCFram\Controller;
 use ZCFram\Container;
 
@@ -10,26 +11,28 @@ use ZCFram\Container;
 class AdminController extends Controller
 {
 
-    public function __construct()
+    public function __construct(Router $router)
     {
-    if (!$this->user->isAuthenticated()) {
-        $reponse = Container::getHTTPResponse();
-        $reponse->setStatus(301);
-        $reponse->redirection('/login');
-    } else {
-        parent::construct();
-    }
+        parent::__construct($router);
+
+        if (!$this->user->isAuthenticated()) {
+            $reponse = Container::getHTTPResponse();
+            $reponse->setStatus(301);
+            $reponse->redirection('/login');
+        }
     }
 
     public function executeDashboard()
     {
+        $userInfo = $this->user->getUserInfo();
+
         $manager = $this->getManager();
         $listPosts = $manager->getList();
         $numberOfUsers = $manager->getNumberOfUsers();
         $numberOfPosts = $manager->getNumberOfPosts();
         $numberOfComments = $manager->getNumberOfComments();
         $listOfComments = $manager->getListOfComments();
-        $myComments = $manager->getMyComments();
+        $myComments = $manager->getMyComments($userInfo['id']);
         $userInfo = $this->user->getUserInfo();
 
         $this->setParams(
@@ -38,7 +41,7 @@ class AdminController extends Controller
                 $numberOfUsers,
                 $numberOfPosts,
                 $numberOfComments,
-                ['listOfComment' => $listOfComment],
+                ['listOfComment' => $listOfComments],
                 ['myComments' => $myComments],
                 ['userInfo' => $userInfo]
             )

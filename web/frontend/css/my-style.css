@@ -9,13 +9,23 @@ a.logo {
 	margin-right: auto;
 }
 
-.thumbnails-pan section {
+.thumbnails-pan {
 	display: flex;
 }
 
-.thumbnails-pan section article {
-	flex: 1;
+.thumbnails-pan section {
+	padding: 0;
 }
+
+.thumbnails-pan section {
+	flex: 1;
+	display: flex;
+}
+
+.thumbnails-pan figure {
+	width: 100%;
+}
+
 
 #surabaya iframe {
     width: 100%;

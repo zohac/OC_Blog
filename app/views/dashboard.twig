@@ -16,7 +16,7 @@
 		</div>
 		<!-- /.container-fluid-->
 	</div>
-{% if role!="Administrator" %}
+{% if userInfo.role == "Administrator" %}
 	<div class="row">
 		<div class="container-fluid">
 			<!-- Icon Cards-->
@@ -49,7 +49,7 @@
 		</div>
 		<!-- /.container-fluid-->
 	</div>
-	
+
 	<h1>Les articles:</h1>
 	<div id="Posts" class="row">
 		<section class="col-xs-12">
@@ -77,7 +77,7 @@
 		<div class="clearfix"></div>
 	</div>
 	<div class="space"></div>
-	
+
 	<h1>Commentaires à approuver:</h1>
 	<div id="Comments" class="row">
 		<section class="col-xs-12">
