@@ -11,22 +11,37 @@
 				<li class="breadcrumb-item">
 					<a href="/admin">Dashboard</a>
 				</li>
-				<li class="breadcrumb-item active">My Dashboard</li>
+				<li class="breadcrumb-item active">Mon tableau de bord.</li>
 			</ol>
+		</div>
+		<!-- /.container-fluid-->
+	</div>
+{% if role!="Administrator" %}
+	<div class="row">
+		<div class="container-fluid">
 			<!-- Icon Cards-->
 			<div class="row">
-				<div class="col-xl-3 col-sm-6">
+				<div class="col-xs-12 col-sm-6 col-md-3">
 					<div class="card text-white bg-primary">
 						<div class="card-body">
 							<div>{{ numberOfPosts }} Articles.</div>
+							<a href="admin/post.html" class="btn btn-default">Ajouter un nouvel article.</a>
 						</div>
 					</div>
 				</div>
-				<div class="col-xl-3 col-sm-6">
+				<div class="col-xs-12 col-sm-6 col-md-3">
 					<div class="card text-white bg-primary">
 						<div class="card-body">
-							<div class="col-sm-6">{{ numberOfUsers }} Utilisateurs.</div>
-							<div class="text-right col-sm-6"><a href="/admin/users.html" class="text-white">Détails</a></div>
+							<div>{{ numberOfUsers }} Utilisateurs.</div>
+							<a href="admin/users.html" class="btn btn-default">Détails</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-3">
+					<div class="card text-white bg-primary">
+						<div class="card-body">
+							<div>{{ numberOfComments }} Commentaires.</div>
+							<a href="admin#Comments" class="btn btn-default">Détails</a>
 						</div>
 					</div>
 				</div>
@@ -34,8 +49,9 @@
 		</div>
 		<!-- /.container-fluid-->
 	</div>
-	<div class="space"></div>
-	<div class="row">
+
+	<h1>Les articles:</h1>
+	<div id="Posts" class="row">
 		<section class="col-xs-12">
 			<table class="table table-hover">
 				<thead class="thead-inverse">
@@ -52,7 +68,7 @@
 						<th scope="row">{{ Post.title }}</th>
 						<td>{{ Post.date }}</td>
 						<td><a href="/admin/post-{{ Post.id }}.html" class="btn btn-primary">Editer</a></td>
-						<td><a href="/admin/post-{{ Post.id }}.html" class="btn btn-danger">Supprimer</a></td>
+						<td><a href="/admin/delete-post-{{ Post.id }}.html" class="btn btn-danger">Supprimer</a></td>
 					</tr>
 				{% endfor %}
 				</tbody>
@@ -60,5 +76,66 @@
 		</section>
 		<div class="clearfix"></div>
 	</div>
-</main
+	<div class="space"></div>
+
+	<h1>Commentaires à approuver:</h1>
+	<div id="Comments" class="row">
+		<section class="col-xs-12">
+			<table class="table table-hover">
+				<thead class="thead-inverse">
+					<tr>
+						<th>Titre</th>
+						<th>Date de création</th>
+						<th>Auteur</th>
+						<th>Titre du blog</th>
+						<th>Validation</th>
+						<th>Supprimer</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for Comment in listOfComment %}
+					<tr>
+						<th scope="row">{{ Comment.title }}</th>
+						<td>{{ Comment.date }}</td>
+						<td>{{ Comment.author }}</td>
+						<td><a href="/admin/post-{{ Comment.blog-id }}.html">{{ Comment.blogTitle }}</a></td>
+						<td><a href="/admin/validation-comment-{{ Comment.id }}.html" class="btn btn-primary">Valider</a></td>
+						<td><a href="/admin/delete-comment-{{ Comment.id }}.html" class="btn btn-danger">Supprimer</a></td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</section>
+		<div class="clearfix"></div>
+	</div>
+{% endif %}
+	<h1>Mes commentaires:</h1>
+	<div id="Comments" class="row">
+		<section class="col-xs-12">
+			<table class="table table-hover">
+				<thead class="thead-inverse">
+					<tr>
+						<th>Titre</th>
+						<th>Date de création</th>
+						<th>Titre du blog</th>
+						<th>Modification</th>
+						<th>Supprimer</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for Comment in myComments %}
+					<tr>
+						<th scope="row">{{ Comment.title }}</th>
+						<td>{{ Comment.date }}</td>
+						<td><a href="/admin/post-{{ Comment.blog-id }}.html">{{ Comment.blogTitle }}</a></td>
+						<td><a href="/admin/validation-comment-{{ Comment.id }}.html" class="btn btn-primary">Modifier</a></td>
+						<td><a href="/admin/delete-comment-{{ Comment.id }}.html" class="btn btn-danger">Supprimer</a></td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</section>
+		<div class="clearfix"></div>
+	</div>
+</main>
 {% endblock %}

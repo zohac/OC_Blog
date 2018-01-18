@@ -7,9 +7,14 @@ namespace ZCFram;
 class User
 {
 
+    private $userInfo;
+
     public function __construct()
     {
         \session_start();
+        if ($this->isAuthenticated()) {
+            $this->userInfo = (isset($_SESSION['user']))? unserialize($_SESSION['user']): null;
+        }
     }
 
     /**
@@ -38,6 +43,30 @@ class User
      * Session variable authenticating a user role
      * @param string $role
      */
+    public function hydrateUser(array $userInfo)
+    {
+        if (!is_array($userInfo)) {
+            $message = 'La valeur spécifiée à la méthode User::hydrateUser() n\'est pas conforme.';
+            throw new \InvalidArgumentException($message);
+        }
+        var_dump($userInfo);
+        $this->userInfo = $userInfo;
+        $_SESSION['user'] = serialize($userInfo);
+    }
+
+    /**
+     * Session variable authenticating a user role
+     * @param string $role
+     */
+    public function getUserInfo()
+    {
+        return $this->userInfo;
+    }
+
+    /**
+     * Session variable authenticating a user role
+     * @param string $role
+     */
     public function setRole(string $role = 'Subscriber')
     {
         if (!in_array($role, ['Subscriber', 'Administrator'])) {
@@ -56,6 +85,7 @@ class User
         $role = (isset($_SESSION['role'])) ? $_SESSION['role'] : false;
         if (!in_array($role, ['Subscriber', 'Administrator'])) {
             $message = 'La variable de session \'role\' n\'est pas conforme.';
+            unset($_SESSION['role']);
             throw new \InvalidArgumentException($message);
         }
         return $role;
