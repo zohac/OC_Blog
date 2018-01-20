@@ -7,7 +7,7 @@ use ZCFram\Container;
 /**
  * Controller who manages the index and blog posts
  */
-class PostsController extends Controller
+class PostController extends Controller
 {
 
     /**
