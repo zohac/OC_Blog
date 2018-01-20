@@ -86,6 +86,16 @@ class Validator
     }
 
     /**
+     * Check a password
+     * @param  string $password
+     */
+    protected function checkInteger(string $value)
+    {
+        $_POST[$value] = (int)$_POST[$value];
+        $this->setField([$value => $_POST[$value]]);
+    }
+
+    /**
      * Set the field variable
      * @param array $field
      */
