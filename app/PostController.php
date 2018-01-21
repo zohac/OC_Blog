@@ -36,8 +36,13 @@ class PostController extends Controller
 
                 // Send the message
                 $mailer->send($message);
+                $this->flash->addFlash('success', 'E-mail envoyé avec succès. Merci '.$params['name'].'!');
+            } else {
+                foreach ($Validator->getError() as $key => $value) {
+                    $this->flash->addFlash('danger', $value);
+                }
             }
-            $this->setParams($Validator->getParams());
+            $this->setParams($this->flash->getFlash());
         }
         $this->getView();
         $this->send();

@@ -6,7 +6,7 @@
 	<div class="row">
 		<div class="container-fluid">
 			<!-- Breadcrumbs-->
-			<div class="text-right"><a href="/logout">Déconnexion</a></div>
+			<div class="text-right">Bonjour {{ userInfo.pseudo }} | <a href="/logout">Déconnexion</a></div>
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
 					<a href="/admin">Dashboard</a>
@@ -16,7 +16,7 @@
 		</div>
 		<!-- /.container-fluid-->
 	</div>
-{% if userInfo.role == "Administrator" %}
+{% if userRole == "Administrator" %}
 	<div class="row">
 		<div class="container-fluid">
 			<!-- Icon Cards-->
@@ -33,7 +33,7 @@
 					<div class="card text-white bg-primary">
 						<div class="card-body">
 							<div>{{ numberOfUsers }} Utilisateurs.</div>
-							<a href="admin/users.html" class="btn btn-default">Détails</a>
+							<a href="admin/user.html" class="btn btn-default">Détails</a>
 						</div>
 					</div>
 				</div>
@@ -50,7 +50,21 @@
 		<!-- /.container-fluid-->
 	</div>
 
+	<div class="flash">
+		{% include 'flash.twig' %}
+	</div>
+	
 	<h1>Les articles:</h1>
+	{% if deletePost %}
+	<div class="alert alert-danger">
+		<strong>Danger!</strong> Voulez-vous vraiment supprimer ce post ?
+		<form method="post" action="/admin/delete-post-{{ deletePost }}.html" name="deletePost" id="deletePost">
+			<input name="id" type="hidden" value="{{ deletePost }}">
+			<input class="btn btn-danger" name="Yes" type="submit" value="Oui">
+			<input class="btn btn-default" name="No" type="submit" value="Non">
+		</form>
+	</div>
+	{% endif %}
 	<div id="Posts" class="row">
 		<section class="col-xs-12">
 			<table class="table table-hover">

@@ -11,7 +11,9 @@ class User
 
     public function __construct()
     {
-        \session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
         if ($this->isAuthenticated()) {
             $this->userInfo = (isset($_SESSION['user']))? unserialize($_SESSION['user']): null;
         }
