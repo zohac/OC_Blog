@@ -284,7 +284,7 @@ class AdminController extends Controller
                 $this->flash->addFlash('danger', 'Une erreur et survenue, veuillez Réessyer.');
             }
         }
-        if (isset($_POST['No']) OR isset($result)) {
+        if (isset($_POST['No']) or isset($result)) {
             // Redirection on the user page
             $reponse = Container::getHTTPResponse();
             $reponse->setStatus(301);

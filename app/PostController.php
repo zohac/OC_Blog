@@ -40,8 +40,7 @@ class PostController extends Controller
                 $message->setBody('
                     De : '.$params['name'].'
                     Email : '.$params['email'].'
-                    Content : '.$params['comments']
-                );
+                    Content : '.$params['comments']);
 
                 // Send the message
                 $result = $mailer->send($message);
