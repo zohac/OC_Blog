@@ -17,6 +17,7 @@ class AdminManager extends Manager
             title,
 			DATE_FORMAT(modificationDate, '%e %M %Y') AS date
         FROM blog.post
+        WHERE status != 'Trash'
         ORDER BY id DESC";
 
         //transition from date to french
@@ -41,6 +42,7 @@ class AdminManager extends Manager
 
     public function getNumberOfPosts()
     {
+        // TODO : Modifier la requète pour les post supprimé
         $sql = "SELECT COUNT(*) AS numberOfPosts FROM blog.post";
 
         $numberOfPosts = $this->DB
@@ -65,11 +67,12 @@ class AdminManager extends Manager
     {
         $sql = "
         SELECT
-            title,
-            post,
-			DATE_FORMAT(creationDate, '%e/%m/%Y') AS creationDate,
-            DATE_FORMAT(modificationDate, '%e/%m/%Y') AS lastModifDate,
-			status,
+            post.id,
+            post.title,
+            post.post,
+			DATE_FORMAT(post.creationDate, '%Y-%m-%e') AS creationDate,
+            DATE_FORMAT(post.modificationDate, '%Y-%m-%e') AS modificationDate,
+			post.status,
             user.pseudo AS author
         FROM blog.post
         INNER JOIN user
@@ -139,5 +142,48 @@ class AdminManager extends Manager
         $myComments = $requete->fetch();
 
         return $myComments;
+    }
+
+    public function updatePost(array $post)
+    {
+        $sql = "
+        UPDATE post
+        SET post.title = :title, post.post = :post, post.status = :status, post.modificationDate = NOW()
+        WHERE id = :id";
+
+        $requete = $this->DB->prepare($sql);
+        $requete->bindValue(':title', $post['title'], \PDO::PARAM_STR);
+        $requete->bindValue(':post', $post['post'], \PDO::PARAM_STR);
+        $requete->bindValue(':status', $post['status'], \PDO::PARAM_STR);
+        $requete->bindValue(':id', $post['id'], \PDO::PARAM_INT);
+        return $requete->execute();
+    }
+
+    public function insertPost(array $post)
+    {
+        $sql = "
+        INSERT INTO `blog`.`post`
+            (author_id, title, post, creationDate, modificationDate, status)
+        VALUES
+            (:author_id, :title, :post, NOW(), NOW(), :status)";
+
+        $requete = $this->DB->prepare($sql);
+        $requete->bindValue(':author_id', $post['author_id'], \PDO::PARAM_INT);
+        $requete->bindValue(':title', $post['title'], \PDO::PARAM_STR);
+        $requete->bindValue(':post', $post['post'], \PDO::PARAM_STR);
+        $requete->bindValue(':status', $post['status'], \PDO::PARAM_STR);
+        return $requete->execute();
+    }
+
+    public function deletePost(int $id)
+    {
+        $sql = "
+        UPDATE post
+        SET status = 'Trash', modificationDate = NOW()
+        WHERE id = :id";
+
+        $requete = $this->DB->prepare($sql);
+        $requete->bindValue(':id', $id, \PDO::PARAM_INT);
+        return $requete->execute();
     }
 }
