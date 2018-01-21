@@ -11,7 +11,9 @@ class User
 
     public function __construct()
     {
-        \session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
         if ($this->isAuthenticated()) {
             $this->userInfo = (isset($_SESSION['user']))? unserialize($_SESSION['user']): null;
         }
@@ -49,18 +51,22 @@ class User
             $message = 'La valeur spécifiée à la méthode User::hydrateUser() n\'est pas conforme.';
             throw new \InvalidArgumentException($message);
         }
-        var_dump($userInfo);
         $this->userInfo = $userInfo;
         $_SESSION['user'] = serialize($userInfo);
     }
 
     /**
-     * Session variable authenticating a user role
-     * @param string $role
+     * Retrieves the info of the current user.
+     * @param  string $value Information to recover
+     * @return string        The requested info
      */
-    public function getUserInfo()
+    public function getUserInfo(string $value):string
     {
-        return $this->userInfo;
+        if (!in_array($value, ['id', 'pseudo', 'email', 'role'])) {
+            $message = 'La valeur spécifiée à la méthode User::getUserInfo() n\'est pas conforme.';
+            throw new \InvalidArgumentException($message);
+        }
+        return $this->userInfo[$value];
     }
 
     /**

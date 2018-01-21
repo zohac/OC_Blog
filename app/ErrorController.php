@@ -77,7 +77,8 @@ class ErrorController extends Controller
             case 'RuntimeException':
                 $this->errorCode = 404;
                 break;
-            case 'BadFunctionCallException' or 'InvalidArgumentException':
+
+            default:
                 $this->errorCode = 500;
                 break;
         }

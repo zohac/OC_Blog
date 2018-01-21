@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <routes>
-    <route url="/" app="frontend" module="Posts" action="Index"/>
-    <route url="/blog" app="frontend" module="Posts" action="ListPosts"/>
-    <route url="/blog/post-([0-9]+)\.html" app="frontend" module="Posts" action="Post" vars="id"/>
+    <route url="/" app="frontend" module="Post" action="Index"/>
+    <route url="/blog" app="frontend" module="Post" action="ListPost"/>
+    <route url="/blog/post-([0-9]+)\.html" app="frontend" module="Post" action="Post" vars="id"/>
     <route url="/login" app="backoffice" module="Login" action="Login"/>
     <route url="/logout" app="backoffice" module="Login" action="Logout"/>
 	<route url="/registration" app="backoffice" module="Registration" action="Registration"/>
     <route url="/admin" app="backoffice" module="Admin" action="Dashboard"/>
-    <route url="/admin/post-([0-9]+)\.html" app="backoffice" module="Admin" action="AdminPost"/>
-    <route url="/admin/users.html" app="backoffice" module="Admin" action="AdminUsers"/>
+    <route url="/admin/post\.html" app="backoffice" module="Admin" action="Insert"/>
+    <route url="/admin/post-([0-9]+)\.html" app="backoffice" module="Admin" action="Update"  vars="id"/>
+	<route url="/admin/delete-post-([0-9]+)\.html" app="backoffice" module="Admin" action="DeletePost"  vars="id"/>
+    <route url="/admin/user.html" app="backoffice" module="User" action="ListUser"/>
+    <route url="/admin/delete-user-([0-9]+)\.html" app="backoffice" module="User" action="DeleteUser"  vars="id"/>
 </routes>

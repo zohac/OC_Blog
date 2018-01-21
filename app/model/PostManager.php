@@ -6,7 +6,7 @@ use \ZCFram\Manager;
 /**
  *
  */
-class PostsManager extends Manager
+class PostManager extends Manager
 {
 
     public function getList(int $debut = -1, int $limite = -1)

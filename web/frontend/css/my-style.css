@@ -9,12 +9,27 @@ a.logo {
 	margin-right: auto;
 }
 
-.thumbnails-pan section {
+.thumbnails-pan {
 	display: flex;
 }
 
-.thumbnails-pan section article {
+.thumbnails-pan section {
+	padding: 0;
+}
+
+.thumbnails-pan section {
 	flex: 1;
+	display: flex;
+}
+
+.thumbnails-pan figure {
+	width: 100%;
+}
+
+
+#surabaya iframe {
+    width: 100%;
+    height: 100%;
 }
 
 input, textarea {
@@ -92,6 +107,8 @@ img,
     background-clip: border-box;
     border: 1px solid rgba(0,0,0,.125);
     border-radius: .25rem;
+	height: 81px;
+	margin-bottom: 25px;
 }
 
 .card-body {
@@ -99,4 +116,8 @@ img,
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
     padding: 1.25rem;
+}
+
+#adminPost textarea#post {
+	height: 380px !important;
 }

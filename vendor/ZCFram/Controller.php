@@ -44,6 +44,12 @@ abstract class Controller
     protected $user;
 
     /**
+     * Represents flash messages
+     * @var object flash
+     */
+    protected $flash;
+
+    /**
      * Set the variable name
      * @param string
      */
@@ -53,6 +59,7 @@ abstract class Controller
         $this->setManager($router->getModule());
         $this->setApplication($router->getApp());
         $this->setView($this->action);
+        $this->flash = new Flash;
         $this->user = new User;
     }
 

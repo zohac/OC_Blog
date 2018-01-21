@@ -5,47 +5,81 @@ use ZCFram\Controller;
 use ZCFram\Container;
 
 /**
- *
+ * Class to manage user authentication
  */
 class LoginController extends Controller
 {
 
+    /**
+     * Methode to manage user authentication
+     * @return [Redirect on success]
+     */
     public function executeLogin()
     {
+        // If variables exist in the post method
         if (!empty($_POST)) {
+            //Retrieving the class that validates the data sent
             $Validator = Container::getValidator();
-
             $Validator->required('email', 'email');
             $Validator->required('password', 'password');
 
+            /*
+             * If the validator does not return an error,
+             * else adding error flash message
+             */
             if (!$Validator->hasError()) {
+                // Recovering validator data
                 $params = $Validator->getParams();
 
+                // password hashing
                 $encryptedPassword = Container::getEncryption()->hash($params);
+
+                // Recovery of the manager returned by the router
+                // And check if the user is registered in DB
                 $manager = $this->getManager();
-                $user = $manager->getUser($params['email'], $encryptedPassword);
+                $userInfo = $manager->getUser($params['email'], $encryptedPassword);
 
-                if ($user === false) {
-                    $this->setParams(['errorLogin' => 'Il existe une erreur dans le couple email/Mot de passe!']);
+                // If the user doesn't exist
+                // Add a flash message
+                if ($userInfo === false) {
+                    // Adding a break to slow down the brute force
+                    sleep(1);
+                    $this->flash->addFlash('danger', 'Il existe une erreur dans le couple email/Mot de passe!');
                 } else {
+                    // Authenticate the user and hydrate the User class
                     $this->user->setAuthenticated();
-                    \var_dump($user['role']);
-                    $this->user->setRole($user['role']);
+                    $this->user->hydrateUser($userInfo);
 
+                    //Redirection to the admin page
                     $reponse = Container::getHTTPResponse();
                     $reponse->setStatus(301);
                     $reponse->redirection('/admin');
                 }
+            } else {
+                // adding error flash message
+                foreach ($Validator->getError() as $key => $value) {
+                    $this->flash->addFlash('danger', $value);
+                }
             }
-            $this->setParams($Validator->getParams());
         }
+        // Flash message retrieval
+        $this->setParams($this->flash->getFlash());
+
+        // View recovery and display
         $this->getView();
         $this->send();
     }
 
+    /**
+     * Methode to manage logout the user
+     * @return [Redirecting the user to the index page]
+     */
     public function executeLogout()
     {
+        // We cancel the authentication
         $this->user->setAuthenticated(false);
+
+        // Redirection to the index page
         $reponse = Container::getHTTPResponse();
         $reponse->setStatus(301);
         $reponse->redirection('/');

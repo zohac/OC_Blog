@@ -40,9 +40,9 @@
                     </section>
                 </div>
                 <div class="clearfix"></div>
-
+                <div class="space"></div>
                 <!-- thumbnails -->
-                <div class="thumbnails-pan">
+                <div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                         <article role="pge-title-content" class="contact-header">
                             <header>
@@ -54,7 +54,9 @@
                     <!-- map -->
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="demo-wrapper">
-                            <div id="surabaya"></div>
+                            <div id="surabaya">
+								<iframe src="http://umap.openstreetmap.fr/fr/map/anonymous-edit/152357:1Yrdsv_Rpvrtznd_m5ZAN6XNDbA"></iframe>
+							</div>
                         </div>
                     </div>
                     <!-- map -->
@@ -63,27 +65,19 @@
                     <!-- contat-from-wrapper -->
                     <div class="contat-from-wrapper">
                         <div id="message">
-                            {% if errorName %}<div class="error_message">{{ errorName }}</div>{% endif %}
-                            {% if errorEmail %}<div class="error_message">{{ errorEmail }}</div>{% endif %}
-                            {% if errorComments %}<div class="error_message">{{ errorComments }}</div>{% endif %}
-                            {% if name %}
-                            <div id='success_page'>
-                                <h3 class='succes_message'E-mail envoyé avec succès.</h3>
-                                <p>Merci <strong>{{ name }}</strong>, votre message nous a été envoyé.</p>
-                            </div>
-                            {% endif %}
+                            {% include 'flash.twig' %}
                         </div>
                         <form method="post" action="/#message" name="cform" id="cform">
                             <div class="row">
                                 <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
-                                    <input  name="name" id="name" type="text" placeholder="Votre nom" >
+                                    <input  name="name" id="name" type="text" placeholder="Votre nom" required>
                                 </div>
                                 <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
-                                    <input  name="email" id="email" type="email"  placeholder="Votre email" >
+                                    <input  name="email" id="email" type="email"  placeholder="Votre email" required>
                                 </div>
                             </div>
                             <div class="clearfix"></div>
-                            <textarea name="comments" id="comments" cols="" rows="" placeholder="Qu'avez-vous en tête" ></textarea>
+                            <textarea name="comments" id="comments" cols="" rows="" placeholder="Qu'avez-vous en tête" required></textarea>
                             <div class="clearfix"></div>
                             <input type="submit" value="Envoyer">
                         </form>
