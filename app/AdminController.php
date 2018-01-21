@@ -261,7 +261,7 @@ class AdminController extends Controller
             $Validator = Container::getValidator();
             $Validator->check('id', 'integer');
 
-            //Recovery of validated data
+            // Recovery of validated data
             $params = $Validator->getParams();
 
             /*
