@@ -117,3 +117,7 @@ img,
     flex: 1 1 auto;
     padding: 1.25rem;
 }
+
+#adminPost textarea#post {
+	height: 380px !important;
+}
