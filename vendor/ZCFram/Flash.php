@@ -7,7 +7,6 @@ namespace ZCFram;
 class Flash
 {
 
-
     /**
      * Table representing all flash messages
      * @var array

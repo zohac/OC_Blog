@@ -50,11 +50,18 @@ abstract class Controller
     protected $flash;
 
     /**
+     * An instance of the Router
+     * @var objet
+     */
+    protected $router;
+
+    /**
      * Set the variable name
      * @param string
      */
     public function __construct(Router $router)
     {
+        $this->router = $router;
         $this->setAction($router->getAction());
         $this->setManager($router->getModule());
         $this->setApplication($router->getApp());

@@ -113,71 +113,74 @@ class AdminController extends Controller
      */
     public function executeInsert()
     {
-        // Initializing the parameters to return to the view
-        $this->setParams([
-                'author_id' => $this->user->getUserInfo('id'),
-                'author' => $this->user->getUserInfo('pseudo')
-            ]);
-
-        // If variables exist in the post method
-        if (!empty($_POST)) {
-            //Retrieving the class that validates the data sent
-            $Validator = Container::getValidator();
-            $Validator->required('status', 'text');
-            $Validator->required('title', 'text');
-            $Validator->check('post', 'text');
-
-            // Creating a parameter table
-            // 1. For sending in DB
-            // 2. For viewing the view
-            $params = \array_merge(
-                $Validator->getParams(),
-                [
+        // We verify that the user has the necessary rights
+        if ($this->user->getUserInfo('role') == 'Administrator') {
+            // Initializing the parameters to return to the view
+            $this->setParams([
                     'author_id' => $this->user->getUserInfo('id'),
-                    'creationDate' => date('Y-m-d'),
-                    'modificationDate' => date('Y-m-d')
-                ]
-            );
+                    'author' => $this->user->getUserInfo('pseudo')
+                ]);
 
-            /*
-             * If the validator does not return an error,
-             * else adding error flash message
-             */
-            if (!$Validator->hasError()) {
-                // Recovery of the manager returned by the router
-                // And insert new post in DB
-                $manager = $this->getManager();
-                $result = $manager->insertPost($params);
+            // If variables exist in the post method
+            if (!empty($_POST)) {
+                //Retrieving the class that validates the data sent
+                $Validator = Container::getValidator();
+                $Validator->required('status', 'text');
+                $Validator->required('title', 'text');
+                $Validator->check('post', 'text');
 
-                // Adding a flash message if successful or unsuccessful
-                if ($result !== false) {
-                    $this->flash->addFlash('success', 'Nouvel article enregistré.');
+                // Creating a parameter table
+                // 1. For sending in DB
+                // 2. For viewing the view
+                $params = \array_merge(
+                    $Validator->getParams(),
+                    [
+                        'author_id' => $this->user->getUserInfo('id'),
+                        'creationDate' => date('Y-m-d'),
+                        'modificationDate' => date('Y-m-d')
+                    ]
+                );
+
+                /*
+                 * If the validator does not return an error,
+                 * else adding error flash message
+                 */
+                if (!$Validator->hasError()) {
+                    // Recovery of the manager returned by the router
+                    // And insert new post in DB
+                    $manager = $this->getManager();
+                    $result = $manager->insertPost($params);
+
+                    // Adding a flash message if successful or unsuccessful
+                    if ($result !== false) {
+                        $this->flash->addFlash('success', 'Nouvel article enregistré.');
+                    } else {
+                        $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'enregistrement.');
+                    }
+
+                    // redirection to the admin page
+                    $reponse = Container::getHTTPResponse();
+                    $reponse->setStatus(301);
+                    $reponse->redirection('/admin');
                 } else {
-                    $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'enregistrement.');
+                    // adding error flash message
+                    foreach ($Validator->getError() as $key => $value) {
+                        $this->flash->addFlash('danger', $value);
+                    }
                 }
-
-                // redirection to the admin page
-                $reponse = Container::getHTTPResponse();
-                $reponse->setStatus(301);
-                $reponse->redirection('/admin');
-            } else {
-                // adding error flash message
-                foreach ($Validator->getError() as $key => $value) {
-                    $this->flash->addFlash('danger', $value);
-                }
+                // Adding flash message and parameters to return by the view
+                $this->setParams($this->flash->getFlash());
+                $this->setParams($params);
             }
             // Adding flash message and parameters to return by the view
             $this->setParams($this->flash->getFlash());
-            $this->setParams($params);
-        }
-        // Adding flash message and parameters to return by the view
-        $this->setParams($this->flash->getFlash());
 
-        // Name of the view to return
-        $this->setView('adminpost');
-        // View recovery and display
-        $this->getView();
-        $this->send();
+            // Name of the view to return
+            $this->setView('adminpost');
+            // View recovery and display
+            $this->getView();
+            $this->send();
+        }
     }
 
     /**
@@ -185,55 +188,58 @@ class AdminController extends Controller
      */
     public function executeUpdate()
     {
-        // Recovery of the manager returned by the router
-        $manager = $this->getManager();
+        // We verify that the user has the necessary rights
+        if ($this->user->getUserInfo('role') == 'Administrator') {
+            // Recovery of the manager returned by the router
+            $manager = $this->getManager();
 
-        // If variables exist in the post method
-        // and the variable 'id' exist
-        // else recovery of the post in DB for display of the completed form
-        if (!empty($_POST) && isset($_GET['id'])) {
-            //Retrieving the class that validates the data sent
-            $Validator = Container::getValidator();
-            $Validator->required('status', 'text');
-            $Validator->required('title', 'text');
-            $Validator->check('post', 'text');
+            // If variables exist in the post method
+            // and the variable 'id' exist
+            // else recovery of the post in DB for display of the completed form
+            if (!empty($_POST) && isset($_GET['id'])) {
+                //Retrieving the class that validates the data sent
+                $Validator = Container::getValidator();
+                $Validator->required('status', 'text');
+                $Validator->required('title', 'text');
+                $Validator->check('post', 'text');
 
-            /*
-             * If the validator does not return an error,
-             * else adding error flash message
-             */
-            if (!$Validator->hasError()) {
-                // Creating a parameter table
-                // 1. For sending in DB
-                $params = \array_merge($Validator->getParams(), ['id' => $_GET['id']]);
+                /*
+                 * If the validator does not return an error,
+                 * else adding error flash message
+                 */
+                if (!$Validator->hasError()) {
+                    // Creating a parameter table
+                    // 1. For sending in DB
+                    $params = \array_merge($Validator->getParams(), ['id' => $_GET['id']]);
 
-                // Update the post
-                $result = $manager->updatePost($params);
+                    // Update the post
+                    $result = $manager->updatePost($params);
 
-                // Adding a flash message if successful or unsuccessful
-                if ($result !== false) {
-                    $this->flash->addFlash('success', 'Article mis à jour.');
-                } else {
-                    $this->flash->addFlash('danger', 'Une erreur est survenu lors de la mise à jour.');
+                    // Adding a flash message if successful or unsuccessful
+                    if ($result !== false) {
+                        $this->flash->addFlash('success', 'Article mis à jour.');
+                    } else {
+                        $this->flash->addFlash('danger', 'Une erreur est survenu lors de la mise à jour.');
+                    }
+
+                    // Recovery the Post in DB
+                    $Post = $manager->getPost($_GET['id']);
+                    $this->setParams($Post);
                 }
-
-                // Recovery the Post in DB
-                $Post = $manager->getPost($_GET['id']);
-                $this->setParams($Post);
+            } elseif (isset($_GET['id'])) {
+                    $Post = $manager->getPost($_GET['id']);
+                    $this->setParams($Post);
             }
-        } elseif (isset($_GET['id'])) {
-                $Post = $manager->getPost($_GET['id']);
-                $this->setParams($Post);
+            // Adding flash message and parameters to return by the view
+            $this->setParams($this->flash->getFlash());
+
+            // Name of the view to return
+            $this->setView('adminpost');
+
+            // View recovery and display
+            $this->getView();
+            $this->send();
         }
-        // Adding flash message and parameters to return by the view
-        $this->setParams($this->flash->getFlash());
-
-        // Name of the view to return
-        $this->setView('adminpost');
-
-        // View recovery and display
-        $this->getView();
-        $this->send();
     }
 
     /**
@@ -242,65 +248,59 @@ class AdminController extends Controller
      */
     public function executeDeletePost()
     {
-        // admin dashboard recovery
-        $this->getAdminDashboard();
-        $this->setView('dashboard');
+        // We verify that the user has the necessary rights
+        if ($this->user->getUserInfo('role') == 'Administrator') {
+            // admin dashboard recovery
+            $this->getAdminDashboard();
+            $this->setView('dashboard');
 
-        if (isset($_GET['id'])) {
-            // Retrieving the id of the post to delete and convert to integer
-            $id = (int)$_GET['id'];
+            if (isset($_GET['id'])) {
+                // Retrieving the id of the post to delete and convert to integer
+                $id = (int)$_GET['id'];
 
-            // Displays a delete confirmation message
-            $this->setParams(['deletePost' => $id]);
-        }
-
-        // If variables exist in the post method
-        // and the variable 'Yes' existe
-        if (!empty($_POST) && isset($_POST['Yes'])) {
-            //Retrieving the class that validates the data sent
-            $Validator = Container::getValidator();
-            $Validator->check('id', 'integer');
-
-            // Recovery of validated data
-            $params = $Validator->getParams();
-
-            /*
-             * If the validator does not return an error,
-             * and the id sent by the POST method and identical to the id of the GET method
-             * Otherwise sending a flash message in case of error
-             */
-            if (!$Validator->hasError() && $params['id'] == $id) {
-                // Recovery of the manager returned by the router
-                $manager = $this->getManager();
-                $result = $manager->deletePost($params['id']);
-
-                // Adding a flash message if successful or unsuccessful
-                if ($result !== false) {
-                    $this->flash->addFlash('success', 'Le post est bien supprimé.');
-                } else {
-                    $this->fash->addFlash('danger', 'Une erreur est survenu lors de la supression du post.');
-                }
-            } else {
-                $this->flash->addFlash('danger', 'Une erreur et survenue, veuillez Réessyer.');
+                // Displays a delete confirmation message
+                $this->setParams(['deletePost' => $id]);
             }
+
+            // If variables exist in the post method
+            // and the variable 'Yes' existe
+            if (!empty($_POST) && isset($_POST['Yes'])) {
+                //Retrieving the class that validates the data sent
+                $Validator = Container::getValidator();
+                $Validator->check('id', 'integer');
+
+                // Recovery of validated data
+                $params = $Validator->getParams();
+
+                /*
+                 * If the validator does not return an error,
+                 * and the id sent by the POST method and identical to the id of the GET method
+                 * Otherwise sending a flash message in case of error
+                 */
+                if (!$Validator->hasError() && $params['id'] == $id) {
+                    // Recovery of the manager returned by the router
+                    $manager = $this->getManager();
+                    $result = $manager->deletePost($params['id']);
+
+                    // Adding a flash message if successful or unsuccessful
+                    if ($result !== false) {
+                        $this->flash->addFlash('success', 'Le post est bien supprimé.');
+                    } else {
+                        $this->fash->addFlash('danger', 'Une erreur est survenu lors de la supression du post.');
+                    }
+                } else {
+                    $this->flash->addFlash('danger', 'Une erreur et survenue, veuillez Réessyer.');
+                }
+            }
+            if (isset($_POST['No']) or isset($result)) {
+                // Redirection on the user page
+                $reponse = Container::getHTTPResponse();
+                $reponse->setStatus(301);
+                $reponse->redirection('/admin');
+            }
+            // View recovery and display
+            $this->getView();
+            $this->send();
         }
-        if (isset($_POST['No']) or isset($result)) {
-            // Redirection on the user page
-            $reponse = Container::getHTTPResponse();
-            $reponse->setStatus(301);
-            $reponse->redirection('/admin');
-        }
-        // View recovery and display
-        $this->getView();
-        $this->send();
-    }
-
-
-    public function DeletePost()
-    {
-        $userInfo = $this->user->getUserInfo();
-
-    if (!$this->user->isAuthenticated() && $userInfo['role'] == 'Administrator') {
-    }
     }
 }

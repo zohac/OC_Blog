@@ -78,6 +78,26 @@ img,
 	border-bottom-color:#9f9e9e
 }
 
+.commentys-form input[type="submit"] {
+	display:block;
+	border:none;
+	outline:none;
+	width:200px;
+	line-height:60px;
+	text-transform:uppercase;
+	font-size:21px;
+	color:#FFF;
+	font-weight:800;
+	letter-spacing:2px;
+	background-color:#e84d49;
+	 margin:41px auto;
+	 margin-bottom:0;
+ }
+
+.commentys-formr input[type="submit"]:hover {
+	background-color:#f8524e
+}
+
 .space {
 	margin-top: 30px;
 }
