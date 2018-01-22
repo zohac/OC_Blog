@@ -68,7 +68,7 @@ class PostController extends Controller
     /**
      * Execute the blog page
      */
-    public function executeListPosts()
+    public function executeListPost()
     {
         // Recovery of the manager returned by the router
         $manager = $this->getManager();
@@ -104,12 +104,42 @@ class PostController extends Controller
      */
     public function executePost()
     {
+        // we make sure that the variable $_GET['id'] is an integer
+        $id = (int)$_GET['id'];
+
         // Recovery of the manager returned by the router
         $manager = $this->getManager();
         // Get one post in DB
-        $Post = $manager->getPost($_GET['id']);
+        $Post = $manager->getPost($id);
 
-        // Adding parameters to return by the view
+        // We check the post for comments?
+        if ($manager->postHasComment($id)) {
+            // We change the manager
+            $this->setManager('Comment');
+            $manager = $this->getManager();
+
+            // We retrieve comments
+            $comment = $manager->getComment($id);
+        } else {
+            $this->setParams(['numberOfComments' => '0 Commentaire']);
+        }
+
+        // If the variable $_POST['comment'] exist
+        if (isset($_POST['comment'])) {
+            // Sent comment control
+            $comment = new CommentController($this->router);
+            $comment->CommentControl();
+        }
+
+        if ($this->user->isAuthenticated()) {
+            $this->setParams([
+                'post_id' => $id,
+                'isAuthenticated' => true,
+                'pseudo' => \ucfirst($this->user->getUserInfo('pseudo'))
+            ]);
+        }
+        // Adding flash message and parameters to return by the view
+        $this->setParams($this->flash->getFlash());
         $this->setParams($Post);
 
         // View recovery and display
