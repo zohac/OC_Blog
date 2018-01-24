@@ -12,4 +12,6 @@
 	<route url="/admin/delete-post-([0-9]+)\.html" app="backoffice" module="Admin" action="DeletePost"  vars="id"/>
     <route url="/admin/user.html" app="backoffice" module="User" action="ListUser"/>
     <route url="/admin/delete-user-([0-9]+)\.html" app="backoffice" module="User" action="DeleteUser"  vars="id"/>
+    <route url="/admin/validation-comment-([0-9]+)\.html" app="backoffice" module="Admin" action="ValidComment"  vars="id"/>
+    <route url="/admin/delete-comment-([0-9]+)\.html" app="backoffice" module="Admin" action="DeleteComment"  vars="id"/>
 </routes>

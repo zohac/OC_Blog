@@ -141,3 +141,7 @@ img,
 #adminPost textarea#post {
 	height: 380px !important;
 }
+
+.second-row {
+	border-top: none !important;
+}

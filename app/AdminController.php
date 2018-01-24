@@ -303,4 +303,128 @@ class AdminController extends Controller
             $this->send();
         }
     }
+
+    public function executeValidComment()
+    {
+        // We verify that the user has the necessary rights
+        if ($this->user->getUserInfo('role') == 'Administrator') {
+            // admin dashboard recovery
+            $this->getAdminDashboard();
+            $this->setView('dashboard');
+
+            // If the $_Get['id'] variable exists, we make sure it is an integer,
+            // otherwise we return false.
+            if (isset($_GET['id'])) {
+                // Retrieving the id of the post to delete and convert to integer
+                $id = (int)$_GET['id'];
+
+                // Displays a delete confirmation message
+                $this->setParams(['validComment' => $id]);
+            } else {
+                $id = false;
+            }
+
+            // If variables exist in the post method
+            // and the variable 'Yes' existe
+            if (!empty($_POST) && isset($_POST['Yes'])) {
+                //Retrieving the class that validates the data sent
+                $Validator = Container::getValidator();
+                $Validator->check('id', 'integer');
+
+                // Recovery of validated data
+                $params = $Validator->getParams();
+
+                /*
+                 * If the validator does not return an error,
+                 * and the id sent by the POST method and identical to the id of the GET method
+                 * Otherwise sending a flash message in case of error
+                 */
+                if (!$Validator->hasError() && $params['id'] == $id) {
+                    // Recovery of the manager returned by the router
+                    $manager = $this->getManager();
+                    $result = $manager->validComment($params['id']);
+
+                    // Adding a flash message if successful or unsuccessful
+                    if ($result !== false) {
+                        $this->flash->addFlash('success', 'Le commentaire est bien validé.');
+                    } else {
+                        $this->fash->addFlash('danger', 'Une erreur est survenu lors de la validation du commentaire.');
+                    }
+                } else {
+                    $this->flash->addFlash('danger', 'Une erreur et survenue, veuillez Réessyer.');
+                }
+            }
+            if (isset($_POST['No']) or isset($result)) {
+                // Redirection on the user page
+                $reponse = Container::getHTTPResponse();
+                $reponse->setStatus(301);
+                $reponse->redirection('/admin');
+            }
+            // View recovery and display
+            $this->getView();
+            $this->send();
+        }
+    }
+
+    public function executeDeleteComment()
+    {
+        // We verify that the user has the necessary rights
+        if ($this->user->getUserInfo('role') == 'Administrator') {
+            // admin dashboard recovery
+            $this->getAdminDashboard();
+            $this->setView('dashboard');
+
+            // If the $_Get['id'] variable exists, we make sure it is an integer,
+            // otherwise we return false.
+            if (isset($_GET['id'])) {
+                // Retrieving the id of the post to delete and convert to integer
+                $id = (int)$_GET['id'];
+
+                // Displays a delete confirmation message
+                $this->setParams(['deleteComment' => $id]);
+            } else {
+                $id = false;
+            }
+
+            // If variables exist in the post method
+            // and the variable 'Yes' existe
+            if (!empty($_POST) && isset($_POST['Yes'])) {
+                //Retrieving the class that validates the data sent
+                $Validator = Container::getValidator();
+                $Validator->check('id', 'integer');
+
+                // Recovery of validated data
+                $params = $Validator->getParams();
+
+                /*
+                 * If the validator does not return an error,
+                 * and the id sent by the POST method and identical to the id of the GET method
+                 * Otherwise sending a flash message in case of error
+                 */
+                if (!$Validator->hasError() && $params['id'] == $id) {
+                    // Recovery of the manager returned by the router
+                    $manager = $this->getManager();
+                    $result = $manager->deleteComment($params['id']);
+
+                    // Adding a flash message if successful or unsuccessful
+                    if ($result !== false) {
+                        $this->flash->addFlash('success', 'Le commentaire est bien supprimé.');
+                    } else {
+                        $this->fash->addFlash('danger', 'Une erreur est survenu lors de la suppression du commentaire.');
+                    }
+                } else {
+                    $this->flash->addFlash('danger', 'Une erreur et survenue, veuillez Réessyer.');
+                }
+            }
+            if (isset($_POST['No']) or isset($result)) {
+                // Redirection on the user page
+                $reponse = Container::getHTTPResponse();
+                $reponse->setStatus(301);
+                $reponse->redirection('/admin');
+            }
+            // View recovery and display
+            $this->getView();
+            $this->send();
+        }
+    }
 }

@@ -84,11 +84,11 @@ class PostManager extends Manager
      * @param  int    $id The id of a post
      * @return bool
      */
-    public function postHasComment(int $id):bool
+    public function postHasComment(int $id):int
     {
         // SQL request
         $sql = "
-        SELECT id
+        SELECT COUNT(*) AS nbComments
         FROM blog.comment
         WHERE comment.status = 'approve' AND comment.post_id = :id";
 
@@ -101,11 +101,8 @@ class PostManager extends Manager
         // Execute the sql query and return a bool
         $requete->execute();
 
-        $result = $requete->fetchColumn();
+        $result = $requete->fetch();
 
-        if ($result === false) {
-            return false;
-        }
-        return true;
+        return (int)$result['nbComments'];
     }
 }

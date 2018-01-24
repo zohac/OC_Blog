@@ -20,7 +20,7 @@ class CommentManager extends Manager
         $sql = "
         SELECT
 			comment.id,
-			comment.title,
+            comment,
 			DATE_FORMAT(comment.creationDate, '%e') AS day,
             DATE_FORMAT(comment.creationDate, '%M %Y') AS monthYear,
             user.pseudo AS author
@@ -34,12 +34,13 @@ class CommentManager extends Manager
 
         $requete = $this->DB->prepare($sql);
         $requete->bindValue(':id', $id, \PDO::PARAM_INT);
-
+        $requete->execute();
+        
         // Retrieves information from DB
-        $listPosts = $requete->fetchAll();
+        $comment = $requete->fetchALL();
 
         // Returns the information in array
-        return $listPosts;
+        return $comment;
     }
 
     /**

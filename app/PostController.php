@@ -113,18 +113,23 @@ class PostController extends Controller
         $Post = $manager->getPost($id);
 
         // We check the post for comments?
-        if ($manager->postHasComment($id)) {
+        if ($numberOfComments = $manager->postHasComment($id)) {
+            $comment = ($numberOfComments > 1) ? ' Commentaires.' : ' Commentaire.' ;
+            $this->setParams(['numberOfComments' => $numberOfComments.$comment]);
+
             // We change the manager
             $this->setManager('Comment');
             $manager = $this->getManager();
 
             // We retrieve comments
-            $comment = $manager->getComment($id);
+            $comments = $manager->getComment($id);
+            $this->setParams(['comments' => $comments]);
         } else {
             $this->setParams(['numberOfComments' => '0 Commentaire']);
         }
 
         // If the variable $_POST['comment'] exist
+        // we control the commentary
         if (isset($_POST['comment'])) {
             // Sent comment control
             $comment = new CommentController($this->router);

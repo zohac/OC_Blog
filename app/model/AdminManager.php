@@ -139,7 +139,7 @@ class AdminManager extends Manager
         $requete = $this->DB->prepare($sql);
         $requete->bindValue(':userID', $userID, \PDO::PARAM_INT);
         $requete->execute();
-        $myComments = $requete->fetch();
+        $myComments = $requete->fetchAll();
 
         return $myComments;
     }
@@ -181,6 +181,30 @@ class AdminManager extends Manager
         UPDATE post
         SET status = 'Trash', modificationDate = NOW()
         WHERE id = :id";
+
+        $requete = $this->DB->prepare($sql);
+        $requete->bindValue(':id', $id, \PDO::PARAM_INT);
+        return $requete->execute();
+    }
+
+    public function validComment(int $id)
+    {
+        $sql = "
+        UPDATE blog.comment
+        SET comment.status = 'approve'
+        WHERE comment.id = :id";
+
+        $requete = $this->DB->prepare($sql);
+        $requete->bindValue(':id', $id, \PDO::PARAM_INT);
+        return $requete->execute();
+    }
+
+    public function deleteComment(int $id)
+    {
+        $sql = "
+        UPDATE blog.comment
+        SET comment.status = 'Trash'
+        WHERE comment.id = :id";
 
         $requete = $this->DB->prepare($sql);
         $requete->bindValue(':id', $id, \PDO::PARAM_INT);

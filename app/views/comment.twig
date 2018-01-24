@@ -5,13 +5,10 @@
         <ul class="comments-reply">
             {% for comment in comments %}
                 <li>
-                    <figure>
-                        <img src="images/blog-images/image-1.jpg" alt="" class="img-responsive"/>
-                    </figure>
                     <section>
-                        <h4>{{ user.pseudo }}</h4>
-                        <div class="date-pan">{{ comment.date }}</div>
-                        {{ comment.content }}
+                        <h4>{{ comment.author }}</h4>
+                        <div class="date-pan">{{ comment.day }} {{ comment.monthYear }}</div>
+                        {{ comment.comment }}
                     </section>
                 </li>
             {% endfor %}
