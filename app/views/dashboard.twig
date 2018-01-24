@@ -105,7 +105,7 @@
 	{% endif %}
 	{% if deleteComment %}
 	<div id="deleteComment" class="alert alert-danger">
-		<strong>Danger!</strong> Voulez-vous vraiment valider ce commentaire ?
+		<strong>Danger!</strong> Voulez-vous vraiment supprimer ce commentaire ?
 		<form method="post" action="/admin/delete-comment-{{ deleteComment }}.html" name="deleteComment" id="deleteComment">
 			<input name="id" type="hidden" value="{{ deleteComment }}">
 			<input class="btn btn-danger" name="Yes" type="submit" value="Oui">
@@ -147,12 +147,23 @@
 {% endif %}
 	<h1>Mes commentaires:</h1>
 	<div id="Comments" class="row">
+		{% if deleteComment %}
+		<div id="deleteComment" class="alert alert-danger">
+			<strong>Danger!</strong> Voulez-vous vraiment supprimer ce commentaire ?
+			<form method="post" action="/admin/delete-comment-{{ deleteComment }}.html" name="deleteComment" id="deleteComment">
+				<input name="id" type="hidden" value="{{ deleteComment }}">
+				<input class="btn btn-danger" name="Yes" type="submit" value="Oui">
+				<input class="btn btn-default" name="No" type="submit" value="Non">
+			</form>
+		</div>
+		{% endif %}
 		<section class="col-xs-12">
 			<table class="table table-hover">
 				<thead class="thead-inverse">
 					<tr>
 						<th>Date de création</th>
 						<th>Titre du blog</th>
+						<th>Status</th>
 						<th>Modification</th>
 						<th>Supprimer</th>
 					</tr>
@@ -161,9 +172,14 @@
 				{% for Comment in myComments %}
 					<tr>
 						<td>{{ Comment.date }}</td>
-						<td><a href="/admin/post-{{ Comment.blog-id }}.html">{{ Comment.blogTitle }}</a></td>
+						<td><a href="/blog/post-{{ Comment.blog_id }}.html">{{ Comment.blogTitle }}</a></td>
+						<td>{{ Comment.status }}</td>
 						<td><a href="/admin/validation-comment-{{ Comment.id }}.html" class="btn btn-primary">Modifier</a></td>
 						<td><a href="/admin/delete-comment-{{ Comment.id }}.html" class="btn btn-danger">Supprimer</a></td>
+					</tr>
+					<tr>
+						<td class="second-row">Commentaire :</td>
+						<td colspan="3" class="second-row">{{ Comment.comment }}</td>
 					</tr>
 				{% endfor %}
 				</tbody>

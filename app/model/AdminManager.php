@@ -124,6 +124,7 @@ class AdminManager extends Manager
             comment.title,
 			comment,
             DATE_FORMAT(comment.creationDate, '%e/%m/%Y') AS date,
+            comment.status,
             user.pseudo AS author,
 			post.title AS blogTitle,
 			post.id AS blog_id
@@ -132,7 +133,7 @@ class AdminManager extends Manager
             ON user.id = comment.author_id
 		INNER JOIN post
             ON post.id = comment.post_id
-		WHERE user.id = :userID";
+		WHERE user.id = :userID AND comment.status != 'Trash'";
 
         //transition from date to french
         $this->DB->query("SET lc_time_names = 'fr_FR'");
@@ -209,5 +210,20 @@ class AdminManager extends Manager
         $requete = $this->DB->prepare($sql);
         $requete->bindValue(':id', $id, \PDO::PARAM_INT);
         return $requete->execute();
+    }
+
+    public function isWrittenByTheUser(int $commentID, int $userID)
+    {
+        $sql = "
+        SELECT COUNT(comment.id) AS isWritten
+        FROM blog.comment
+        WHERE comment.author_id = :userID AND comment.id = :commentID";
+
+        $requete = $this->DB->prepare($sql);
+        $requete->bindValue(':commentID', $commentID, \PDO::PARAM_INT);
+        $requete->bindValue(':userID', $userID, \PDO::PARAM_INT);
+        $requete->execute();
+        $answer = $requete->fetch();
+        return $answer['isWritten'];
     }
 }

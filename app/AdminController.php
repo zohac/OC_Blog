@@ -368,23 +368,29 @@ class AdminController extends Controller
 
     public function executeDeleteComment()
     {
+        // If the $_Get['id'] variable exists, we make sure it is an integer,
+        // otherwise we return false.
+        if (isset($_GET['id'])) {
+            // Retrieving the id of the post to delete and convert to integer
+            $id = (int)$_GET['id'];
+
+            // Displays a delete confirmation message
+            $this->setParams(['deleteComment' => $id]);
+        } else {
+            $id = false;
+        }
+
+        // Recovery of the manager returned by the router
+        $manager = $this->getManager();
+
         // We verify that the user has the necessary rights
-        if ($this->user->getUserInfo('role') == 'Administrator') {
+        if ($this->user->getUserInfo('role') == 'Administrator'
+        or
+        $manager->isWrittenByTheUser($id, $this->user->getUserInfo('id'))
+        ) {
             // admin dashboard recovery
             $this->getAdminDashboard();
             $this->setView('dashboard');
-
-            // If the $_Get['id'] variable exists, we make sure it is an integer,
-            // otherwise we return false.
-            if (isset($_GET['id'])) {
-                // Retrieving the id of the post to delete and convert to integer
-                $id = (int)$_GET['id'];
-
-                // Displays a delete confirmation message
-                $this->setParams(['deleteComment' => $id]);
-            } else {
-                $id = false;
-            }
 
             // If variables exist in the post method
             // and the variable 'Yes' existe
@@ -402,8 +408,6 @@ class AdminController extends Controller
                  * Otherwise sending a flash message in case of error
                  */
                 if (!$Validator->hasError() && $params['id'] == $id) {
-                    // Recovery of the manager returned by the router
-                    $manager = $this->getManager();
                     $result = $manager->deleteComment($params['id']);
 
                     // Adding a flash message if successful or unsuccessful
