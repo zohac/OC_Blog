@@ -41,7 +41,10 @@ class CommentController extends Controller
 
             // Adding a flash message if successful or unsuccessful
             if ($result > 0) {
-                $this->flash->addFlash('success', 'Commentaire en attente de validation. Merci '.$this->user->getUserInfo('pseudo').'!');
+                $this->flash->addFlash(
+                    'success',
+                    'Commentaire en attente de validation. Merci '.$this->user->getUserInfo('pseudo').'!'
+                );
             } else {
                 $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'enregistrement du commentaire.');
             }

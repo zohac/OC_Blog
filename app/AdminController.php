@@ -410,7 +410,10 @@ class AdminController extends Controller
                     if ($result !== false) {
                         $this->flash->addFlash('success', 'Le commentaire est bien supprimé.');
                     } else {
-                        $this->fash->addFlash('danger', 'Une erreur est survenu lors de la suppression du commentaire.');
+                        $this->fash->addFlash(
+                            'danger',
+                            'Une erreur est survenu lors de la suppression du commentaire.'
+                        );
                     }
                 } else {
                     $this->flash->addFlash('danger', 'Une erreur et survenue, veuillez Réessyer.');
