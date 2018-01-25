@@ -9,3 +9,4 @@ vendor/doctrine
 vendor/egulias
 vendor/swiftmailer
 composer.lock
+.travis.yml
