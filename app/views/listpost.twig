@@ -19,7 +19,7 @@
                                         <div class="post-date">
                                             <span>{{ colLeft.day }}</span> {{ colLeft.monthYear }}
                                         </div>
-                                        <img src="frontend/images/blog-images/blog-{{ colLeft.id }}.jpg" alt="" class="img-responsive" />
+                                        <img src="{{ app.request.server.get('SERVER_NAME') }}{{ colLeft.imgPath }}" alt="" class="img-responsive" />
                                     </figure>
                                 </a>
                                 <article>
@@ -41,7 +41,7 @@
                                         <div class="post-date">
                                             <span>{{ colRight.day }}</span> {{ colRight.monthYear }}
                                         </div>
-                                        <img src="frontend/images/blog-images/blog-{{ colRight.id }}.jpg" alt="" class="img-responsive" />
+                                        <img src="{{ app.request.server.get('SERVER_NAME') }}{{ colRight.imgPath }}" alt="" class="img-responsive" />
                                     </figure>
                                 </a>
                                 <article>

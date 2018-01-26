@@ -123,6 +123,7 @@ class AdminController extends Controller
 
             // If variables exist in the post method
             if (!empty($_POST)) {
+
                 //Retrieving the class that validates the data sent
                 $Validator = Container::getValidator();
                 $Validator->required('status', 'text');
@@ -193,10 +194,59 @@ class AdminController extends Controller
             // Recovery of the manager returned by the router
             $manager = $this->getManager();
 
+            if (isset($_GET['id'])) {
+                // Retrieving the id of the post to delete and convert to integer
+                $id = (int)$_GET['id'];
+
+                // Displays a delete confirmation message
+                $this->setParams(['deletePost' => $id]);
+            }
+
             // If variables exist in the post method
             // and the variable 'id' exist
             // else recovery of the post in DB for display of the completed form
-            if (!empty($_POST) && isset($_GET['id'])) {
+            if (!empty($_POST) && $id) {
+                if (!empty($_FILES['upload'])) {
+                    // Varibale d'erreur par soucis de lisibilité
+                    // Evite d'imbriquer trop de if/else, on pourrait aisément s'en passer
+                    $error = false;
+
+                    // On définis nos constantes
+                    $newName = 'blog-'.$id;
+                    $path = __DIR__.'/../web/upload';
+                    $legalExtensions = array("jpg", "png", "gif");
+                    $legalSize = "4000000"; // 4 MO
+                    \var_dump($_FILES['upload']);
+                    // On récupères les infos
+                    $file = $_FILES['upload'];
+                    $actualName = $file['tmp_name'];
+                    $actualSize = $file['size'];
+                    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+
+                    // On s'assure que le fichier n'est pas vide
+                    if ($actualName === 0 || $actualSize == 0) {
+                        $error = true;
+                        echo '1';
+                    }
+
+                    // On vérifie qu'un fichier portant le même nom n'est pas présent sur le serveur
+                    if (file_exists($path.'/'.$newName.'.'.$extension)) {
+                        $error = true;
+                    }
+
+                    // On effectue nos vérifications réglementaires
+                    if (!$error) {
+                        if ($actualSize < $legalSize) {
+                            if (in_array($extension, $legalExtensions)) {
+                                move_uploaded_file($actualName, $path.'/'.$newName.'.'.$extension);
+                            }
+                        }
+                    } else {
+                        // On supprime le fichier du serveur
+                        @unlink($path.'/'.$newName.'.'.$extension);
+                        $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'upload de l\'image.');
+                    }
+                }
                 //Retrieving the class that validates the data sent
                 $Validator = Container::getValidator();
                 $Validator->required('status', 'text');

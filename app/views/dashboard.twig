@@ -164,7 +164,6 @@
 						<th>Date de création</th>
 						<th>Titre du blog</th>
 						<th>Status</th>
-						<th>Modification</th>
 						<th>Supprimer</th>
 					</tr>
 				</thead>
@@ -174,7 +173,6 @@
 						<td>{{ Comment.date }}</td>
 						<td><a href="/blog/post-{{ Comment.blog_id }}.html">{{ Comment.blogTitle }}</a></td>
 						<td>{{ Comment.status }}</td>
-						<td><a href="/admin/validation-comment-{{ Comment.id }}.html" class="btn btn-primary">Modifier</a></td>
 						<td><a href="/admin/delete-comment-{{ Comment.id }}.html" class="btn btn-danger">Supprimer</a></td>
 					</tr>
 					<tr>

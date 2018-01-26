@@ -81,6 +81,11 @@ class PostController extends Controller
         $listRight = [];
 
         foreach ($listPosts as $key => $list) {
+            if (file_exists(__DIR__.'/../web/upload/blog-'.$list['id'].'.jpg')) {
+                $list = \array_merge($list, ['imgPath' => '/upload/blog-'.$list['id'].'.jpg']);
+            } else {
+                $list = \array_merge($list, ['imgPath' => '/upload/default.jpg']);
+            }
             if (($key % 2) == 0) {
                 $listRight[] = $list;
             } else {
@@ -111,6 +116,12 @@ class PostController extends Controller
         $manager = $this->getManager();
         // Get one post in DB
         $Post = $manager->getPost($id);
+
+        if (file_exists(__DIR__.'/../web/upload/blog-'.$Post['id'].'.jpg')) {
+            $Post = \array_merge($Post, ['imgPath' => '/upload/blog-'.$Post['id'].'.jpg']);
+        } else {
+            $Post = \array_merge($Post, ['imgPath' => '/upload/default.jpg']);
+        }
 
         // We check the post for comments?
         if ($numberOfComments = $manager->postHasComment($id)) {

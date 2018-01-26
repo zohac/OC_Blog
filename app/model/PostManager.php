@@ -49,6 +49,7 @@ class PostManager extends Manager
         // SQL request
         $sql = "
         SELECT
+            post.id,
             title,
             SUBSTRING(post FROM 1 FOR 160) AS chapo,
             post,
