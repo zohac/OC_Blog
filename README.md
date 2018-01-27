@@ -19,11 +19,13 @@ You can also download the OC_Blog source directly from the Git clone:
     cd OC_Blog
     composer update
 
+Setting up the database by importing the blog.sql file (in the /app/config/ folder)
+
 ## Dependency
 
 * Twig: https://twig.symfony.com/
 * swiftmailer: https://swiftmailer.symfony.com/
-	
+
 ## Issues
 
 Bug reports and feature requests can be submitted on the [Github Issue Tracker] (https://github.com/zohac/OC_Blog/issues).
