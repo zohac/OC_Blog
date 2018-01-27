@@ -18,7 +18,7 @@
                         </figure>
                     </section>
                     <div class="enter-content">
-                        <p>{{ post }}</p>
+                        <p>{{ post|raw|nl2br }}</p>
                     </div>
                 </article>
 {% include 'comment.twig' %}

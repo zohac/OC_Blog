@@ -136,7 +136,7 @@
 					</tr>
 					<tr>
 						<td class="second-row">Commentaire :</td>
-						<td colspan="4" class="second-row">{{ Comment.comment }}</td>
+						<td colspan="4" class="second-row">{{ Comment.comment|raw|nl2br }}</td>
 					</tr>
 				{% endfor %}
 				</tbody>
@@ -177,7 +177,7 @@
 					</tr>
 					<tr>
 						<td class="second-row">Commentaire :</td>
-						<td colspan="3" class="second-row">{{ Comment.comment }}</td>
+						<td colspan="3" class="second-row">{{ Comment.comment|raw|nl2br }}</td>
 					</tr>
 				{% endfor %}
 				</tbody>

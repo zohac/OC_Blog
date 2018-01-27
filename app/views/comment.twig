@@ -8,7 +8,7 @@
                     <section>
                         <h4>{{ comment.author }}</h4>
                         <div class="date-pan">{{ comment.day }} {{ comment.monthYear }}</div>
-                        {{ comment.comment }}
+                        {{ comment.comment|raw|nl2br }}
                     </section>
                 </li>
             {% endfor %}
