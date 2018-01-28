@@ -1,6 +1,10 @@
 $(document).ready(function() {
 	
-	
+	$('#returnOnTop').click(function() {
+        $('html,body').animate({
+            scrollTop: 0
+        }, 'slow');
+    });
 	
       
 	$.fn.menumaker = function(options) {
