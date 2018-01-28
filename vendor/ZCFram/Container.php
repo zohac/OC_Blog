@@ -8,11 +8,6 @@ abstract class Container
 {
 
     /**
-     * The path to the config file
-     */
-    const CONFIG_PATH = '/../../app/config/config.xml';
-
-    /**
      * Variable representing the HTTP response as a singleton
      * @var objet|null
      */
@@ -32,34 +27,12 @@ abstract class Container
 
     /**
      * Returns the parameters in the config file
-     * @param string $config The name of the tag to find
-     * @return array $var
+     * @param string $value The name of the config to find
+     * @return object
      */
-    public static function getConfig(string $config)
+    public static function getConfigurator(string $value)
     {
-        $configPath = realpath(__DIR__.self::CONFIG_PATH);
-
-        $xml = new \DOMDocument;
-        $xml->load($configPath);
-        $variable = $xml->getElementsByTagName($config);
-
-        switch ($config) {
-            case 'bdd':
-                foreach ($variable as $value) {
-                    $var = [
-                        'host' => $value->getAttribute('host'),
-                        'dbname' => $value->getAttribute('dbname'),
-                        'user' => $value->getAttribute('user'),
-                        'password' => $value->getAttribute('password')
-                    ];
-                }
-                break;
-            case 'mail':
-                break;
-        }
-
-
-        return $var;
+        return new Configurator($value);
     }
 
     /**
@@ -68,7 +41,8 @@ abstract class Container
      */
     public static function getConnexionDB()
     {
-        return new PDOManager(self::getConfig('bdd'));
+        $config = self::getConfigurator('database');
+        return new PDOManager($config->getConfig());
     }
 
     /**
@@ -86,11 +60,10 @@ abstract class Container
      */
     public static function getMailer()
     {
+        // Get configuration
+        $mail = self::getConfig('mail');
         // Create the Transport
-        $transport = (new \Swift_SmtpTransport('localhost', 25))
-         // ->setUsername('your username')
-         // ->setPassword('your password')
-        ;
+        $transport = (new \Swift_SmtpTransport($mail['host'], 25));
 
         // Create the Mailer using your created Transport
         return new \Swift_Mailer($transport);
@@ -102,8 +75,13 @@ abstract class Container
      */
     public static function getSwiftMessage()
     {
+        $privatekey = \file_get_contents(__DIR__.'/../../../dkim.private.key');
+        $signer = new \Swift_Signers_DKIMSigner($privatekey, 'jouan.ovh', 'default');
+
         $message =  new \Swift_Message();
-        $message->setSubject('Demande de contact')
+        $message->attachSigner($signer);
+        $message
+            ->setSubject('Demande de contact')
             ->setFrom(['contact@jouan.ovh' => 'jouan.ovh'])
             ->setTo(['fenrir0680@gmail.com' => 'jouan.ovh']);
         return $message;

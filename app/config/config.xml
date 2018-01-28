@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <config>
-    <bdd host="localhost" dbname="blog" user="root" password="root" />
+    <database>
+        <host>localhost</host>
+        <dbname>blog</dbname>
+        <user>root</user>
+        <password>root</password>
+    </database>
+    <mail>
+        <host>localhost</host>
+        <DKIM></DKIM>
+    </mail>
+    <blog>
+        <title>jouan.ovh</title>
+        <author>Simon</author>
+    </blog>
 </config>
