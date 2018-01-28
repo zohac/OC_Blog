@@ -20,12 +20,6 @@ abstract class Controller
     protected $manager;
 
     /**
-     * The name of the application.
-     * @var string
-     */
-    protected $app;
-
-    /**
      * An instance of the view controller
      * @var
      */
@@ -59,13 +53,15 @@ abstract class Controller
      * Set the variable name
      * @param string
      */
-    public function __construct(Router $router)
+    public function __construct(Router $router, array $params = null)
     {
         $this->router = $router;
         $this->setAction($router->getAction());
         $this->setManager($router->getModule());
-        $this->setApplication($router->getApp());
         $this->setView($this->action);
+        if ($params) {
+            $this->setParams($params);
+        }
         $this->flash = new Flash;
         $this->user = new User;
     }

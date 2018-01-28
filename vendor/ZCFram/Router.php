@@ -26,10 +26,10 @@ class Router
     protected $action;
 
     /**
-     * The name of the application
+     * The name of the middelware
      * @var string
      */
-    protected $application;
+    protected $middelware;
 
     /**
      * set of variables
@@ -75,9 +75,9 @@ class Router
      * Get the name of the application
      * @return string
      */
-    public function getApp(): string
+    public function getMiddelware(): string
     {
-        return $this->application;
+        return $this->middelware;
     }
 
     /**
@@ -98,8 +98,11 @@ class Router
                 if ($route->hasAttribute('vars')) {
                     $vars[$route->getAttribute('vars')] = $id;
                 }
+                // On regarde s'il existe un middelware
+                if ($route->hasAttribute('middelware')) {
+                    $this->middelware = $route->getAttribute('middelware');
+                }
 
-                $this->application = $route->getAttribute('app');
                 $this->module = $route->getAttribute('module');
                 $this->action = $route->getAttribute('action');
                 $this->vars = $vars;

@@ -45,9 +45,8 @@ class App
      */
     public function run()
     {
-        $uri = $this->request->requestURI();
-
-        // else, launch the application
+        // try to launch the application
+        // else get the Exception
         try {
             $controller = $this->getController();
             $controller->execute();
@@ -74,8 +73,14 @@ class App
         // We add the variables of the URL to the $ _GET array.
         $_GET = array_merge($_GET, $router->getVars());
 
-        // We instantiate the controller.
-        $controllerClass = 'app\\'.$router->getModule().'Controller';
+        if ($router->getMiddelware()) {
+            // We instantiate the controller.
+            $controllerClass = 'app\\'.$router->getMiddelware().'Controller';
+        } else {
+            // We instantiate the controller.
+            $controllerClass = 'app\\'.$router->getModule().'Controller';
+        }
+
         return new $controllerClass($router);
     }
 }

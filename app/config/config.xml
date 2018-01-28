@@ -11,7 +11,11 @@
         <DKIM></DKIM>
     </mail>
     <blog>
-        <title>jouan.ovh</title>
-        <author>Simon</author>
+        <title>jouan</title>
+        <author>Simon JOUAN</author>
+        <description>Development of my own blog system in php.</description>
+        <twitter>https://twitter.com/fenrir0680</twitter>
+        <linkedin>https://www.linkedin.com/in/simon-jouan-b355a927/</linkedin>
+        <github>https://github.com/zohac</github>
     </blog>
 </config>

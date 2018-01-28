@@ -11,9 +11,9 @@ use ZCFram\Container;
 class AdminController extends Controller
 {
 
-    public function __construct(Router $router)
+    public function __construct(Router $router, array $params)
     {
-        parent::__construct($router);
+        parent::__construct($router, $params);
 
         // Test if the user is authenticated
         if (!$this->user->isAuthenticated()) {

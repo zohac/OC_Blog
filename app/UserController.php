@@ -15,9 +15,9 @@ class UserController extends AdminController
      * Uses the parent constructor and adds the user role check
      * @param Router
      */
-    public function __construct(Router $router)
+    public function __construct(Router $router, array $params)
     {
-        parent::__construct($router);
+        parent::__construct($router, $params);
 
         // Check the role of the user.
         if ($this->user->getUserInfo('role') != 'Administrator') {
