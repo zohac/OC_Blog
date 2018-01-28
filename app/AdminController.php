@@ -123,7 +123,6 @@ class AdminController extends Controller
 
             // If variables exist in the post method
             if (!empty($_POST)) {
-
                 //Retrieving the class that validates the data sent
                 $Validator = Container::getValidator();
                 $Validator->required('status', 'text');

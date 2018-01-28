@@ -27,12 +27,13 @@ class App
     public function __construct()
     {
         $this->request = new HTTPRequest();
+        $this->reponse = Container::getHTTPResponse();
 
         $uri = $this->request->requestURI();
 
         // format the end of the url without '/'
         // and redirect to the correct url if necessary
-        if (!empty($uri) && substr($uri, 0, -1) === '/' && strlen($uri) > 1) {
+        if (!empty($uri) &&substr($uri, -1, 1) === '/' && strlen($uri) > 1) {
             $this->reponse->setStatus(301);
             $this->reponse->redirection(substr($uri, 0, -1));
         }
@@ -51,7 +52,7 @@ class App
             $controller = $this->getController();
             $controller->execute();
         } catch (\Exception $e) {
-            $controller = new \app\ErrorController($e);
+            $controller = new ErrorController($e);
             $controller->execute();
         }
     }

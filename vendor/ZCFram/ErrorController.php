@@ -1,8 +1,5 @@
 <?php
-namespace app;
-
-use \ZCFram\Controller;
-use \ZCFram\Container;
+namespace ZCFram;
 
 /**
  * Controller who manages the index and blog posts
