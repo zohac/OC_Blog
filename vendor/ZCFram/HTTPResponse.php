@@ -77,9 +77,6 @@ class HTTPResponse
         exit;
     }
 
- /*
-    // TODO : suprimmer
-    //TODO
     // Changement par rapport à la fonction setcookie() : le dernier argument est par défaut à true
     public function setCookie(
         $name,
@@ -91,5 +88,5 @@ class HTTPResponse
         $httpOnly = true
     ) {
         setcookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
-    } */
+    }
 }

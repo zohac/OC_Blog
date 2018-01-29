@@ -26,13 +26,15 @@ class App
      */
     public function __construct()
     {
+        $ticket = new SessionTicket;
+
         // We're recovering the client request.
         $this->request = new HTTPRequest();
         $uri = $this->request->requestURI();
 
         // format the end of the url without '/'
         // and redirect to the correct url if necessary
-        if (!empty($uri) &&substr($uri, -1, 1) === '/' && strlen($uri) > 1) {
+        if ($ticket->isTicketValid() && !empty($uri) && substr($uri, -1, 1) === '/' && strlen($uri) > 1) {
             $this->reponse = Container::getHTTPResponse();
             $this->reponse->setStatus(301);
             $this->reponse->redirection(substr($uri, 0, -1));
@@ -64,7 +66,7 @@ class App
      */
     public function getController()
     {
-        
+
         // We instantiate the router, and we check if the url
         // corresponds to a route in the configuration file.
         $router = new Router(realpath(__DIR__.'/../../app/config/routes.xml'));
