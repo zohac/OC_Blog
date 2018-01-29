@@ -37,8 +37,13 @@ class Router
      */
     protected $vars = [];
 
-    public function __construct($routeFromXML)
+    /**
+     * Loads the route file
+     * @var string $routeFromXML
+     */
+    public function __construct(string $routeFromXML)
     {
+        //Loads the route file in xml format
         $xml = new \DOMDocument;
         $xml->load($routeFromXML);
         $this->routes = $xml->getElementsByTagName('route');
@@ -72,7 +77,7 @@ class Router
     }
 
     /**
-     * Get the name of the application
+     * Get the name of the middelware
      * @return string
      */
     public function getMiddelware(): string
@@ -85,30 +90,36 @@ class Router
      * @param  string $uri path to test
      * @return boolean|object an exception if the route does not exist
      */
-    public function match($uri)
+    public function match(string $uri):bool
     {
+        // For each route contained in the route file...
         foreach ($this->routes as $route) {
+            // ...We test if the uri passed matches a path in the file.
             if (preg_match('`^'.$route->getAttribute('url').'$`', $uri)) {
-                $vars = [];
-
-                $parts = \explode('-', $uri);
-                $id = (int)str_replace('.html', '', \end($parts));
-
-                // On regarde si des variables sont présentes dans l'URL.
+                // We see if variables are present in the URL.
                 if ($route->hasAttribute('vars')) {
+                    // We get the variable from the url...
+                    $parts = \explode('-', $uri);
+                    // ...And we make sure that the variable is an integer
+                    $id = (int)str_replace('.html', '', \end($parts));
+
+                    // Saving the value
                     $vars[$route->getAttribute('vars')] = $id;
+                    $this->vars = $vars;
                 }
-                // On regarde s'il existe un middelware
+                // See if there's any middelware.
                 if ($route->hasAttribute('middelware')) {
                     $this->middelware = $route->getAttribute('middelware');
                 }
-
+                // Saving variables
                 $this->module = $route->getAttribute('module');
                 $this->action = $route->getAttribute('action');
-                $this->vars = $vars;
+
+                // And return true
                 return true;
             }
         }
+        // else we throw an exception
         throw new \RuntimeException('L\'URL demandée n\'existe pas.');
     }
 }

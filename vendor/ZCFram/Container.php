@@ -32,7 +32,8 @@ abstract class Container
      */
     public static function getConfigurator(string $value)
     {
-        return new Configurator($value);
+        $config = new Configurator;
+        return $config->getConfig($value);
     }
 
     /**
@@ -42,7 +43,7 @@ abstract class Container
     public static function getConnexionDB()
     {
         $config = self::getConfigurator('database');
-        return new PDOManager($config->getConfig());
+        return new PDOManager($config);
     }
 
     /**
@@ -61,7 +62,7 @@ abstract class Container
     public static function getMailer()
     {
         // Get configuration
-        $mail = self::getConfig('mail');
+        $mail = self::getConfigurator('mail');
         // Create the Transport
         $transport = (new \Swift_SmtpTransport($mail['host'], 25));
 

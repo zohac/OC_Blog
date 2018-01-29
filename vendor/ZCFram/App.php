@@ -26,14 +26,14 @@ class App
      */
     public function __construct()
     {
+        // We're recovering the client request.
         $this->request = new HTTPRequest();
-        $this->reponse = Container::getHTTPResponse();
-
         $uri = $this->request->requestURI();
 
         // format the end of the url without '/'
         // and redirect to the correct url if necessary
         if (!empty($uri) &&substr($uri, -1, 1) === '/' && strlen($uri) > 1) {
+            $this->reponse = Container::getHTTPResponse();
             $this->reponse->setStatus(301);
             $this->reponse->redirection(substr($uri, 0, -1));
         }
@@ -48,7 +48,9 @@ class App
         // try to launch the application
         // else get the Exception
         try {
+            // We retrieve the controller (request for the Router)
             $controller = $this->getController();
+            // We execute it
             $controller->execute();
         } catch (\Exception $e) {
             $controller = new ErrorController($e);
@@ -62,17 +64,17 @@ class App
      */
     public function getController()
     {
-        /**
-         * We instantiate the router, and we check if the url
-         * corresponds to a route in the configuration file.
-         */
+        
+        // We instantiate the router, and we check if the url
+        // corresponds to a route in the configuration file.
         $router = new Router(realpath(__DIR__.'/../../app/config/routes.xml'));
-
         $router->match($this->request->requestURI());
 
-        // We add the variables of the URL to the $ _GET array.
+        // We add the variables of the URL to the $_GET array.
         $_GET = array_merge($_GET, $router->getVars());
 
+        // If there's a middelware, we go through it,
+        // otherwise we get the module.
         if ($router->getMiddelware()) {
             // We instantiate the controller.
             $controllerClass = 'app\\'.$router->getMiddelware().'Controller';
@@ -80,7 +82,7 @@ class App
             // We instantiate the controller.
             $controllerClass = 'app\\'.$router->getModule().'Controller';
         }
-
+        // We return an instance of the desired controller
         return new $controllerClass($router);
     }
 }

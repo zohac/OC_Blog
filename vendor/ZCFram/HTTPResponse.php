@@ -47,6 +47,7 @@ class HTTPResponse
      */
     public function setStatus(int $statuts)
     {
+        // Check that the status code is an authorized code.
         if (array_key_exists($statuts, $this->statusCode)) {
             $this->status = $statuts;
         }
@@ -58,9 +59,7 @@ class HTTPResponse
      */
     public function redirection(string $uri)
     {
-        //if (!filter_var($uri, FILTER_VALIDATE_URL)) {
-        //    throw new \InvalidArgumentException(500);
-        //}
+        //Create HTTP header and redirect.
         $this->addHeader('HTTP/1.1 '.$this->status.' '.$this->statusCode[$this->status]);
         $this->addHeader('Location: '.$uri);
         exit;
@@ -78,6 +77,9 @@ class HTTPResponse
         exit;
     }
 
+ /*
+    // TODO : suprimmer
+    //TODO
     // Changement par rapport à la fonction setcookie() : le dernier argument est par défaut à true
     public function setCookie(
         $name,
@@ -89,5 +91,5 @@ class HTTPResponse
         $httpOnly = true
     ) {
         setcookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
-    }
+    } */
 }

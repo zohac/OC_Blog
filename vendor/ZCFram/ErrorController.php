@@ -33,12 +33,14 @@ class ErrorController extends Controller
      */
     public $errorCode;
 
+    /**
+     * @var Exception $e
+     */
     public function __construct(\Exception $e)
     {
+        // We recover the execution
         $this->e = $e;
-        $this->setAction('error');
-        $this->setManager('error');
-        $this->setApplication('frontend');
+        // We define the view to call
         $this->setView('error');
     }
 
@@ -48,9 +50,12 @@ class ErrorController extends Controller
      */
     public function executeError()
     {
+        // The error code returned by the exception type is retrieved.
         $this->getStatusCode();
-
+        
+        // If the error code is set correctly
         if (\array_key_exists($this->errorCode, $this->statusCode)) {
+            // We define the parameters to send to the view
             $this->setParams([
                 'error' => $this->errorCode,
                 'status' => $this->statusCode[$this->errorCode],
@@ -58,8 +63,10 @@ class ErrorController extends Controller
             ]);
         }
 
+        // We define the status code to return to the user's browser.
         Container::getHTTPResponse()->setStatus($this->errorCode);
 
+        // View recovery and display
         $this->getView();
         $this->send();
     }
@@ -70,6 +77,7 @@ class ErrorController extends Controller
      */
     private function getStatusCode()
     {
+        //The error code is defined according to the type of exception.
         switch (get_class($this->e)) {
             case 'RuntimeException':
                 $this->errorCode = 404;

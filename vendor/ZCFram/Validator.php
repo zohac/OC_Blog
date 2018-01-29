@@ -26,9 +26,11 @@ class Validator
      */
     public function required(string $value, string $type)
     {
+        // If the required field is empty, an exception is raised.
         if (empty($_POST[$value]) === true) {
             $this->setError([\ucfirst($value) => 'Le champ ' . $value . ' est requis']);
         } else {
+            // Otherwise we check the value
             $this->check($value, $type);
         }
     }
@@ -40,12 +42,14 @@ class Validator
      */
     public function check(string $value, string $type)
     {
+        // The method name is formatted.
         $method = 'check'.ucfirst($type);
-
+        
+        // If the method is not executable, an exception is raised.
         if (!is_callable([$this, $method])) {
             throw new \BadFunctionCallException('La méthode utilisée n\'existe pas.');
         }
-
+        // The method is executed
         $this->$method($value);
     }
 
@@ -55,6 +59,8 @@ class Validator
      */
     protected function checkEmail(string $email)
     {
+        // We record the field if it is a valid email,
+        // otherwise we record an error.
         if (filter_var($_POST[$email], FILTER_VALIDATE_EMAIL) !== false) {
             $this->setField([$email => $_POST[$email]]);
         } else {
@@ -68,6 +74,7 @@ class Validator
      */
     protected function checkText(string $text)
     {
+        // We clean up the field, and we record it.
         $field = filter_input(INPUT_POST, $text, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $this->setField([$text => $field]);
     }
@@ -78,6 +85,8 @@ class Validator
      */
     protected function checkPassword(string $password)
     {
+        // We're just checking the length of the field.
+        // We record it, otherwise we record an error.
         if (strlen($_POST[$password]) < 6) {
             $this->setError(['Password' => 'Mot de passe trop court!']);
         } else {
@@ -91,6 +100,8 @@ class Validator
      */
     protected function checkInteger(string $value)
     {
+        // We make sure that the field is an integer.
+        // And we record it
         $_POST[$value] = (int)$_POST[$value];
         $this->setField([$value => $_POST[$value]]);
     }
@@ -101,10 +112,11 @@ class Validator
      */
     protected function setField(array $field)
     {
+        // We verify that the variable is a table, otherwise we raise an exception.
         if (!is_array($field)) {
             throw new \InvalidArgumentException('Les paramètres ne sont pas au bon format.');
         }
-
+        // The new field is saved in the table containing all validated fields.
         $this->field = array_merge($this->field, $field);
     }
 
@@ -114,10 +126,11 @@ class Validator
      */
     protected function setError(array $error)
     {
+        // We verify that the variable is a table, otherwise we raise an exception.
         if (!is_array($error)) {
             throw new \InvalidArgumentException('Les paramètres ne sont pas au bon format.');
         }
-
+        // The new field is stored in the table containing all incorrect fields.
         $this->error = array_merge($this->error, $error);
     }
 
@@ -127,6 +140,7 @@ class Validator
      */
     public function hasError()
     {
+        // If an error has been recorded, we return true, else false.
         if (!empty($this->error)) {
             return true;
         }
@@ -139,6 +153,7 @@ class Validator
      */
     public function getParams()
     {
+        // Return the table containing all validated fields.
         return $this->field;
     }
 
@@ -148,6 +163,7 @@ class Validator
      */
     public function getError()
     {
+        // Return the table containing all incorrect fields.
         return $this->error;
     }
 }

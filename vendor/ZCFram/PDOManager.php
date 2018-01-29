@@ -51,13 +51,14 @@ class PDOManager
      */
     public function __construct(array $config)
     {
+        // Recording DB connection data
         $this->host = $config['host'];
         $this->dbname = $config['dbname'];
         $this->user = $config['user'];
         $this->password = $config['password'];
 
+        // DB connection request
         $this->getConnexion();
-        //return $this->DB;
     }
 
     /**
@@ -75,7 +76,9 @@ class PDOManager
      */
     private function getConnexion()
     {
+        // If the variable is strictly null
         if ($this->DB === null) {
+            // Create a new connection to DB using PDO
             $this->DB = new PDO(
                 'mysql:host='.$this->host.';dbname='.$this->dbname.';charset=utf8',
                 $this->user,
