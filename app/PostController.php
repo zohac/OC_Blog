@@ -16,47 +16,59 @@ class PostController extends Controller
      */
     public function executeIndex()
     {
+        //Retrieving the class that validates the token
+        $token = Container::getToken();
         // If variables exist in the post method
         if (!empty($_POST)) {
-            //Retrieving the class that validates the data sent
-            $Validator = Container::getValidator();
-            $Validator->required('name', 'text');
-            $Validator->required('email', 'email');
-            $Validator->required('comments', 'text');
+            // We're checking the validity of the token.
+            if ($token->isTokenValid($_POST['token'])) {
+                //Retrieving the class that validates the data sent
+                $Validator = Container::getValidator();
+                $Validator->required('name', 'text');
+                $Validator->required('email', 'email');
+                $Validator->required('comments', 'text');
 
-            /*
-             * If the validator does not return an error,
-             * else adding error flash message
-             */
-            if (!$Validator->hasError()) {
-                // Recovery of classes managing swiftMailer
-                $mailer = Container::getMailer();
-                $message = Container::getSwiftMessage();
+                /*
+                 * If the validator does not return an error,
+                 * else adding error flash message
+                 */
+                if (!$Validator->hasError()) {
+                    // Recovery of classes managing swiftMailer
+                    $mailer = Container::getMailer();
+                    $message = Container::getSwiftMessage();
 
-                // Recovery of validated data
-                $params = $Validator->getParams();
+                    // Recovery of validated data
+                    $params = $Validator->getParams();
 
-                // Create the message
-                $message->setBody('
-                    De : '.$params['name'].'
-                    Email : '.$params['email'].'
-                    Content : '.$params['comments']);
+                    // Create the message
+                    $message->setBody('
+                        De : '.$params['name'].'
+                        Email : '.$params['email'].'
+                        Content : '.$params['comments']);
 
-                // Send the message
-                $result = $mailer->send($message);
+                    // Send the message
+                    $result = $mailer->send($message);
 
-                // Adding a flash message if successful or unsuccessful
-                if ($result > 0) {
-                    $this->flash->addFlash('success', 'E-mail envoyé avec succès. Merci '.$params['name'].'!');
+                    // Adding a flash message if successful or unsuccessful
+                    if ($result > 0) {
+                        $this->flash->addFlash('success', 'E-mail envoyé avec succès. Merci '.$params['name'].'!');
+                    } else {
+                        $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'envoi de mail.');
+                    }
                 } else {
-                    $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'envoi de mail.');
+                    foreach ($Validator->getError() as $key => $value) {
+                        $this->flash->addFlash('danger', $value);
+                    }
                 }
             } else {
-                foreach ($Validator->getError() as $key => $value) {
-                    $this->flash->addFlash('danger', $value);
-                }
+                $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'envoi de mail.');
             }
         }
+        //Retrieving the class that validates the token
+        $token = $token->getToken();
+        // Adding token to the parameters to return by the view
+        $this->setParams(['token' => $token]);
+
         // Adding flash message and parameters to return by the view
         $this->setParams($this->flash->getFlash());
 
@@ -154,6 +166,11 @@ class PostController extends Controller
                 'pseudo' => \ucfirst($this->user->getUserInfo('pseudo'))
             ]);
         }
+        //Retrieving the class that validates the token
+        $token = Container::getToken()->getToken();
+        // Adding token to the parameters to return by the view
+        $this->setParams(['token' => $token]);
+
         // Adding flash message and parameters to return by the view
         $this->setParams($this->flash->getFlash());
         $this->setParams($Post);

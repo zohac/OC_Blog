@@ -103,14 +103,25 @@ class UserController extends AdminController
                 $this->flash->addFlash('danger', 'Une erreur et survenue, Veuillez Réessyer.');
             }
         }
+        //Retrieving the class that validates the token
+        $token = Container::getToken();
         // If variables exist in the post method
         // and the variable 'No' OR '$result' exist
         if (isset($_POST['No']) or isset($result)) {
+            \var_dump($_POST);
+            if (!$token->isTokenValid($_POST['token'])) {
+                $this->flash->addFlash('danger', 'Une erreur et survenue, Veuillez Réessyer.');
+            }
             // Redirection on the user page
             $reponse = Container::getHTTPResponse();
             $reponse->setStatus(301);
             $reponse->redirection('/admin/user.html');
         }
+        //Retrieving the class that validates the token
+        $token = $token->getToken();
+        // Adding token to the parameters to return by the view
+        $this->setParams(['token' => $token]);
+
         // Adding flash message and parameters to return by the view
         $this->setParams($this->flash->getFlash());
 

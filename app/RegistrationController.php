@@ -16,61 +16,74 @@ class RegistrationController extends Controller
      */
     public function executeRegistration()
     {
+        //Retrieving the class that validates the token
+        $token = Container::getToken();
+
         // If variables exist in the post method
         if (!empty($_POST)) {
-            if ($this->samePassword($_POST['password'], $_POST['password2'])) {
-                //Retrieving the class that validates the data sent
-                $Validator = Container::getValidator();
-                $Validator->required('pseudo', 'text');
-                $Validator->required('email', 'email');
-                $Validator->required('password', 'password');
-                $Validator->required('password2', 'password');
+            // We're checking the validity of the token.
+            if ($token->isTokenValid($_POST['token'])) {
+                if ($this->samePassword($_POST['password'], $_POST['password2'])) {
+                    //Retrieving the class that validates the data sent
+                    $Validator = Container::getValidator();
+                    $Validator->required('pseudo', 'text');
+                    $Validator->required('email', 'email');
+                    $Validator->required('password', 'password');
+                    $Validator->required('password2', 'password');
 
-                /*
-                 * If the validator does not return an error,
-                 * else adding error flash message
-                 */
-                if (!$Validator->hasError()) {
-                    // Recovering validator data
-                    $params = $Validator->getParams();
+                    /*
+                     * If the validator does not return an error,
+                     * else adding error flash message
+                     */
+                    if (!$Validator->hasError()) {
+                        // Recovering validator data
+                        $params = $Validator->getParams();
 
-                    // password hashing
-                    $encryptedPassword = Container::getEncryption()->hash($params);
+                        // password hashing
+                        $encryptedPassword = Container::getEncryption()->hash($params);
 
-                    // We check that the user does not exist, or that the email address is not banned
-                    if (!$this->userExist($params['email']) or !$this->userBanned($params['email'])) {
-                        // Recovery of the manager returned by the router
-                        $manager = $this->getManager();
+                        // We check that the user does not exist, or that the email address is not banned
+                        if (!$this->userExist($params['email']) or !$this->userBanned($params['email'])) {
+                            // Recovery of the manager returned by the router
+                            $manager = $this->getManager();
 
-                        // User registration in DB
-                        $result = $manager->Registration($params['pseudo'], $params['email'], $encryptedPassword);
+                            // User registration in DB
+                            $result = $manager->Registration($params['pseudo'], $params['email'], $encryptedPassword);
 
-                        // If the record failed, sends a flash message,
-                        // otherwise redirection
-                        if ($result === false) {
-                            $this->flash->addFlash(
-                                'danger',
-                                'Une erreur est survenu lors de votre inscription, veuillez réessayer!'
-                            );
-                        } else {
-                            $this->flash->addFlash(
-                                'success',
-                                'Vous êtes bien enregistré '. $params['pseudo'] .'! Veuillez Vous connecter.'
-                            );
-                            //Redirection to the login page
-                            $reponse = Container::getHTTPResponse();
-                            $reponse->setStatus(301);
-                            $reponse->redirection('/login');
+                            // If the record failed, sends a flash message,
+                            // otherwise redirection
+                            if ($result === false) {
+                                $this->flash->addFlash(
+                                    'danger',
+                                    'Une erreur est survenu lors de votre inscription, veuillez réessayer!'
+                                );
+                            } else {
+                                $this->flash->addFlash(
+                                    'success',
+                                    'Vous êtes bien enregistré '. $params['pseudo'] .'! Veuillez Vous connecter.'
+                                );
+                                //Redirection to the login page
+                                $reponse = Container::getHTTPResponse();
+                                $reponse->setStatus(301);
+                                $reponse->redirection('/login');
+                            }
+                        }
+                    } else {
+                        // adding error flash message
+                        foreach ($Validator->getError() as $key => $value) {
+                            $this->flash->addFlash('danger', $value);
                         }
                     }
-                } else {
-                    // adding error flash message
-                    foreach ($Validator->getError() as $key => $value) {
-                        $this->flash->addFlash('danger', $value);
-                    }
                 }
+            } else {
+                $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'envoi de mail.');
             }
         }
+        //Retrieving the class that validates the token
+        $token = $token->getToken();
+        // Adding token to the parameters to return by the view
+        $this->setParams(['token' => $token]);
+        
         // Flash message retrieval
         $this->setParams($this->flash->getFlash());
 

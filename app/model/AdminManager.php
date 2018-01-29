@@ -226,4 +226,15 @@ class AdminManager extends Manager
         $answer = $requete->fetch();
         return $answer['isWritten'];
     }
+
+    public function getTheNewPostID()
+    {
+        $sql = "SELECT id FROM `post` ORDER BY id DESC LIMIT 1";
+
+        $requete = $this->DB->query($sql);
+        $requete->execute();
+        $id = $requete->fetch();
+        $id = 1 + (int)$id['id'];
+        return $id;
+    }
 }

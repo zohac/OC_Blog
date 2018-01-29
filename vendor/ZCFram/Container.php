@@ -96,4 +96,13 @@ abstract class Container
     {
         return new Encryption();
     }
+
+    /**
+     * Returns an instance of the Token Controller
+     * @return object Token
+     */
+    public static function getToken()
+    {
+        return new Token;
+    }
 }
