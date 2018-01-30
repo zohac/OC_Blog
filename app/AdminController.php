@@ -411,7 +411,10 @@ class AdminController extends Controller
                         if ($result !== false) {
                             $this->flash->addFlash('success', 'Le commentaire est bien validé.');
                         } else {
-                            $this->fash->addFlash('danger', 'Une erreur est survenu lors de la validation du commentaire.');
+                            $this->fash->addFlash(
+                                'danger',
+                                'Une erreur est survenu lors de la validation du commentaire.'
+                            );
                         }
                     } else {
                         $this->flash->addFlash('danger', 'Une erreur et survenue, veuillez réessayer.');
@@ -515,7 +518,7 @@ class AdminController extends Controller
             $token = $token->getToken();
             // Adding token to the parameters to return by the view
             $this->setParams(['token' => $token]);
-            
+
             // View recovery and display
             $this->getView();
             $this->send();

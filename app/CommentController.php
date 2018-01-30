@@ -19,7 +19,6 @@ class CommentController extends Controller
         //Retrieving the class that validates the token
         $token = Container::getToken();
         if ($token->isTokenValid($_POST['token'])) {
-
             // we make sure that the variable $_GET['id'] is an integer
             $id = (int)$_GET['id'];
 
@@ -49,7 +48,10 @@ class CommentController extends Controller
                         'Commentaire en attente de validation. Merci '.$this->user->getUserInfo('pseudo').'!'
                     );
                 } else {
-                    $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'enregistrement du commentaire.');
+                    $this->flash->addFlash(
+                        'danger',
+                        'Une erreur est survenu lors de l\'enregistrement du commentaire.'
+                    );
                 }
             } else {
                 foreach ($Validator->getError() as $key => $value) {
