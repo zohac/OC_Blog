@@ -42,6 +42,8 @@ class ErrorController extends Controller
         $this->e = $e;
         // We define the view to call
         $this->setView('error');
+        // We define the action to execute
+        $this->setAction('error');
     }
 
     /**
@@ -52,7 +54,7 @@ class ErrorController extends Controller
     {
         // The error code returned by the exception type is retrieved.
         $this->getStatusCode();
-        
+
         // If the error code is set correctly
         if (\array_key_exists($this->errorCode, $this->statusCode)) {
             // We define the parameters to send to the view
