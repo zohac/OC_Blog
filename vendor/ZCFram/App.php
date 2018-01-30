@@ -26,15 +26,25 @@ class App
      */
     public function __construct()
     {
-        $ticket = new SessionTicket;
-
         // We're recovering the client request.
         $this->request = new HTTPRequest();
         $uri = $this->request->requestURI();
 
-        // format the end of the url without '/'
+        // Ticket creation to prevent session theft
+        $ticket = new SessionTicket;
+
+        // Check if the ticket is valid
+
+        if (!$ticket->isTicketValid()) {
+            // Deleting User Authentication
+            $user = Container::getUser();
+            $user->setAuthenticated(false);
+        }
+
+        // and format the end of the url without '/'
         // and redirect to the correct url if necessary
-        if ($ticket->isTicketValid() && !empty($uri) && substr($uri, -1, 1) === '/' && strlen($uri) > 1) {
+        if (!empty($uri) && substr($uri, -1, 1) === '/' && strlen($uri) > 1) {
+            // Redirection
             $this->reponse = Container::getHTTPResponse();
             $this->reponse->setStatus(301);
             $this->reponse->redirection(substr($uri, 0, -1));
@@ -55,7 +65,9 @@ class App
             // We execute it
             $controller->execute();
         } catch (\Exception $e) {
+            // An instance of the error controller is created
             $controller = new ErrorController($e);
+            // We execute it
             $controller->execute();
         }
     }

@@ -14,7 +14,7 @@ class Token
      */
     protected $token;
 
-    function __construct()
+    public function __construct()
     {
         // Test if a session is started.
         if (session_status() == PHP_SESSION_NONE) {

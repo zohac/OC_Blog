@@ -55,6 +55,7 @@ abstract class Controller
      */
     public function __construct(Router $router, array $params = null)
     {
+        
         $this->router = $router;
         $this->setAction($router->getAction());
         $this->setManager($router->getModule());

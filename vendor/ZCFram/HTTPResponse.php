@@ -77,15 +77,25 @@ class HTTPResponse
         exit;
     }
 
-    // Changement par rapport à la fonction setcookie() : le dernier argument est par défaut à true
+    /**
+     * Change compared to the setcookie () function: the last argument is set to true by default.
+     * @param  string $name     The name of the cookie
+     * @param  string $value    The value of the cookie
+     * @param  int $expire      The lifetime of the cookie in s
+     * @param  string $path     The path on the server in which the cookie will be available on
+     * @param  string $domain   The (sub)domain that the cookie is available to
+     * @param  bool $value      Indicates that the cookie should only be transmitted over a secure HTTPS
+     *                          connection from the client
+     * @param  bool $value      When TRUE the cookie will be made accessible only through the HTTP protocol.
+     */
     public function setCookie(
-        $name,
-        $value = '',
-        $expire = 0,
-        $path = null,
-        $domain = null,
-        $secure = false,
-        $httpOnly = true
+        string $name,
+        string $value = '',
+        int $expire = 0,
+        string $path = null,
+        string $domain = null,
+        bool $secure = false,
+        bool $httpOnly = true
     ) {
         setcookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
     }
