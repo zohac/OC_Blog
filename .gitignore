@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 avana
 vendor/bin
 vendor/composer
@@ -9,3 +10,16 @@ vendor/egulias
 vendor/swiftmailer
 composer.lock
 web/upload/*.jpg
+=======
+avana
+vendor/bin
+vendor/composer
+vendor/squizlabs
+vendor/twig
+vendor/symfony
+vendor/doctrine
+vendor/egulias
+vendor/swiftmailer
+composer.lock
+web/upload/*.jpg
+>>>>>>> develop

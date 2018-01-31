@@ -32,13 +32,40 @@ abstract class Controller
     protected $params = [];
 
     /**
+     * Represents a user.
+     * @var object user
+     */
+    protected $user;
+
+    /**
+     * Represents flash messages
+     * @var object flash
+     */
+    protected $flash;
+
+    /**
+     * An instance of the Router
+     * @var objet
+     */
+    protected $router;
+
+    /**
      * Set the variable name
      * @param string
      */
-    public function __construct($action, $manager)
+    public function __construct(Router $router, array $params = null)
     {
-        $this->setAction($action);
-        $this->setManager($manager);
+        
+        $this->router = $router;
+        $this->setAction($router->getAction());
+        $this->setManager($router->getModule());
+        $this->setView($this->action);
+        if ($params) {
+            $this->setParams($params);
+        }
+        
+        $this->flash = new Flash;
+        $this->user = new User;
     }
 
     /**
@@ -46,68 +73,98 @@ abstract class Controller
      */
     public function execute()
     {
+        // Formatting the method name
         $method = 'execute'.ucfirst($this->action);
 
+        // We're checking to see if the method exists.
+        // We throw an exception in the event of an error
         if (!is_callable([$this, $method])) {
             throw new \BadFunctionCallException('La méthode utilisée n\'existe pas.');
         }
-
+        // We execute the method
         $this->$method();
     }
 
     /**
-     *
-     * @param string
+     * Set the name of the manager
+     * @param string $manager
      */
-    protected function setManager($manager)
+    protected function setManager(string $manager)
     {
+        // We check if the weak variable is a non-null character string
+        // We throw an exception in the event of an error
         if (!is_string($manager) || empty($manager)) {
-            throw new \InvalidArgumentException('L\'action demandée n\'existe pas.');
+            throw new \InvalidArgumentException('Le manager demandé n\'existe pas.');
         }
-
+        // we store the variable
         $this->manager = $manager;
     }
 
     /**
-     *
+     * Set the name of the action to do
      * @param string
      */
-    protected function setAction($action)
+    protected function setAction(string $action)
     {
+        // We check if the weak variable is a non-null character string
+        // We throw an exception in the event of an error
         if (!is_string($action) || empty($action)) {
-            throw new \InvalidArgumentException('Le manager demandé n\'existe pas.');
+            throw new \InvalidArgumentException('L\'action demandée n\'existe pas.');
         }
-
+        // we store the variable
         $this->action = $action;
     }
 
     /**
-     * [setParams description]
-     * @param array $params [description]
+     * Set the name of the action to do
+     * @param string
+     */
+    protected function setApplication(string $app)
+    {
+        // We check if the weak variable is a non-null character string
+        // We throw an exception in the event of an error
+        if (!is_string($app) || empty($app)) {
+            throw new \InvalidArgumentException('L\'application demandée n\'existe pas.');
+        }
+        // we store the variable
+        $this->app = $app;
+    }
+
+    /**
+     * Set the parameters for the views
+     * @param array $params
      */
     protected function setParams(array $params)
     {
+        // We check if the variable is an array
+        // We throw an exception in the event of an error
         if (!is_array($params)) {
             throw new \InvalidArgumentException('Les paramètres ne sont pas au bon format.');
         }
-
-        $this->params = $params;
+        // we store the variable
+        $this->params = array_merge($this->params, $params);
     }
 
-    protected function setView()
+    /**
+     * Set the name of the view for the renderer
+     * @param string $view
+     */
+    protected function setView(string $view = null)
     {
-        $view = \strtolower($this->action).'.twig';
-        $this->view = $view;
+        // Formatting the view name
+        $this->view = \strtolower($view).'.twig';
     }
 
     /**
      * Generate the requested view with twig.
-     * @return
+     * @return object Return of an instance of a manager
      */
     protected function getManager()
     {
+        // Definition of the manager path to be retrieved
         $managerClass = '\app\\model\\'.$this->manager.'Manager';
-        return new $managerClass(Container::getConnexionDB());
+        // Return of an instance of a manager
+        return new $managerClass();
     }
 
     /**
@@ -116,9 +173,20 @@ abstract class Controller
      */
     public function getView()
     {
+        // Instancies twig's environment
         $loader = new \Twig_Loader_Filesystem(realpath(__DIR__.'/../../app/views'));
         $this->twig = new \Twig_Environment($loader, []);
 
-        return $this->twig->render($this->view, $this->params);
+        // Recovers the view generated by twig
+        $this->view =  $this->twig->render($this->view, $this->params);
+    }
+
+    /**
+     * Retrieve the response and send it to the client browser
+     */
+    public function send()
+    {
+        $response = Container::getHTTPResponse();
+        $response->send($this->view);
     }
 }

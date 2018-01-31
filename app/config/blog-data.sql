@@ -2,9 +2,11 @@
 -- Table `blog`.`user`
 -- -----------------------------------------------------
 INSERT INTO `blog`.`user`
-    (pseudo, email, mdp, role)
+    (pseudo, email, password, role, status)
 VALUES
-    ('zohac', 'fenrir0680@gmail.com', '123456', 'Administrator')
+    ('simon', 'fenrir0680@gmail.com', '4c53c523128b86ae4256ace325f71273085aae88f4a4da2fae181c9c419612bc', 'Administrator', 'authorized'),
+    ('test', 'test@test.com', '4c53c523128b86ae4256ace325f71273085aae88f4a4da2fae181c9c419612bc', 'Subscriber', 'banned'),
+    ('test2', 'test2@test.com', '4c53c523128b86ae4256ace325f71273085aae88f4a4da2fae181c9c419612bc', 'Subscriber', 'banned')
 ;
 
 -- -----------------------------------------------------

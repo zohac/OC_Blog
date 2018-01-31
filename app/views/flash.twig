@@ -1,0 +1,9 @@
+{% if flash %}
+    {% for key, messages in flash %}
+    {% for message in messages %}
+    <div class="alert alert-{{ key }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endfor %}
+{% endif %}

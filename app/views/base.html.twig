@@ -1,0 +1,48 @@
+﻿<!DOCTYPE HTML>
+ <html>
+    <head>
+    	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta charset="utf-8">
+
+        <!-- Description, Keywords and Author -->
+        <meta name="description" content="{{ descriptionBlog }}">
+        <meta name="author" content="{{ authorBlog }}">
+
+        <title>:: &lsaquo;{{ titleBlog }} /&rsaquo; ::</title>
+
+        <link rel="shortcut icon" href="{{ app.request.server.get('SERVER_NAME') }}/frontend/images/favicon.ico" type="image/x-icon">
+
+        <!-- style -->
+        <link href="{{ app.request.server.get("SERVER_NAME") }}/frontend/css/style.css" rel="stylesheet" type="text/css">
+        <link href="{{ app.request.server.get('SERVER_NAME') }}/frontend/css/my-style.css" rel="stylesheet" type="text/css">
+
+        <!-- bootstrap -->
+        <link rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+			crossorigin="anonymous">
+
+        <!-- responsive -->
+        <link href="{{ app.request.server.get('SERVER_NAME') }}/frontend/css/responsive.css" rel="stylesheet" type="text/css">
+
+        <!-- font-awesome -->
+		<link rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+			integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+			crossorigin="anonymous">
+
+        <link href="{{ app.request.server.get('SERVER_NAME') }}/frontend/css/effects/normalize.css" rel="stylesheet" type="text/css">
+        <link href="{{ app.request.server.get('SERVER_NAME') }}/frontend/css/effects/component.css" rel="stylesheet" type="text/css">
+
+	</head>
+
+    <body>
+
+{% include 'header.twig' %}
+
+{% block content %}{% endblock %}
+
+{% include 'footer.twig' %}
+
+    </body>
+</html>

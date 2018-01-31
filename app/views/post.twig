@@ -1,4 +1,4 @@
-{% extends 'layout.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block content %}
         <!-- main -->
@@ -7,21 +7,25 @@
                 <article class="post-details" id="post-details">
                     <header role="bog-header" class="bog-header text-center">
                         <h3><span>{{ title }}</span> par {{ author }}</h3>
-                        <h2>{{ chapo }}...</h2>
+                        <h2>{{ chapo|raw|nl2br }}...</h2>
                     </header>
                     <section class="blog-content">
                         <figure>
                             <div class="post-date">
                                 <span>{{ day }}</span> {{ monthYear }}
                             </div>
-                            <img src="{{ app.request.server.get('SERVER_NAME') }}/frontend/images/blog-images/blog-details-image.jpg" alt="" class="img-responsive"/>
+                            <img src="{{ app.request.server.get('SERVER_NAME') }}{{ imgPath }}" alt="" class="img-responsive"/>
                         </figure>
                     </section>
                     <div class="enter-content">
-                        <p>{{ post }}</p>
+                        <p>{{ post|raw|nl2br }}</p>
                     </div>
                 </article>
+{% include 'comment.twig' %}
             </div>
         </main>
         <!-- main -->
+
+
+
 {% endblock %}

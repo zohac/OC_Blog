@@ -1,0 +1,193 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+<main role="main-inner-wrapper" class="container">
+	<div class="row">
+		<div class="container-fluid">
+			<!-- Breadcrumbs-->
+			<div class="text-right">Bonjour {{ userInfo.pseudo }} | <a href="/logout">Déconnexion</a></div>
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="/admin">Dashboard</a>
+				</li>
+				<li class="breadcrumb-item active">Mon tableau de bord.</li>
+			</ol>
+		</div>
+		<!-- /.container-fluid-->
+	</div>
+{% if userRole == "Administrator" %}
+	<div class="row">
+		<div class="container-fluid">
+			<!-- Icon Cards-->
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 col-md-3">
+					<div class="card text-white bg-primary">
+						<div class="card-body">
+							<div>{{ numberOfPosts }} Articles.</div>
+							<a href="admin/post.html" class="btn btn-default">Ajouter un nouvel article.</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-3">
+					<div class="card text-white bg-primary">
+						<div class="card-body">
+							<div>{{ numberOfUsers }} Utilisateurs.</div>
+							<a href="admin/user.html" class="btn btn-default">Détails</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-3">
+					<div class="card text-white bg-primary">
+						<div class="card-body">
+							<div>{{ numberOfComments }} Commentaires.</div>
+							<a href="admin#Comments" class="btn btn-default">Détails</a>
+						</div>
+					</div>
+				</div>
+			 </div>
+		</div>
+		<!-- /.container-fluid-->
+	</div>
+
+	<div class="flash">
+		{% include 'flash.twig' %}
+	</div>
+
+	<h1>Les articles:</h1>
+	{% if deletePost %}
+	<div class="alert alert-danger">
+		<strong>Danger!</strong> Voulez-vous vraiment supprimer ce post ?
+		<form method="post" action="/admin/delete-post-{{ deletePost }}.html" name="deletePost" id="deletePost">
+			<input name="id" type="hidden" value="{{ deletePost }}">
+			<input type="hidden" name="token" value="{{ token }}">
+			<input class="btn btn-danger" name="Yes" type="submit" value="Oui">
+			<input class="btn btn-default" name="No" type="submit" value="Non">
+		</form>
+	</div>
+	{% endif %}
+	<div id="Posts" class="row">
+		<section class="col-xs-12">
+			<table class="table table-hover">
+				<thead class="thead-inverse">
+					<tr>
+						<th>Titre</th>
+						<th>Dernière modification</th>
+						<th>Editer</th>
+						<th>Supprimer</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for Post in listPosts %}
+					<tr>
+						<th scope="row">{{ Post.title }}</th>
+						<td>{{ Post.date }}</td>
+						<td><a href="/admin/post-{{ Post.id }}.html" class="btn btn-primary">Editer</a></td>
+						<td><a href="/admin/delete-post-{{ Post.id }}.html" class="btn btn-danger">Supprimer</a></td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</section>
+		<div class="clearfix"></div>
+	</div>
+	<div class="space"></div>
+
+	<h1>Commentaires à approuver:</h1>
+	{% if validComment %}
+	<div id="validComment" class="alert alert-warning">
+		<strong>Attention!</strong> Voulez-vous vraiment valider ce commentaire ?
+		<form method="post" action="/admin/validation-comment-{{ validComment }}.html" name="validComment" id="validComment">
+			<input name="id" type="hidden" value="{{ validComment }}">
+			<input type="hidden" name="token" value="{{ token }}">
+			<input class="btn btn-warning" name="Yes" type="submit" value="Oui">
+			<input class="btn btn-default" name="No" type="submit" value="Non">
+		</form>
+	</div>
+	{% endif %}
+	{% if deleteComment %}
+	<div id="deleteComment" class="alert alert-danger">
+		<strong>Danger!</strong> Voulez-vous vraiment supprimer ce commentaire ?
+		<form method="post" action="/admin/delete-comment-{{ deleteComment }}.html" name="deleteComment" id="deleteComment">
+			<input name="id" type="hidden" value="{{ deleteComment }}">
+			<input type="hidden" name="token" value="{{ token }}">
+			<input class="btn btn-danger" name="Yes" type="submit" value="Oui">
+			<input class="btn btn-default" name="No" type="submit" value="Non">
+		</form>
+	</div>
+	{% endif %}
+	<div id="Comments" class="row">
+		<section class="col-xs-12">
+			<table class="table table-hover">
+				<thead class="thead-inverse">
+					<tr>
+						<th>Date de création</th>
+						<th>Auteur</th>
+						<th>Titre du blog</th>
+						<th>Validation</th>
+						<th>Supprimer</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for Comment in listOfComment %}
+					<tr>
+						<td>{{ Comment.date }}</td>
+						<td>{{ Comment.author }}</td>
+						<td><a href="/admin/post-{{ Comment.blog-id }}.html">{{ Comment.blogTitle }}</a></td>
+						<td><a href="/admin/validation-comment-{{ Comment.id }}.html#validComment" class="btn btn-primary">Valider</a></td>
+						<td><a href="/admin/delete-comment-{{ Comment.id }}.html#deleteComment" class="btn btn-danger">Supprimer</a></td>
+					</tr>
+					<tr>
+						<td class="second-row">Commentaire :</td>
+						<td colspan="4" class="second-row">{{ Comment.comment|raw|nl2br }}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</section>
+		<div class="clearfix"></div>
+	</div>
+{% endif %}
+	<h1>Mes commentaires:</h1>
+	<div id="Comments" class="row">
+		{% if deleteComment %}
+		<div id="deleteComment" class="alert alert-danger">
+			<strong>Danger!</strong> Voulez-vous vraiment supprimer ce commentaire ?
+			<form method="post" action="/admin/delete-comment-{{ deleteComment }}.html" name="deleteComment" id="deleteComment">
+				<input name="id" type="hidden" value="{{ deleteComment }}">
+				<input type="hidden" name="token" value="{{ token }}">
+				<input class="btn btn-danger" name="Yes" type="submit" value="Oui">
+				<input class="btn btn-default" name="No" type="submit" value="Non">
+			</form>
+		</div>
+		{% endif %}
+		<section class="col-xs-12">
+			<table class="table table-hover">
+				<thead class="thead-inverse">
+					<tr>
+						<th>Date de création</th>
+						<th>Titre du blog</th>
+						<th>Status</th>
+						<th>Supprimer</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for Comment in myComments %}
+					<tr>
+						<td>{{ Comment.date }}</td>
+						<td><a href="/blog/post-{{ Comment.blog_id }}.html">{{ Comment.blogTitle }}</a></td>
+						<td>{{ Comment.status }}</td>
+						<td><a href="/admin/delete-comment-{{ Comment.id }}.html" class="btn btn-danger">Supprimer</a></td>
+					</tr>
+					<tr>
+						<td class="second-row">Commentaire :</td>
+						<td colspan="3" class="second-row">{{ Comment.comment|raw|nl2br }}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</section>
+		<div class="clearfix"></div>
+	</div>
+</main>
+{% endblock %}

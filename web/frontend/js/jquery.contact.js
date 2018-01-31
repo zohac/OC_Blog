@@ -1,4 +1,4 @@
-(function($) { 
+(function($) {
 	"use strict";
 
 jQuery(document).ready(function(){
@@ -15,10 +15,10 @@ jQuery(document).ready(function(){
 
 		$.post(action, {
 			name: $('#name').val(),
-			companyname: $('#companyname').val(),
 			email: $('#email').val(),
-			tel: $('#tel').val(),
 			comments: $('#comments').val(),
+			password: $('#password').val(),
+
 
 		},
 			function(data){
