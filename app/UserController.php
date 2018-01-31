@@ -116,7 +116,7 @@ class UserController extends Controller
 
         // If variables exist in the post method
         // and the variable 'No' OR '$result' exist
-        if (isset($_POST['No']) or isset($result)) {
+        if (isset($_POST['No']) || isset($result)) {
             // Redirection on the user page
             $reponse = Container::getHTTPResponse();
             $reponse->setStatus(301);

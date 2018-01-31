@@ -43,7 +43,7 @@ class RegistrationController extends Controller
                         $encryptedPassword = Container::getEncryption()->hash($params);
 
                         // We check that the user does not exist, or that the email address is not banned
-                        if (!$this->userExist($params['email']) or !$this->userBanned($params['email'])) {
+                        if (!$this->userExist($params['email']) || !$this->userBanned($params['email'])) {
                             // Recovery of the manager returned by the router
                             $manager = $this->getManager();
 
@@ -83,7 +83,7 @@ class RegistrationController extends Controller
         $token = $token->getToken();
         // Adding token to the parameters to return by the view
         $this->setParams(['token' => $token]);
-        
+
         // Flash message retrieval
         $this->setParams($this->flash->getFlash());
 

@@ -344,7 +344,7 @@ class AdminController extends Controller
                     $this->flash->addFlash('danger', 'Une erreur et survenue, veuillez réessayer.');
                 }
             }
-            if (isset($_POST['No']) or isset($result)) {
+            if (isset($_POST['No']) || isset($result)) {
                 // Redirection on the user page
                 $reponse = Container::getHTTPResponse();
                 $reponse->setStatus(301);
@@ -426,7 +426,7 @@ class AdminController extends Controller
                     $this->flash->addFlash('danger', 'Une erreur et survenue, veuillez réessayer.');
                 }
             }
-            if (isset($_POST['No']) or isset($result)) {
+            if (isset($_POST['No']) || isset($result)) {
                 // Redirection on the user page
                 $reponse = Container::getHTTPResponse();
                 $reponse->setStatus(301);
@@ -468,9 +468,9 @@ class AdminController extends Controller
         $token = Container::getToken();
 
         // We verify that the user has the necessary rights
-        if ($this->user->getUserInfo('role') == 'Administrator'
-        or
-        $manager->isWrittenByTheUser($id, $this->user->getUserInfo('id'))
+        if (
+            $this->user->getUserInfo('role') == 'Administrator' ||
+            $manager->isWrittenByTheUser($id, $this->user->getUserInfo('id'))
         ) {
             // admin dashboard recovery
             $this->getAdminDashboard();
@@ -512,7 +512,7 @@ class AdminController extends Controller
                     $this->flash->addFlash('danger', 'Une erreur et survenue, veuillez réessayer.');
                 }
             }
-            if (isset($_POST['No']) or isset($result)) {
+            if (isset($_POST['No']) || isset($result)) {
                 // Redirection on the user page
                 $reponse = Container::getHTTPResponse();
                 $reponse->setStatus(301);
