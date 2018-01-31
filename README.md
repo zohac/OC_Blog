@@ -19,7 +19,7 @@ You can also download the OC_Blog source directly from the Git clone:
     cd OC_Blog
     composer update
 
-Setting up the database by importing the blog.sql file (in the /app/config/ folder)
+Setting up the database by importing the blog.sql file (in the /app/config/ folder).
 Update the /app/config/config. xml file accordingly.
 
 ## Dependency
