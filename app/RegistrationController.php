@@ -92,8 +92,6 @@ class RegistrationController extends Controller
         $this->send();
     }
 
-    // TODO : N'envoyer qu'un seul message flash si l'utilisateur exite et est banni
-
     /**
      * Check if a user exist in DB
      * @param  string $email

@@ -46,8 +46,6 @@ class LoginController extends Controller
                     // If the user doesn't exist
                     // Add a flash message
                     if ($userInfo === false) {
-                        // Adding a break to slow down the brute force
-                        // sleep(1);
                         $this->flash->addFlash('danger', 'Il existe une erreur dans le couple email/Mot de passe!');
                     } else {
                         // Authenticate the user and hydrate the User class

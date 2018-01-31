@@ -47,7 +47,6 @@ class AdminManager extends PDOManager
 
     public function getNumberOfPosts()
     {
-        // TODO : Modifier la requète pour les post supprimé
         // SQL request
         $sql = "SELECT COUNT(*) AS numberOfPosts FROM blog.post WHERE post.status!='Trash'";
 
