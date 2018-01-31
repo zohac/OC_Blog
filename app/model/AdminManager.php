@@ -1,7 +1,7 @@
 <?php
 namespace app\model;
 
-use \ZCFram\Manager;
+use \ZCFram\PDOManager;
 
 /**
  *
@@ -34,7 +34,7 @@ class AdminManager extends PDOManager
     public function getNumberOfUsers()
     {
         // SQL request
-        $sql = "SELECT COUNT(*) AS numberOfUsers FROM blog.user";
+        $sql = "SELECT COUNT(*) AS numberOfUsers FROM blog.user WHERE user.status='authorized'";
 
         // Retrieves information from DB
         $numberOfUsers = $this->DB
@@ -49,7 +49,7 @@ class AdminManager extends PDOManager
     {
         // TODO : Modifier la requète pour les post supprimé
         // SQL request
-        $sql = "SELECT COUNT(*) AS numberOfPosts FROM blog.post";
+        $sql = "SELECT COUNT(*) AS numberOfPosts FROM blog.post WHERE post.status!='Trash'";
 
         // Retrieves information from DB
         $numberOfPosts = $this->DB
@@ -63,7 +63,7 @@ class AdminManager extends PDOManager
     public function getNumberOfComments()
     {
         // SQL request
-        $sql = "SELECT COUNT(*) AS numberOfComments FROM blog.comment";
+        $sql = "SELECT COUNT(*) AS numberOfComments FROM blog.comment WHERE comment.status!='Trash'";
 
         $numberOfComments = $this->DB
             ->query($sql)

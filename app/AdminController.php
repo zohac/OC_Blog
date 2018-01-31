@@ -124,10 +124,11 @@ class AdminController extends Controller
             // Recovery of the manager returned by the router
             $manager = $this->getManager();
 
+            //Retrieving the class that validates the token
+            $token = Container::getToken();
+
             // If variables exist in the post method
             if (!empty($_POST)) {
-                //Retrieving the class that validates the token
-                $token = Container::getToken();
                 // We're checking the validity of the token.
                 if ($token->isTokenValid($_POST['token'])) {
                     // If there is a file to upload
@@ -211,6 +212,9 @@ class AdminController extends Controller
             // Recovery of the manager returned by the router
             $manager = $this->getManager();
 
+            //Retrieving the class that validates the token
+            $token = Container::getToken();
+
             if (isset($_GET['id'])) {
                 // Retrieving the id of the post to delete and convert to integer
                 $id = (int)$_GET['id'];
@@ -223,8 +227,6 @@ class AdminController extends Controller
             // and the variable 'id' exist
             // else recovery of the post in DB for display of the completed form
             if (!empty($_POST) && $id) {
-                //Retrieving the class that validates the token
-                $token = Container::getToken();
                 // We're checking the validity of the token.
                 if ($token->isTokenValid($_POST['token'])) {
                     // If there is a file to upload
@@ -263,7 +265,7 @@ class AdminController extends Controller
                 } else {
                     $this->flash->addFlash('danger', 'Une erreur est survenu lors de la mise à jour.');
                 }
-            } elseif (isset($_GET['id'])) {
+            } elseif (isset($_GET['id'])) { // if $token->isTokenValid
                     $Post = $manager->getPost($_GET['id']);
                     $this->setParams($Post);
             }
@@ -296,6 +298,9 @@ class AdminController extends Controller
             $this->getAdminDashboard();
             $this->setView('dashboard');
 
+            //Retrieving the class that validates the token
+            $token = Container::getToken();
+
             if (isset($_GET['id'])) {
                 // Retrieving the id of the post to delete and convert to integer
                 $id = (int)$_GET['id'];
@@ -307,8 +312,6 @@ class AdminController extends Controller
             // If variables exist in the post method
             // and the variable 'Yes' existe
             if (!empty($_POST) && isset($_POST['Yes'])) {
-                //Retrieving the class that validates the token
-                $token = Container::getToken();
                 // We're checking the validity of the token.
                 if ($token->isTokenValid($_POST['token'])) {
                     //Retrieving the class that validates the data sent
@@ -382,12 +385,12 @@ class AdminController extends Controller
                 $id = false;
             }
 
-
+            //Retrieving the class that validates the token
+            $token = Container::getToken();
+            
             // If variables exist in the post method
             // and the variable 'Yes' existe
             if (!empty($_POST) && isset($_POST['Yes'])) {
-                //Retrieving the class that validates the token
-                $token = Container::getToken();
                 // We're checking the validity of the token.
                 if ($token->isTokenValid($_POST['token'])) {
                     //Retrieving the class that validates the data sent
@@ -461,6 +464,9 @@ class AdminController extends Controller
         // Recovery of the manager returned by the router
         $manager = $this->getManager();
 
+        //Retrieving the class that validates the token
+        $token = Container::getToken();
+
         // We verify that the user has the necessary rights
         if ($this->user->getUserInfo('role') == 'Administrator'
         or
@@ -473,8 +479,6 @@ class AdminController extends Controller
             // If variables exist in the post method
             // and the variable 'Yes' existe
             if (!empty($_POST) && isset($_POST['Yes'])) {
-                //Retrieving the class that validates the token
-                $token = Container::getToken();
                 // We're checking the validity of the token.
                 if ($token->isTokenValid($_POST['token'])) {
                     //Retrieving the class that validates the data sent
@@ -527,8 +531,7 @@ class AdminController extends Controller
 
     /**
      * [uploadFile description]
-     * @param  int    $id [description]
-     * @return [type]     [description]
+     * @param  int    $id The id of the post
      */
     public function uploadFile(int $id)
     {

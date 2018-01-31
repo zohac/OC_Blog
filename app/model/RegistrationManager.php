@@ -1,7 +1,7 @@
 <?php
 namespace app\model;
 
-use \ZCFram\Manager;
+use \ZCFram\PDOManager;
 
 /**
  *
@@ -16,13 +16,13 @@ class RegistrationManager extends PDOManager
 
         // Preparing the sql query
         $requete = $this->DB->prepare($sql);
-        
+
         // Associates a value with the email parameter
         $requete->bindValue(':email', $email, \PDO::PARAM_STR);
-        
+
         // Execute the sql query
         $requete->execute();
-        
+
         // Retrieves information
         $reponse = $requete->fetch();
 
@@ -41,13 +41,13 @@ class RegistrationManager extends PDOManager
 
         // Preparing the sql query
         $requete = $this->DB->prepare($sql);
-        
+
         // Associates a value with the email parameter
         $requete->bindValue(':email', $email, \PDO::PARAM_STR);
-        
+
         // Execute the sql query
         $requete->execute();
-        
+
         // Retrieves information
         $reponse = $requete->fetch();
 
@@ -75,12 +75,12 @@ class RegistrationManager extends PDOManager
 
         // Preparing the sql query
         $requete = $this->DB->prepare($sql);
-        
+
         // Associates values with parameters
         $requete->bindValue(':pseudo', $pseudo, \PDO::PARAM_STR);
         $requete->bindValue(':email', $email, \PDO::PARAM_STR);
         $requete->bindValue(':password', $password, \PDO::PARAM_STR);
-        
+
         // Execute the sql query return a bool
         return $requete->execute();
     }

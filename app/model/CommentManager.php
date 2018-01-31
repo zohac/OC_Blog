@@ -1,7 +1,7 @@
 <?php
 namespace app\model;
 
-use \ZCFram\Manager;
+use \ZCFram\PDOManager;
 
 /**
  * Class allowing the call to the DB concerning the Post, using PDO
@@ -34,13 +34,13 @@ class CommentManager extends PDOManager
 
         // Preparing the sql query
         $requete = $this->DB->prepare($sql);
-        
+
         // Associates a value with the id parameter
         $requete->bindValue(':id', $id, \PDO::PARAM_INT);
-        
+
         // Execute the sql query
         $requete->execute();
-        
+
         // Retrieves information from DB
         $comment = $requete->fetchALL();
 
@@ -64,12 +64,12 @@ class CommentManager extends PDOManager
 
         // Preparing the sql query
         $requete = $this->DB->prepare($sql);
-        
+
         // Associates values with parameters
         $requete->bindValue(':post_id', $comment['post_id'], \PDO::PARAM_INT);
         $requete->bindValue(':author_id', $comment['author_id'], \PDO::PARAM_INT);
         $requete->bindValue(':comment', $comment['comment'], \PDO::PARAM_STR);
-        
+
         // Execute the sql query and return a booleen
         return $requete->execute();
     }

@@ -76,7 +76,7 @@ class RegistrationController extends Controller
                     }
                 }
             } else {
-                $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'envoi de mail.');
+                $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'inscription.');
             }
         }
         //Retrieving the class that validates the token

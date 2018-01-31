@@ -1,12 +1,12 @@
 <?php
 namespace app\model;
 
-use \ZCFram\Manager;
+use \ZCFram\PDOManager;
 
 /**
  * Class allowing the call to the DB concerning the user, using PDO
  */
-class UserManager extends Manager
+class UserManager extends PDOManager
 {
 
     /**
