@@ -2,7 +2,7 @@
 namespace ZCFram;
 
 /**
- *
+ * Retrieves the desired configuration, in the config.xml file
  */
 class Configurator
 {
@@ -12,32 +12,31 @@ class Configurator
      */
     const CONFIG_PATH = '/../../app/config/config.xml';
 
-    protected $config;
-
-    public function __construct(string $config)
+    /**
+     * Retrieves the desired configuration, in the config.xml file
+     * @var string $config  The name of the configuration to be found
+     * @return array        Set of the configuration returned in table form
+     */
+    public function getConfig(string $config):array
     {
-        $this->setConfig($config);
-    }
-
-    protected function setConfig(string $config)
-    {
-        $this->config = $config;
-    }
-
-    public function getConfig():array
-    {
+        // Retrieves the path of the config.xml file
         $configPath = realpath(__DIR__.self::CONFIG_PATH);
 
+        // Load the file and recover all child nodes
         $xml = new \DOMDocument;
         $xml->load($configPath);
-        $variable = $xml->getElementsByTagName($this->config);
-        $variable = $variable->item(0);
-        $variable = $variable->childNodes;
+        $variable = $xml->getElementsByTagName($config);
+        $item = $variable->item(0);
+        $childNodes = $item->childNodes;
 
+        //Declaration of a variable array, to store the requested configuration
         $var = [];
-        foreach ($variable as $value) {
+
+        // For each child node, the value is recovered
+        foreach ($childNodes as $value) {
             $var = \array_merge($var, [$value->nodeName => $value->nodeValue]);
         }
+        // Return the requested configuration
         return $var;
     }
 }

@@ -1,12 +1,12 @@
 <?php
 namespace app\model;
 
-use \ZCFram\Manager;
+use \ZCFram\PDOManager;
 
 /**
  * Class allowing the call to the DB concerning the Post, using PDO
  */
-class PostManager extends Manager
+class PostManager extends PDOManager
 {
 
     /**
@@ -70,7 +70,7 @@ class PostManager extends Manager
         // Associates a value with the id parameter
         $requete->bindValue(':id', $id, \PDO::PARAM_INT);
 
-        // Execute the sql query and return a bool
+        // Execute the sql query
         $requete->execute();
 
         // Retrieves information from a post
@@ -102,8 +102,10 @@ class PostManager extends Manager
         // Execute the sql query and return a bool
         $requete->execute();
 
+        // Retrieves information
         $result = $requete->fetch();
 
+        // return ths number of comments as integer
         return (int)$result['nbComments'];
     }
 }

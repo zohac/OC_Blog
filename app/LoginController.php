@@ -16,52 +16,64 @@ class LoginController extends Controller
      */
     public function executeLogin()
     {
+        //Retrieving the class that validates the token
+        $token = Container::getToken();
         // If variables exist in the post method
         if (!empty($_POST)) {
-            //Retrieving the class that validates the data sent
-            $Validator = Container::getValidator();
-            $Validator->required('email', 'email');
-            $Validator->required('password', 'password');
+            // We're checking the validity of the token.
+            if ($token->isTokenValid($_POST['token'])) {
+                //Retrieving the class that validates the data sent
+                $Validator = Container::getValidator();
+                $Validator->required('email', 'email');
+                $Validator->required('password', 'password');
 
-            /*
-             * If the validator does not return an error,
-             * else adding error flash message
-             */
-            if (!$Validator->hasError()) {
-                // Recovering validator data
-                $params = $Validator->getParams();
+                /*
+                 * If the validator does not return an error,
+                 * else adding error flash message
+                 */
+                if (!$Validator->hasError()) {
+                    // Recovering validator data
+                    $params = $Validator->getParams();
 
-                // password hashing
-                $encryptedPassword = Container::getEncryption()->hash($params);
+                    // password hashing
+                    $encryptedPassword = Container::getEncryption()->hash($params);
 
-                // Recovery of the manager returned by the router
-                // And check if the user is registered in DB
-                $manager = $this->getManager();
-                $userInfo = $manager->getUser($params['email'], $encryptedPassword);
+                    // Recovery of the manager returned by the router
+                    // And check if the user is registered in DB
+                    $manager = $this->getManager();
+                    $userInfo = $manager->getUser($params['email'], $encryptedPassword);
 
-                // If the user doesn't exist
-                // Add a flash message
-                if ($userInfo === false) {
-                    // Adding a break to slow down the brute force
-                    sleep(1);
-                    $this->flash->addFlash('danger', 'Il existe une erreur dans le couple email/Mot de passe!');
+                    // If the user doesn't exist
+                    // Add a flash message
+                    if ($userInfo === false) {
+                        // Adding a break to slow down the brute force
+                        sleep(1);
+                        $this->flash->addFlash('danger', 'Il existe une erreur dans le couple email/Mot de passe!');
+                    } else {
+                        // Authenticate the user and hydrate the User class
+                        $this->user->setAuthenticated();
+                        $this->user->hydrateUser($userInfo);
+
+                        //Redirection to the admin page
+                        $reponse = Container::getHTTPResponse();
+                        $reponse->setStatus(301);
+                        $reponse->redirection('/admin');
+                    }
                 } else {
-                    // Authenticate the user and hydrate the User class
-                    $this->user->setAuthenticated();
-                    $this->user->hydrateUser($userInfo);
-
-                    //Redirection to the admin page
-                    $reponse = Container::getHTTPResponse();
-                    $reponse->setStatus(301);
-                    $reponse->redirection('/admin');
+                    // adding error flash message
+                    foreach ($Validator->getError() as $key => $value) {
+                        $this->flash->addFlash('danger', $value);
+                    }
                 }
             } else {
-                // adding error flash message
-                foreach ($Validator->getError() as $key => $value) {
-                    $this->flash->addFlash('danger', $value);
-                }
+                $this->flash->addFlash('danger', 'Une erreur est survenu.');
             }
         }
+        //Retrieving the class that validates the token
+        $token = $token->getToken();
+        // Adding token to the parameters to return by the view
+        $this->setParams(['token' => $token]);
+
         // Flash message retrieval
         $this->setParams($this->flash->getFlash());
 

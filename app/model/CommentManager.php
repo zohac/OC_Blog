@@ -1,12 +1,12 @@
 <?php
 namespace app\model;
 
-use \ZCFram\Manager;
+use \ZCFram\PDOManager;
 
 /**
  * Class allowing the call to the DB concerning the Post, using PDO
  */
-class CommentManager extends Manager
+class CommentManager extends PDOManager
 {
 
     /**
@@ -32,10 +32,15 @@ class CommentManager extends Manager
         //transition from date to french
         $this->DB->query("SET lc_time_names = 'fr_FR'");
 
+        // Preparing the sql query
         $requete = $this->DB->prepare($sql);
+
+        // Associates a value with the id parameter
         $requete->bindValue(':id', $id, \PDO::PARAM_INT);
+
+        // Execute the sql query
         $requete->execute();
-        
+
         // Retrieves information from DB
         $comment = $requete->fetchALL();
 
@@ -48,18 +53,24 @@ class CommentManager extends Manager
      * @param  int    $id The id of a post
      * @return array The list of all publish Post
      */
-    public function insertComment(array $comment)
+    public function insertComment(array $comment):bool
     {
+        // SQL request
         $sql = "
         INSERT INTO `blog`.`comment`
             (post_id, author_id, comment, creationDate, status)
         VALUES
             (:post_id, :author_id, :comment, NOW(), 'hold')";
 
+        // Preparing the sql query
         $requete = $this->DB->prepare($sql);
+
+        // Associates values with parameters
         $requete->bindValue(':post_id', $comment['post_id'], \PDO::PARAM_INT);
         $requete->bindValue(':author_id', $comment['author_id'], \PDO::PARAM_INT);
         $requete->bindValue(':comment', $comment['comment'], \PDO::PARAM_STR);
+
+        // Execute the sql query and return a booleen
         return $requete->execute();
     }
 }

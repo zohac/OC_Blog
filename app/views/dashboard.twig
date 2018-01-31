@@ -60,6 +60,7 @@
 		<strong>Danger!</strong> Voulez-vous vraiment supprimer ce post ?
 		<form method="post" action="/admin/delete-post-{{ deletePost }}.html" name="deletePost" id="deletePost">
 			<input name="id" type="hidden" value="{{ deletePost }}">
+			<input type="hidden" name="token" value="{{ token }}">
 			<input class="btn btn-danger" name="Yes" type="submit" value="Oui">
 			<input class="btn btn-default" name="No" type="submit" value="Non">
 		</form>
@@ -98,6 +99,7 @@
 		<strong>Attention!</strong> Voulez-vous vraiment valider ce commentaire ?
 		<form method="post" action="/admin/validation-comment-{{ validComment }}.html" name="validComment" id="validComment">
 			<input name="id" type="hidden" value="{{ validComment }}">
+			<input type="hidden" name="token" value="{{ token }}">
 			<input class="btn btn-warning" name="Yes" type="submit" value="Oui">
 			<input class="btn btn-default" name="No" type="submit" value="Non">
 		</form>
@@ -108,6 +110,7 @@
 		<strong>Danger!</strong> Voulez-vous vraiment supprimer ce commentaire ?
 		<form method="post" action="/admin/delete-comment-{{ deleteComment }}.html" name="deleteComment" id="deleteComment">
 			<input name="id" type="hidden" value="{{ deleteComment }}">
+			<input type="hidden" name="token" value="{{ token }}">
 			<input class="btn btn-danger" name="Yes" type="submit" value="Oui">
 			<input class="btn btn-default" name="No" type="submit" value="Non">
 		</form>
@@ -152,6 +155,7 @@
 			<strong>Danger!</strong> Voulez-vous vraiment supprimer ce commentaire ?
 			<form method="post" action="/admin/delete-comment-{{ deleteComment }}.html" name="deleteComment" id="deleteComment">
 				<input name="id" type="hidden" value="{{ deleteComment }}">
+				<input type="hidden" name="token" value="{{ token }}">
 				<input class="btn btn-danger" name="Yes" type="submit" value="Oui">
 				<input class="btn btn-default" name="No" type="submit" value="Non">
 			</form>

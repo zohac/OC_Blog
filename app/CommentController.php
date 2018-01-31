@@ -16,42 +16,50 @@ class CommentController extends Controller
      */
     public function commentControl()
     {
-        // we make sure that the variable $_GET['id'] is an integer
-        $id = (int)$_GET['id'];
+        //Retrieving the class that validates the token
+        $token = Container::getToken();
+        if ($token->isTokenValid($_POST['token'])) {
+            // we make sure that the variable $_GET['id'] is an integer
+            $id = (int)$_GET['id'];
 
-        //Retrieving the class that validates the data sent
-        $Validator = Container::getValidator();
-        $Validator->required('comment', 'text');
+            //Retrieving the class that validates the data sent
+            $Validator = Container::getValidator();
+            $Validator->required('comment', 'text');
 
-
-        // If the validator does not return an error,
-        // else adding error flash message
-        //
-        if (!$Validator->hasError()) {
-            // Recovery of validated data
-            $params = array_merge(
-                $Validator->getParams(),
-                ['post_id' => $id,
-                'author_id' => $this->user->getUserInfo('id')]
-            );
-
-            $this->setManager('Comment');
-            $manager = $this->getManager();
-            $result = $manager->insertComment($params);
-
-            // Adding a flash message if successful or unsuccessful
-            if ($result > 0) {
-                $this->flash->addFlash(
-                    'success',
-                    'Commentaire en attente de validation. Merci '.$this->user->getUserInfo('pseudo').'!'
+            // If the validator does not return an error,
+            // else adding error flash message
+            //
+            if (!$Validator->hasError()) {
+                // Recovery of validated data
+                $params = array_merge(
+                    $Validator->getParams(),
+                    ['post_id' => $id,
+                    'author_id' => $this->user->getUserInfo('id')]
                 );
+
+                $this->setManager('Comment');
+                $manager = $this->getManager();
+                $result = $manager->insertComment($params);
+
+                // Adding a flash message if successful or unsuccessful
+                if ($result > 0) {
+                    $this->flash->addFlash(
+                        'success',
+                        'Commentaire en attente de validation. Merci '.$this->user->getUserInfo('pseudo').'!'
+                    );
+                } else {
+                    $this->flash->addFlash(
+                        'danger',
+                        'Une erreur est survenu lors de l\'enregistrement du commentaire.'
+                    );
+                }
             } else {
-                $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'enregistrement du commentaire.');
+                foreach ($Validator->getError() as $key => $value) {
+                    $this->flash->addFlash('danger', $value);
+                }
             }
         } else {
-            foreach ($Validator->getError() as $key => $value) {
-                $this->flash->addFlash('danger', $value);
-            }
+            $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'enregistrement du commentaire.');
         }
     }
 }

@@ -7,7 +7,7 @@
                 <article class="post-details" id="post-details">
                     <header role="bog-header" class="bog-header text-center">
                         <h3><span>{{ title }}</span> par {{ author }}</h3>
-                        <h2>{{ chapo }}...</h2>
+                        <h2>{{ chapo|raw|nl2br }}...</h2>
                     </header>
                     <section class="blog-content">
                         <figure>

@@ -1,16 +1,17 @@
 <?php
 namespace app\model;
 
-use \ZCFram\Manager;
+use \ZCFram\PDOManager;
 
 /**
  *
  */
-class AdminManager extends Manager
+class AdminManager extends PDOManager
 {
 
     public function getList()
     {
+        // SQL request
         $sql = "
         SELECT
             id,
@@ -26,45 +27,55 @@ class AdminManager extends Manager
             ->query($sql)
             ->fetchAll();
 
+        // Returns the information in array
         return $listPosts;
     }
 
     public function getNumberOfUsers()
     {
-        $sql = "SELECT COUNT(*) AS numberOfUsers FROM blog.user";
+        // SQL request
+        $sql = "SELECT COUNT(*) AS numberOfUsers FROM blog.user WHERE user.status='authorized'";
 
+        // Retrieves information from DB
         $numberOfUsers = $this->DB
             ->query($sql)
             ->fetch();
 
+        // Returns the information in array
         return $numberOfUsers;
     }
 
     public function getNumberOfPosts()
     {
         // TODO : Modifier la requète pour les post supprimé
-        $sql = "SELECT COUNT(*) AS numberOfPosts FROM blog.post";
+        // SQL request
+        $sql = "SELECT COUNT(*) AS numberOfPosts FROM blog.post WHERE post.status!='Trash'";
 
+        // Retrieves information from DB
         $numberOfPosts = $this->DB
             ->query($sql)
             ->fetch();
 
+        // Returns the information in array
         return $numberOfPosts;
     }
 
     public function getNumberOfComments()
     {
-        $sql = "SELECT COUNT(*) AS numberOfComments FROM blog.comment";
+        // SQL request
+        $sql = "SELECT COUNT(*) AS numberOfComments FROM blog.comment WHERE comment.status!='Trash'";
 
         $numberOfComments = $this->DB
             ->query($sql)
             ->fetch();
 
+        // Returns the information in array
         return $numberOfComments;
     }
 
     public function getPost(int $id)
     {
+        // SQL request
         $sql = "
         SELECT
             post.id,
@@ -91,6 +102,7 @@ class AdminManager extends Manager
 
     public function getListOfComments()
     {
+        // SQL request
         $sql = "
         SELECT
             comment.id,
@@ -118,6 +130,7 @@ class AdminManager extends Manager
 
     public function getMyComments(int $userID)
     {
+        // SQL request
         $sql = "
         SELECT
             comment.id,
@@ -147,6 +160,7 @@ class AdminManager extends Manager
 
     public function updatePost(array $post)
     {
+        // SQL request
         $sql = "
         UPDATE post
         SET post.title = :title, post.post = :post, post.status = :status, post.modificationDate = NOW()
@@ -162,6 +176,7 @@ class AdminManager extends Manager
 
     public function insertPost(array $post)
     {
+        // SQL request
         $sql = "
         INSERT INTO `blog`.`post`
             (author_id, title, post, creationDate, modificationDate, status)
@@ -178,6 +193,7 @@ class AdminManager extends Manager
 
     public function deletePost(int $id)
     {
+        // SQL request
         $sql = "
         UPDATE post
         SET status = 'Trash', modificationDate = NOW()
@@ -190,6 +206,7 @@ class AdminManager extends Manager
 
     public function validComment(int $id)
     {
+        // SQL request
         $sql = "
         UPDATE blog.comment
         SET comment.status = 'approve'
@@ -202,6 +219,7 @@ class AdminManager extends Manager
 
     public function deleteComment(int $id)
     {
+        // SQL request
         $sql = "
         UPDATE blog.comment
         SET comment.status = 'Trash'
@@ -214,6 +232,7 @@ class AdminManager extends Manager
 
     public function isWrittenByTheUser(int $commentID, int $userID)
     {
+        // SQL request
         $sql = "
         SELECT COUNT(comment.id) AS isWritten
         FROM blog.comment
@@ -225,5 +244,17 @@ class AdminManager extends Manager
         $requete->execute();
         $answer = $requete->fetch();
         return $answer['isWritten'];
+    }
+
+    public function getTheNewPostID()
+    {
+        // SQL request
+        $sql = "SELECT id FROM `post` ORDER BY id DESC LIMIT 1";
+
+        $requete = $this->DB->query($sql);
+        $requete->execute();
+        $id = $requete->fetch();
+        $id = 1 + (int)$id['id'];
+        return $id;
     }
 }

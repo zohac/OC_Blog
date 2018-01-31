@@ -16,7 +16,7 @@
 		</div>
 		<!-- /.container-fluid-->
 	</div>
-	
+
 	<div id="message">
 		{% include 'flash.twig' %}
 	</div>
@@ -27,6 +27,7 @@
         <strong>Danger!</strong> Voulez-vous vraiment supprimer cet utilisateur ?
         <form method="post" action="/admin/delete-user-{{ deleteUser }}.html" name="deleteUser" id="deleteUser">
             <input name="id" type="hidden" value="{{ deleteUser }}">
+			<input type="hidden" name="token" value="{{ token }}">
             <input class="btn btn-danger" name="Yes" type="submit" value="Oui">
             <input class="btn btn-default" name="No" type="submit" value="Non">
         </form>

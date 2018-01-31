@@ -41,33 +41,31 @@ class PDOManager
 
     /**
      * [__construct description]
-     * @param array $config The config for the connexion to the database
-     *              $config [
-     *                  'host'      => 'hostname',
-     *                  'dbname'    => 'dbname',
-     *                  'user'      => 'user',
-     *                  'password'  => 'password',
-     *              ]
+     * Retrieving DB connection configuration, and connection
      */
-    public function __construct(array $config)
+    public function __construct()
     {
+        // The config for the connexion to the database
+        $config = Container::getConfigurator('database');
+        
+        // Recording DB connection data
         $this->host = $config['host'];
         $this->dbname = $config['dbname'];
         $this->user = $config['user'];
         $this->password = $config['password'];
 
+        // DB connection request
         $this->getConnexion();
-        //return $this->DB;
     }
 
     /**
      * Return an instance of PDO
      * @return object PDO
-     */
+     *
     public function getDB()
     {
         return $this->DB;
-    }
+    }*/
 
     /**
      * Returns a connection object to the DB by initiating the connection as needed
@@ -75,7 +73,9 @@ class PDOManager
      */
     private function getConnexion()
     {
+        // If the variable is strictly null
         if ($this->DB === null) {
+            // Create a new connection to DB using PDO
             $this->DB = new PDO(
                 'mysql:host='.$this->host.';dbname='.$this->dbname.';charset=utf8',
                 $this->user,
