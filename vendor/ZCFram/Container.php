@@ -37,16 +37,6 @@ abstract class Container
     }
 
     /**
-     * Returns a connection object to the database
-     * @return object PDOManager
-     */
-    public static function getConnexionDB()
-    {
-        $config = self::getConfigurator('database');
-        return new PDOManager($config);
-    }
-
-    /**
      * Returns an instance of the Form Controller
      * @return object Validator
      */
@@ -110,6 +100,10 @@ abstract class Container
         return new Token;
     }
 
+    /**
+     * Returns an instance of the User Controller
+     * @return object User
+     */
     public static function getUser()
     {
         return new User;

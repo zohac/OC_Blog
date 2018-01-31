@@ -2,7 +2,7 @@
 namespace ZCFram;
 
 /**
- *
+ * Class to protect a session with a ticket system
  */
 class SessionTicket
 {
@@ -14,8 +14,8 @@ class SessionTicket
     protected $ticket;
 
     /**
-     * A ticket
-     * @var string $ticket
+     * The lifetime of a session
+     * @var string $lifetime
      */
     protected $lifetime;
 
@@ -38,17 +38,21 @@ class SessionTicket
     }
 
     /**
-     *
+     * Ticket creation
+     * @return cookie $_COOKIE
      */
     public function setTicket()
     {
-        // else we create our ticket
+        // we create our ticket
         $this->ticket = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+        // Set ticket lifetime (5min)
         $this->lifetime = time()+600;
 
+        // Send the ticket as a cookie
         $response = Container::getHTTPResponse();
         $response->setCookie('ticket', $this->ticket, $this->lifetime, '/');
 
+        // Creating the corresponding session variables
         $_SESSION['lifetimeTicket'] = $this->lifetime;
         $_SESSION['ticket'] =  $this->ticket;
     }

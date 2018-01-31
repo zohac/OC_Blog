@@ -34,14 +34,13 @@ class App
         $ticket = new SessionTicket;
 
         // Check if the ticket is valid
-
         if (!$ticket->isTicketValid()) {
             // Deleting User Authentication
             $user = Container::getUser();
             $user->setAuthenticated(false);
         }
 
-        // and format the end of the url without '/'
+        // Format the end of the url without '/'
         // and redirect to the correct url if necessary
         if (!empty($uri) && substr($uri, -1, 1) === '/' && strlen($uri) > 1) {
             // Redirection

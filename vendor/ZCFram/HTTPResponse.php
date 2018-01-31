@@ -72,7 +72,9 @@ class HTTPResponse
      */
     public function send(string $view)
     {
+        // Send the header
         $this->addHeader('HTTP/1.1 '.$this->status.' '.$this->statusCode[$this->status]);
+        //And the view
         echo($view);
         exit;
     }
