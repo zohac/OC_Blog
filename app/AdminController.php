@@ -387,7 +387,7 @@ class AdminController extends Controller
 
             //Retrieving the class that validates the token
             $token = Container::getToken();
-            
+
             // If variables exist in the post method
             // and the variable 'Yes' existe
             if (!empty($_POST) && isset($_POST['Yes'])) {
