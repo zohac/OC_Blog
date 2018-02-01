@@ -468,8 +468,7 @@ class AdminController extends Controller
         $token = Container::getToken();
 
         // We verify that the user has the necessary rights
-        if (
-            $this->user->getUserInfo('role') == 'Administrator' ||
+        if ($this->user->getUserInfo('role') == 'Administrator' ||
             $manager->isWrittenByTheUser($id, $this->user->getUserInfo('id'))
         ) {
             // admin dashboard recovery
