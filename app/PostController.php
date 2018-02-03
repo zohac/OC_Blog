@@ -96,6 +96,8 @@ class PostController extends Controller
         foreach ($listPosts as $key => $list) {
             if (file_exists(__DIR__.'/../web/upload/blog-'.$list['id'].'.jpg')) {
                 $list = \array_merge($list, ['imgPath' => '/upload/blog-'.$list['id'].'.jpg']);
+            } elseif (file_exists(__DIR__.'/../web/upload/blog-'.$list['id'].'.png')) {
+                $list = \array_merge($list, ['imgPath' => '/upload/blog-'.$list['id'].'.png']);
             } else {
                 $list = \array_merge($list, ['imgPath' => '/upload/default.jpg']);
             }
@@ -132,6 +134,8 @@ class PostController extends Controller
 
         if (file_exists(__DIR__.'/../web/upload/blog-'.$Post['id'].'.jpg')) {
             $Post = \array_merge($Post, ['imgPath' => '/upload/blog-'.$Post['id'].'.jpg']);
+        } elseif (file_exists(__DIR__.'/../web/upload/blog-'.$Post['id'].'.png')) {
+            $Post = \array_merge($Post, ['imgPath' => '/upload/blog-'.$Post['id'].'.png']);
         } else {
             $Post = \array_merge($Post, ['imgPath' => '/upload/default.jpg']);
         }
