@@ -20,7 +20,7 @@ class PostManager extends PDOManager
         SELECT
             id,
             title,
-            SUBSTRING(post FROM 1 FOR 160) AS chapo,
+            SUBSTRING(post FROM 1 FOR 120) AS chapo,
             DATE_FORMAT(modificationDate, '%e') AS day,
             DATE_FORMAT(modificationDate, '%M %Y') AS monthYear
         FROM blog.post
@@ -51,7 +51,7 @@ class PostManager extends PDOManager
         SELECT
             post.id,
             title,
-            SUBSTRING(post FROM 1 FOR 160) AS chapo,
+            SUBSTRING(post FROM 1 FOR 120) AS chapo,
             post,
             DATE_FORMAT(modificationDate, '%e') AS day,
             DATE_FORMAT(modificationDate, '%M %Y') AS monthYear,
