@@ -80,7 +80,7 @@
 				<tbody>
 				{% for Post in listPosts %}
 					<tr>
-						<th scope="row">{{ Post.title }}</th>
+						<th scope="row">{{ Post.title|raw|nl2br }}</th>
 						<td>{{ Post.date }}</td>
 						<td><a href="/admin/post-{{ Post.id }}.html" class="btn btn-primary">Editer</a></td>
 						<td><a href="/admin/delete-post-{{ Post.id }}.html" class="btn btn-danger">Supprimer</a></td>

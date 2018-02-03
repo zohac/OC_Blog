@@ -23,7 +23,7 @@
                                     </figure>
                                 </a>
                                 <article>
-                                    <h2>{{ colLeft.title }}</h2>
+                                    <h2>{{ colLeft.title|raw|nl2br }}</h2>
                                     <p>{{ colLeft.chapo|raw|nl2br }}...</p>
                                 </article>
                             </section>
@@ -45,7 +45,7 @@
                                     </figure>
                                 </a>
                                 <article>
-                                    <h2>{{ colRight.title }}</h2>
+                                    <h2>{{ colRight.title|raw|nl2br }}</h2>
                                     <p>{{ colRight.chapo|raw|nl2br }}...</p>
                                 </article>
                             </section>

@@ -8,3 +8,4 @@ vendor/egulias
 vendor/swiftmailer
 composer.lock
 web/upload/*.jpg
+web/upload/*.png

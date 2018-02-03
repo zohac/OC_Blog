@@ -6,7 +6,7 @@
             <div class="blog-details">
                 <article class="post-details" id="post-details">
                     <header role="bog-header" class="bog-header text-center">
-                        <h3><span>{{ title }}</span> par {{ author }}</h3>
+                        <h3><span>{{ title|raw|nl2br }}</span> par {{ author }}</h3>
                         <h2>{{ chapo|raw|nl2br }}...</h2>
                     </header>
                     <section class="blog-content">

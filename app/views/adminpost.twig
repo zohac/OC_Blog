@@ -50,7 +50,7 @@
 				<div class="row">
                     <div class="col-xs-12">
 						<label for="title">Le titre :</label><br />
-                        <input  name="title" id="title" type="text"  placeholder="Titre du post" value="{{ title }}" required>
+                        <input  name="title" id="title" type="text"  placeholder="Titre du post" value="{{ title|raw|nl2br }}" required>
                     </div>
                 </div>
                 <div class="space"></div>
