@@ -156,7 +156,8 @@ class PostController extends Controller
         if (isset($_POST['comment'])) {
             // Sent comment control
             $comment = new CommentController($this->router);
-            $comment->CommentControl();
+            $flash = $comment->CommentControl();
+            $this->setParams($flash);
         }
 
         if ($this->user->isAuthenticated()) {
@@ -171,8 +172,7 @@ class PostController extends Controller
         // Adding token to the parameters to return by the view
         $this->setParams(['token' => $token]);
 
-        // Adding flash message and parameters to return by the view
-        $this->setParams($this->flash->getFlash());
+        // Adding parameters to return by the view
         $this->setParams($Post);
 
         // View recovery and display

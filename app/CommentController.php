@@ -61,5 +61,7 @@ class CommentController extends Controller
         } else {
             $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'enregistrement du commentaire.');
         }
+
+        return $this->flash->getFlash();
     }
 }

@@ -1,4 +1,8 @@
 <!-- Comments -->
+<div class="flash">
+    {% include 'flash.twig' %}
+</div>
+
 <div class="comments-pan">
     <h3>{{ numberOfComments }}</h3>
     {% if comments %}
@@ -32,6 +36,7 @@
                         <textarea id="comment" name="comment" placeholder="Qu'avez vous en tête..."></textarea>
                     </div>
                     <div class="clearfix"></div>
+                    <input type="hidden" name="token" value="{{ token }}">
                     <input type="submit" value="Envoyer">
                 </form>
             </div>
