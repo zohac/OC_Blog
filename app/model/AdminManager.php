@@ -372,11 +372,6 @@ class AdminManager extends PDOManager
         // SQL request
         $sql = "SELECT id FROM `post` ORDER BY id DESC LIMIT 1";
 
-        //
-//        $requete = $this->DB->query($sql);
-//        $requete->execute();
-//        $id = $requete->fetch();
-//
         // Retrieves information from DB
         $id = $this->DB
             ->query($sql)
