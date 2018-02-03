@@ -133,7 +133,7 @@
 					<tr>
 						<td>{{ Comment.date }}</td>
 						<td>{{ Comment.author }}</td>
-						<td><a href="/admin/post-{{ Comment.blog-id }}.html">{{ Comment.blogTitle }}</a></td>
+						<td><a href="/admin/post-{{ Comment.blog-id }}.html">{{ Comment.blogTitle|raw|nl2br }}</a></td>
 						<td><a href="/admin/validation-comment-{{ Comment.id }}.html#validComment" class="btn btn-primary">Valider</a></td>
 						<td><a href="/admin/delete-comment-{{ Comment.id }}.html#deleteComment" class="btn btn-danger">Supprimer</a></td>
 					</tr>
@@ -175,7 +175,7 @@
 				{% for Comment in myComments %}
 					<tr>
 						<td>{{ Comment.date }}</td>
-						<td><a href="/blog/post-{{ Comment.blog_id }}.html">{{ Comment.blogTitle }}</a></td>
+						<td><a href="/blog/post-{{ Comment.blog_id }}.html">{{ Comment.blogTitle|raw|nl2br }}</a></td>
 						<td>{{ Comment.status }}</td>
 						<td><a href="/admin/delete-comment-{{ Comment.id }}.html" class="btn btn-danger">Supprimer</a></td>
 					</tr>
