@@ -42,32 +42,43 @@ class RegistrationController extends Controller
                         // password hashing
                         $encryptedPassword = Container::getEncryption()->hash($params);
 
-                        // We check that the user does not exist, or that the email address is not banned
-                        if (!$this->userExist($params['email']) || !$this->userBanned($params['email'])) {
+
+                        if ($this->isFirstRegistration()){
                             // Recovery of the manager returned by the router
                             $manager = $this->getManager();
 
                             // User registration in DB
-                            $result = $manager->Registration($params['pseudo'], $params['email'], $encryptedPassword);
+                            $result = $manager->registrationAdministrator(
+                                $params['pseudo'],
+                                $params['email'], $encryptedPassword
+                            );
+                        } elseif (!$this->userExist($params['email']) && !$this->userBanned($params['email'])) {
+                            // We check that the user does not exist, and that the email address is not banned
 
-                            // If the record failed, sends a flash message,
-                            // otherwise redirection
-                            if ($result === false) {
-                                $this->flash->addFlash(
-                                    'danger',
-                                    'Une erreur est survenu lors de votre inscription, veuillez réessayer!'
-                                );
-                            } else {
-                                $this->flash->addFlash(
-                                    'success',
-                                    'Vous êtes bien enregistré '. $params['pseudo'] .'! Veuillez Vous connecter.'
-                                );
-                                //Redirection to the login page
-                                $reponse = Container::getHTTPResponse();
-                                $reponse->setStatus(301);
-                                $reponse->redirection('/login');
-                            }
+                            // Recovery of the manager returned by the router
+                            $manager = $this->getManager();
+
+                            // User registration in DB
+                            $result = $manager->registration($params['pseudo'], $params['email'], $encryptedPassword);
                         }
+                        // If the record failed, sends a flash message,
+                        // otherwise redirection
+                        if ($result === false) {
+                            $this->flash->addFlash(
+                                'danger',
+                                'Une erreur est survenu lors de votre inscription, veuillez réessayer!'
+                            );
+                        } else {
+                            $this->flash->addFlash(
+                                'success',
+                                'Vous êtes bien enregistré '. $params['pseudo'] .'! Veuillez Vous connecter.'
+                            );
+                            //Redirection to the login page
+                            $reponse = Container::getHTTPResponse();
+                            $reponse->setStatus(301);
+                            $reponse->redirection('/login');
+                        }
+
                     } else {
                         // adding error flash message
                         foreach ($Validator->getError() as $key => $value) {
@@ -147,5 +158,18 @@ class RegistrationController extends Controller
             return false;
         }
         return true;
+    }
+
+    public function isFirstRegistration():bool
+    {
+        // Recovery of the manager returned by the router
+        $manager = $this->getManager();
+
+        // Check if a user email is banned
+        if ($manager->firstRegistration()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

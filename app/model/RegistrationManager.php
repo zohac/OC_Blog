@@ -9,7 +9,7 @@ use \ZCFram\PDOManager;
 class RegistrationManager extends PDOManager
 {
 
-    public function userExist(string $email)
+    public function userExist(string $email):bool
     {
         // SQL request
         $sql = " SELECT COUNT(*) AS user FROM user WHERE email = :email";
@@ -34,7 +34,7 @@ class RegistrationManager extends PDOManager
         return false;
     }
 
-    public function userBanned(string $email)
+    public function userBanned(string $email):bool
     {
         // SQL request
         $sql = " SELECT COUNT(*) AS banned FROM user WHERE email = :email AND status = 'banned'";
@@ -70,6 +70,54 @@ class RegistrationManager extends PDOManager
 			:email,
 			:password,
 			'Subscriber',
+			'authorized'
+		)";
+
+        // Preparing the sql query
+        $requete = $this->DB->prepare($sql);
+
+        // Associates values with parameters
+        $requete->bindValue(':pseudo', $pseudo, \PDO::PARAM_STR);
+        $requete->bindValue(':email', $email, \PDO::PARAM_STR);
+        $requete->bindValue(':password', $password, \PDO::PARAM_STR);
+
+        // Execute the sql query return a bool
+        return $requete->execute();
+    }
+
+    public function firstRegistration():bool
+    {
+        // SQL request
+        $sql = " SELECT COUNT(*) AS user FROM user";
+
+        // Preparing the sql query
+        $requete = $this->DB->prepare($sql);
+
+        // Execute the sql query
+        $requete->execute();
+
+        // Retrieves information
+        $reponse = $requete->fetch();
+
+        // If there is a record, we return true
+        if ((int)$reponse['user'] === 0) {
+            return true;
+        }
+        // else
+        return false;
+    }
+
+    public function registrationAdministrator(string $pseudo, string $email, string $password):bool
+    {
+        // SQL request
+        $sql = "
+		INSERT INTO `blog`.`user`
+			(pseudo, email, password, role, status)
+		VALUES (
+			:pseudo,
+			:email,
+			:password,
+			'Administrator',
 			'authorized'
 		)";
 
