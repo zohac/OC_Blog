@@ -43,14 +43,15 @@ class RegistrationController extends Controller
                         $encryptedPassword = Container::getEncryption()->hash($params);
 
 
-                        if ($this->isFirstRegistration()){
+                        if ($this->isFirstRegistration()) {
                             // Recovery of the manager returned by the router
                             $manager = $this->getManager();
 
                             // User registration in DB
                             $result = $manager->registrationAdministrator(
                                 $params['pseudo'],
-                                $params['email'], $encryptedPassword
+                                $params['email'],
+                                $encryptedPassword
                             );
                         } elseif (!$this->userExist($params['email']) && !$this->userBanned($params['email'])) {
                             // We check that the user does not exist, and that the email address is not banned
@@ -78,7 +79,6 @@ class RegistrationController extends Controller
                             $reponse->setStatus(301);
                             $reponse->redirection('/login');
                         }
-
                     } else {
                         // adding error flash message
                         foreach ($Validator->getError() as $key => $value) {
