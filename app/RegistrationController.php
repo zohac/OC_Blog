@@ -160,16 +160,19 @@ class RegistrationController extends Controller
         return true;
     }
 
+    /**
+     * Verify that it is the first user.
+     * @return bool
+     */
     public function isFirstRegistration():bool
     {
         // Recovery of the manager returned by the router
         $manager = $this->getManager();
 
-        // Check if a user email is banned
+        // Check that it is the first user.
         if ($manager->firstRegistration()) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 }

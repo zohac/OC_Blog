@@ -92,6 +92,7 @@ class PostController extends Controller
         $listLeft = [];
         $listRight = [];
 
+        // For each post, the linked image is retrieved for each post, otherwise a default one is displayed.
         foreach ($listPosts as $key => $list) {
             if (file_exists(__DIR__.'/../web/upload/blog-'.$list['id'].'.jpg')) {
                 $list = \array_merge($list, ['imgPath' => '/upload/blog-'.$list['id'].'.jpg']);
@@ -148,6 +149,7 @@ class PostController extends Controller
             $comments = $manager->getComment($id);
             $this->setParams(['comments' => $comments]);
         } else {
+            // If there is no comment.
             $this->setParams(['numberOfComments' => '0 Commentaire']);
         }
 
@@ -160,6 +162,7 @@ class PostController extends Controller
             $this->setParams($flash);
         }
 
+        // Si l'utilisateur est authentifié, on ajoute des paramètre pour les commentaires.
         if ($this->user->isAuthenticated()) {
             $this->setParams([
                 'post_id' => $id,

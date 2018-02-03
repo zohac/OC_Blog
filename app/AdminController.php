@@ -11,6 +11,10 @@ use ZCFram\Container;
 class AdminController extends Controller
 {
 
+    /**
+     * @param Router $router
+     * @param array  $params
+     */
     public function __construct(Router $router, array $params)
     {
         parent::__construct($router, $params);

@@ -4,11 +4,16 @@ namespace app\model;
 use \ZCFram\PDOManager;
 
 /**
- *
+ * The registration manager
  */
 class RegistrationManager extends PDOManager
 {
 
+    /**
+     * Verifies that the user exists
+     * @param  string $email
+     * @return bool
+     */
     public function userExist(string $email):bool
     {
         // SQL request
@@ -34,6 +39,11 @@ class RegistrationManager extends PDOManager
         return false;
     }
 
+    /**
+     * Verifies that the user is banned
+     * @param  string $email
+     * @return bool
+     */
     public function userBanned(string $email):bool
     {
         // SQL request
@@ -59,6 +69,13 @@ class RegistrationManager extends PDOManager
         return false;
     }
 
+    /**
+     * Register a new user
+     * @param  string $pseudo
+     * @param  string $email
+     * @param  string $password
+     * @return bool
+     */
     public function registration(string $pseudo, string $email, string $password):bool
     {
         // SQL request
@@ -85,6 +102,10 @@ class RegistrationManager extends PDOManager
         return $requete->execute();
     }
 
+    /**
+     * Make sure this is the first recording
+     * @return bool
+     */
     public function firstRegistration():bool
     {
         // SQL request
@@ -107,6 +128,13 @@ class RegistrationManager extends PDOManager
         return false;
     }
 
+    /**
+     * Register the user as administrator
+     * @param  string $pseudo
+     * @param  string $email
+     * @param  string $password
+     * @return bool
+     */
     public function registrationAdministrator(string $pseudo, string $email, string $password):bool
     {
         // SQL request

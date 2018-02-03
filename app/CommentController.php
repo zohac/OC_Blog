@@ -11,10 +11,10 @@ class CommentController extends Controller
 {
 
     /**
-     * [commentControl description]
-     * @return [type] [description]
+     * Posted comment controller
+     * @return array Returns flash messages
      */
-    public function commentControl()
+    public function commentControl():array
     {
         //Retrieving the class that validates the token
         $token = Container::getToken();
@@ -36,7 +36,7 @@ class CommentController extends Controller
                     ['post_id' => $id,
                     'author_id' => $this->user->getUserInfo('id')]
                 );
-
+                // Retrieve the manager and insert comments in DB
                 $this->setManager('Comment');
                 $manager = $this->getManager();
                 $result = $manager->insertComment($params);
@@ -54,14 +54,16 @@ class CommentController extends Controller
                     );
                 }
             } else {
+                // For each error returned by the validator, a flash message is displayed.
                 foreach ($Validator->getError() as $key => $value) {
                     $this->flash->addFlash('danger', $value);
                 }
             }
         } else {
+            // If the token is not valid, a flash message is displayed.
             $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'enregistrement du commentaire.');
         }
-
+        // Returns flash messages
         return $this->flash->getFlash();
     }
 }

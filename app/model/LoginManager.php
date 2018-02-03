@@ -4,12 +4,18 @@ namespace app\model;
 use \ZCFram\PDOManager;
 
 /**
- *
+ * The login Manager
  */
 class LoginManager extends PDOManager
 {
 
-    public function getUser(string $email, string $password)
+    /**
+     * Verify that the user is registered, and retrieve this is information
+     * @param  string $email
+     * @param  string $password
+     * @return array            The user information
+     */
+    public function getUser(string $email, string $password):array
     {
         // SQL request
         $sql = "

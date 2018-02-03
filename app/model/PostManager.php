@@ -13,7 +13,7 @@ class PostManager extends PDOManager
      * The list of all publish Post
      * @return array The list of all publish Post
      */
-    public function getList()
+    public function getList():array
     {
         // SQL request
         $sql = "
@@ -44,7 +44,7 @@ class PostManager extends PDOManager
      * @param  int    $id The id of a post
      * @return array The publish Post
      */
-    public function getPost(int $id)
+    public function getPost(int $id):array
     {
         // SQL request
         $sql = "
@@ -83,7 +83,7 @@ class PostManager extends PDOManager
     /**
      * Check if the post has comment
      * @param  int    $id The id of a post
-     * @return bool
+     * @return int        the number of comments as integer
      */
     public function postHasComment(int $id):int
     {
