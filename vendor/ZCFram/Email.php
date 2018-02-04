@@ -51,7 +51,6 @@ class Email
             $params = $Validator->getParams();
             // Send the mail
             $this->sendEmail($params);
-
         } else {
             foreach ($Validator->getError() as $key => $value) {
                 $this->flash->addFlash('danger', $value);
