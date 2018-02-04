@@ -47,7 +47,7 @@ class PDOManager
     {
         // The config for the connexion to the database
         $config = Container::getConfigurator('database');
-        
+
         // Recording DB connection data
         $this->host = $config['host'];
         $this->dbname = $config['dbname'];
@@ -57,15 +57,6 @@ class PDOManager
         // DB connection request
         $this->getConnexion();
     }
-
-    /**
-     * Return an instance of PDO
-     * @return object PDO
-     *
-    public function getDB()
-    {
-        return $this->DB;
-    }*/
 
     /**
      * Returns a connection object to the DB by initiating the connection as needed

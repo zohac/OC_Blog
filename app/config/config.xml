@@ -8,7 +8,10 @@
     </database>
     <mail>
         <host>localhost</host>
-        <DKIM></DKIM>
+        <serverName>jouan.ovh</serverName>
+        <from>contact@jouan.ovh</from>
+        <to>fenrir0680@gmail.com</to>
+        <dkimPath>/../../../dkim.private.key</dkimPath>
     </mail>
     <blog>
         <titleBlog>jouan</titleBlog>

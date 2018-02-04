@@ -2,6 +2,7 @@
 namespace app\model;
 
 use \ZCFram\PDOManager;
+use \ZCFram\User;
 
 /**
  * The registration manager
@@ -11,10 +12,10 @@ class RegistrationManager extends PDOManager
 
     /**
      * Verifies that the user exists
-     * @param  string $email
+     * @param User $user
      * @return bool
      */
-    public function userExist(string $email):bool
+    public function userExist(User $user):bool
     {
         // SQL request
         $sql = " SELECT COUNT(*) AS user FROM user WHERE email = :email";
@@ -23,7 +24,7 @@ class RegistrationManager extends PDOManager
         $requete = $this->DB->prepare($sql);
 
         // Associates a value with the email parameter
-        $requete->bindValue(':email', $email, \PDO::PARAM_STR);
+        $requete->bindValue(':email', $user->getEmail(), \PDO::PARAM_STR);
 
         // Execute the sql query
         $requete->execute();
@@ -41,10 +42,10 @@ class RegistrationManager extends PDOManager
 
     /**
      * Verifies that the user is banned
-     * @param  string $email
+     * @param User $user
      * @return bool
      */
-    public function userBanned(string $email):bool
+    public function userBanned(User $user):bool
     {
         // SQL request
         $sql = " SELECT COUNT(*) AS banned FROM user WHERE email = :email AND status = 'banned'";
@@ -53,7 +54,7 @@ class RegistrationManager extends PDOManager
         $requete = $this->DB->prepare($sql);
 
         // Associates a value with the email parameter
-        $requete->bindValue(':email', $email, \PDO::PARAM_STR);
+        $requete->bindValue(':email', $user->getEmail(), \PDO::PARAM_STR);
 
         // Execute the sql query
         $requete->execute();
@@ -71,12 +72,10 @@ class RegistrationManager extends PDOManager
 
     /**
      * Register a new user
-     * @param  string $pseudo
-     * @param  string $email
-     * @param  string $password
+     * @param  User   $user [description]
      * @return bool
      */
-    public function registration(string $pseudo, string $email, string $password):bool
+    public function registration(User $user):bool
     {
         // SQL request
         $sql = "
@@ -86,7 +85,7 @@ class RegistrationManager extends PDOManager
 			:pseudo,
 			:email,
 			:password,
-			'Subscriber',
+			:role,
 			'authorized'
 		)";
 
@@ -94,9 +93,10 @@ class RegistrationManager extends PDOManager
         $requete = $this->DB->prepare($sql);
 
         // Associates values with parameters
-        $requete->bindValue(':pseudo', $pseudo, \PDO::PARAM_STR);
-        $requete->bindValue(':email', $email, \PDO::PARAM_STR);
-        $requete->bindValue(':password', $password, \PDO::PARAM_STR);
+        $requete->bindValue(':pseudo', $user->getPseudo(), \PDO::PARAM_STR);
+        $requete->bindValue(':email', $user->getEmail(), \PDO::PARAM_STR);
+        $requete->bindValue(':password', $user->getPassword(), \PDO::PARAM_STR);
+        $requete->bindValue(':role', $user->getRole(), \PDO::PARAM_STR);
 
         // Execute the sql query return a bool
         return $requete->execute();
@@ -126,38 +126,5 @@ class RegistrationManager extends PDOManager
         }
         // else
         return false;
-    }
-
-    /**
-     * Register the user as administrator
-     * @param  string $pseudo
-     * @param  string $email
-     * @param  string $password
-     * @return bool
-     */
-    public function registrationAdministrator(string $pseudo, string $email, string $password):bool
-    {
-        // SQL request
-        $sql = "
-		INSERT INTO `blog`.`user`
-			(pseudo, email, password, role, status)
-		VALUES (
-			:pseudo,
-			:email,
-			:password,
-			'Administrator',
-			'authorized'
-		)";
-
-        // Preparing the sql query
-        $requete = $this->DB->prepare($sql);
-
-        // Associates values with parameters
-        $requete->bindValue(':pseudo', $pseudo, \PDO::PARAM_STR);
-        $requete->bindValue(':email', $email, \PDO::PARAM_STR);
-        $requete->bindValue(':password', $password, \PDO::PARAM_STR);
-
-        // Execute the sql query return a bool
-        return $requete->execute();
     }
 }

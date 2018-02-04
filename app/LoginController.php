@@ -41,16 +41,15 @@ class LoginController extends Controller
                     // Recovery of the manager returned by the router
                     // And check if the user is registered in DB
                     $manager = $this->getManager();
-                    $userInfo = $manager->getUser($params['email'], $encryptedPassword);
+                    $user = $manager->getUser($params['email'], $encryptedPassword);
 
                     // If the user doesn't exist
                     // Add a flash message
-                    if ($userInfo === false) {
+                    if ($user === false) {
                         $this->flash->addFlash('danger', 'Il existe une erreur dans le couple email/Mot de passe!');
                     } else {
                         // Authenticate the user and hydrate the User class
-                        $this->user->setAuthenticated();
-                        $this->user->hydrateUser($userInfo);
+                        $user->setAuthenticated();
 
                         //Redirection to the admin page
                         $reponse = Container::getHTTPResponse();

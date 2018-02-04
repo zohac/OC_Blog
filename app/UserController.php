@@ -20,7 +20,7 @@ class UserController extends Controller
         parent::__construct($router, $params);
 
         // Check the role of the user.
-        if ($this->user->getUserInfo('role') != 'Administrator') {
+        if ($this->user->getRole() != 'Administrator') {
             // If it is not an administrator, redirection to the admin page
             $reponse = Container::getHTTPResponse();
             $reponse->setStatus(301);
@@ -95,7 +95,7 @@ class UserController extends Controller
                 if (!$Validator->hasError() && $params['id'] == $id) {
                     // Recovery of the manager returned by the router
                     $manager = $this->getManager();
-                    $result = $manager->deleteUser($params['id']);
+                    $result = $manager->deleteUser($id);
 
                     // Adding a flash message if successful or unsuccessful
                     if ($result !== false) {

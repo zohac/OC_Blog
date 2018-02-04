@@ -6,25 +6,65 @@ namespace ZCFram;
  */
 class User
 {
-    /**
-     * Represents a user.
-     * @var $userInfo
-     */
-    private $userInfo;
+    use Hydrator;
 
-    public function __construct()
+    /**
+     * The id user
+     * @var int
+     */
+    private $userId;
+
+    /**
+     * The pseudo of the user
+     * @var string
+     */
+    private $pseudo;
+
+    /**
+     * The email of the user
+     * @var string
+     */
+    private $email;
+
+    /**
+     * The password of the user
+     * @var string
+     */
+    private $password;
+
+    /**
+     * The role of the user
+     * @var string
+     */
+    private $role;
+
+    /**
+     * The status of the user
+     * @var string
+     */
+    private $status;
+
+    public function __construct(array $data = [])
     {
         // Test if a session is started.
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
+
         // If the user is authenticated,
         // its information stored as a session variable is retrieved.
         if ($this->isAuthenticated() && isset($_SESSION['user'])) {
-            $this->userInfo = $_SESSION['user'];
+            //
+            $this->hydrate($_SESSION['user']);
+            $_SESSION['user'] = $this;
+        } elseif ($data) {
+            //
+            $this->hydrate($data);
+            $_SESSION['user'] = $this;
         } else {
             // Otherwise, the authentication is deleted.
             $this->setAuthenticated(false);
+            unset($_SESSION['user']);
         }
     }
 
@@ -53,34 +93,74 @@ class User
     }
 
     /**
-     * Session variable authenticating a user role
-     * @param string $role
+     * Set the User id
+     * @param int $id
      */
-    public function hydrateUser(array $userInfo)
+    public function setUserId(int $id)
     {
-        // TODO : Refaire l'hydratation de l'utilisateur
-        //TODO
-        if (!is_array($userInfo)) {
-            $message = 'La valeur spécifiée à la méthode User::hydrateUser() n\'est pas conforme.';
-            throw new \InvalidArgumentException($message);
-        }
-        $this->userInfo = $userInfo;
-        $_SESSION['user'] = $userInfo;
+        $this->userId = $id;
     }
 
     /**
-     * Retrieves the info of the current user.
-     * @param  string $value Information to recover
-     * @return string|int        The requested info
+     * Set the pseudo User
+     * @param string $pseudo
      */
-    public function getUserInfo(string $value)
+    public function setPseudo(string $pseudo)
     {
-        // If the variable is not defined, an exception is called.
-        if (!in_array($value, ['id', 'pseudo', 'email', 'role'])) {
-            $message = 'La valeur spécifiée à la méthode User::getUserInfo() n\'est pas conforme.';
-            throw new \InvalidArgumentException($message);
-        }
-        // Returns the requested information.
-        return $this->userInfo[$value];
+        $this->pseudo = $pseudo;
+    }
+
+    /**
+     * Set the email of the user
+     * @param string $email
+     */
+    public function setEmail(string $email)
+    {
+        $this->email = $email;
+    }
+
+    public function setPassword(string $password)
+    {
+        $this->password = $password;
+    }
+
+    public function setRole(string $role)
+    {
+        $this->role = $role;
+    }
+
+    public function setStatus(string $status)
+    {
+        $this->status = $status;
+    }
+
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    public function getPseudo()
+    {
+        return $this->pseudo;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

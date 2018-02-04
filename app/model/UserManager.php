@@ -2,6 +2,7 @@
 namespace app\model;
 
 use \ZCFram\PDOManager;
+use \ZCFram\User;
 
 /**
  * Class allowing the call to the DB concerning the user, using PDO
@@ -22,9 +23,15 @@ class UserManager extends PDOManager
         WHERE status != 'banned'";
 
         // Return an array of users
-        return $this->DB
+        $listOfUsers = $this->DB
             ->query($sql)
             ->fetchAll();
+
+        foreach ($listOfUsers as $key => $user) {
+            $listOfPosts[$key] = new User($user);
+        }
+        // Returns the information in array
+        return $listOfUsers;
     }
 
     /**

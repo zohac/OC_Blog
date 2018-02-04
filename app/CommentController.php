@@ -3,6 +3,7 @@ namespace app;
 
 use ZCFram\Controller;
 use ZCFram\Container;
+use \app\Comment;
 
 /**
  * Controller who manages the comments in the blog post page
@@ -33,13 +34,16 @@ class CommentController extends Controller
                 // Recovery of validated data
                 $params = array_merge(
                     $Validator->getParams(),
-                    ['post_id' => $id,
-                    'author_id' => $this->user->getUserInfo('id')]
+                    ['idPost' => $id,
+                    'author' => $this->user->getUserInfo('id')]
                 );
+
+                $comment = new Comment($params);
+
                 // Retrieve the manager and insert comments in DB
                 $this->setManager('Comment');
                 $manager = $this->getManager();
-                $result = $manager->insertComment($params);
+                $result = $manager->insertComment($comment);
 
                 // Adding a flash message if successful or unsuccessful
                 if ($result > 0) {

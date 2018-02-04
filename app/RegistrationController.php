@@ -3,6 +3,7 @@ namespace app;
 
 use ZCFram\Controller;
 use ZCFram\Container;
+use ZCFram\User;
 
 /**
  * Class managing DB registration of a new user
@@ -38,30 +39,31 @@ class RegistrationController extends Controller
                     if (!$Validator->hasError()) {
                         // Recovering validator data
                         $params = $Validator->getParams();
-
                         // password hashing
                         $encryptedPassword = Container::getEncryption()->hash($params);
 
+                        $params = \array_merge(
+                            $params,
+                            ['password' => $encryptedPassword]
+                        );
+                        $user = new User($params);
+
+                        // Recovery of the manager returned by the router
+                        $manager = $this->getManager();
 
                         if ($this->isFirstRegistration()) {
-                            // Recovery of the manager returned by the router
-                            $manager = $this->getManager();
-
+                            $user->setRole('Administrator');
                             // User registration in DB
-                            $result = $manager->registrationAdministrator(
-                                $params['pseudo'],
-                                $params['email'],
-                                $encryptedPassword
-                            );
-                        } elseif (!$this->userExist($params['email']) && !$this->userBanned($params['email'])) {
+                            $result = $manager->registration($user);
+                        } elseif (!$this->userExist($user) && !$this->userBanned($user)) {
                             // We check that the user does not exist, and that the email address is not banned
-
-                            // Recovery of the manager returned by the router
-                            $manager = $this->getManager();
-
+                            $user->setRole('Subscriber');
                             // User registration in DB
-                            $result = $manager->registration($params['pseudo'], $params['email'], $encryptedPassword);
+                            $result = $manager->registration($user);
+                        } else {
+                            $result = false;
                         }
+
                         // If the record failed, sends a flash message,
                         // otherwise redirection
                         if ($result === false) {
@@ -108,13 +110,13 @@ class RegistrationController extends Controller
      * @param  string $email
      * @return bool
      */
-    public function userExist(string $email):bool
+    public function userExist(User $user):bool
     {
         // Recovery of the manager returned by the router
         $manager = $this->getManager();
 
         // Check if a user exist in DB
-        if ($manager->userExist($email)) {
+        if ($manager->userExist($user)) {
             // If a user exists, send a flash message
             $this->flash->addFlash('danger', 'L\'utilisateur existe déjà!');
             return true;
@@ -128,13 +130,13 @@ class RegistrationController extends Controller
      * @param  string $email
      * @return bool
      */
-    public function userBanned(string $email):bool
+    public function userBanned(User $user):bool
     {
         // Recovery of the manager returned by the router
         $manager = $this->getManager();
 
         // Check if a user email is banned
-        if ($manager->userBanned($email)) {
+        if ($manager->userBanned($user)) {
             // If a user is banned, send a flash message
             $this->flash->addFlash('danger', 'L\'adresse email a été bannie!');
             return true;

@@ -2,6 +2,7 @@
 namespace app\model;
 
 use \ZCFram\PDOManager;
+use \app\Comment;
 
 /**
  * Class allowing the call to the DB concerning the Post, using PDO
@@ -21,8 +22,7 @@ class CommentManager extends PDOManager
         SELECT
 			comment.id,
             comment,
-			DATE_FORMAT(comment.creationDate, '%e') AS day,
-            DATE_FORMAT(comment.creationDate, '%M %Y') AS monthYear,
+            DATE_FORMAT(comment.creationDate, '%e-%M %Y') AS creationDate,
             user.pseudo AS author
         FROM blog.comment
 		INNER JOIN user
@@ -42,10 +42,14 @@ class CommentManager extends PDOManager
         $requete->execute();
 
         // Retrieves information from DB
-        $comment = $requete->fetchALL();
+        $listOfComment = $requete->fetchALL();
+
+        foreach ($listOfComment as $key => $comment) {
+            $listOfComment[$key] = new Comment($comment);
+        }
 
         // Returns the information in array
-        return $comment;
+        return $listOfComment;
     }
 
     /**
@@ -53,7 +57,7 @@ class CommentManager extends PDOManager
      * @param  int    $id The id of a post
      * @return array The list of all publish Post
      */
-    public function insertComment(array $comment):bool
+    public function insertComment(Comment $comment):bool
     {
         // SQL request
         $sql = "
@@ -66,9 +70,9 @@ class CommentManager extends PDOManager
         $requete = $this->DB->prepare($sql);
 
         // Associates values with parameters
-        $requete->bindValue(':post_id', $comment['post_id'], \PDO::PARAM_INT);
-        $requete->bindValue(':author_id', $comment['author_id'], \PDO::PARAM_INT);
-        $requete->bindValue(':comment', $comment['comment'], \PDO::PARAM_STR);
+        $requete->bindValue(':post_id', $comment->getIdPost(), \PDO::PARAM_INT);
+        $requete->bindValue(':author_id', $comment->getAuthor(), \PDO::PARAM_INT);
+        $requete->bindValue(':comment', $comment->getComment(), \PDO::PARAM_STR);
 
         // Execute the sql query and return a booleen
         return $requete->execute();

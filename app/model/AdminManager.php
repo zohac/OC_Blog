@@ -2,6 +2,7 @@
 namespace app\model;
 
 use \ZCFram\PDOManager;
+use \app\Post;
 
 /**
  * Manager for the admin section
@@ -13,27 +14,31 @@ class AdminManager extends PDOManager
      * List of all posts
      * @return array all posts
      */
-    public function getList():array
+    public function getListOfPost()
     {
         // SQL request
         $sql = "
         SELECT
-            id,
+            id AS postID,
             title,
-			DATE_FORMAT(modificationDate, '%e %M %Y') AS date
+            DATE_FORMAT(modificationDate, '%e %M %Y') AS modificationDate
         FROM blog.post
-        WHERE status != 'Trash'
+        WHERE post.status != 'Trash'
         ORDER BY id DESC";
 
         //transition from date to french
         $this->DB->query("SET lc_time_names = 'fr_FR'");
+
         // Retrieves information from DB
-        $listPosts = $this->DB
+        $listOfPosts = $this->DB
             ->query($sql)
             ->fetchAll();
 
+        foreach ($listOfPosts as $key => $comment) {
+            $listOfPosts[$key] = new Post($comment);
+        }
         // Returns the information in array
-        return $listPosts;
+        return $listOfPosts;
     }
 
     /**
@@ -93,18 +98,18 @@ class AdminManager extends PDOManager
     /**
      * Retrieves information from a post
      * @param  int   $id id of the post
-     * @return array     information from a post
+     * @return object    information from a post
      */
-    public function getPost(int $id):array
+    public function getPost(int $id)
     {
         // SQL request
         $sql = "
         SELECT
-            post.id,
+            post.id AS postId,
             post.title,
             post.post,
-			DATE_FORMAT(post.creationDate, '%Y-%m-%e') AS creationDate,
-            DATE_FORMAT(post.modificationDate, '%Y-%m-%e') AS modificationDate,
+			DATE_FORMAT(post.creationDate, '%Y-%m-%d') AS creationDate,
+            DATE_FORMAT(post.modificationDate, '%Y-%m-%d') AS modificationDate,
 			post.status,
             user.pseudo AS author
         FROM blog.post
@@ -127,8 +132,11 @@ class AdminManager extends PDOManager
         // Retrieves information from DB
         $PostInfo = $requete->fetch();
 
-        // Returns the information in array
-        return $PostInfo;
+        // Create new post object
+        $post = new Post($PostInfo);
+
+        // Return the information of an object post
+        return $post;
     }
 
     /**
@@ -212,10 +220,10 @@ class AdminManager extends PDOManager
 
     /**
      * Updating a post
-     * @param  array $post
+     * @param post $post
      * @return bool
      */
-    public function updatePost(array $post):bool
+    public function updatePost(post $post):bool
     {
         // SQL request
         $sql = "
@@ -227,10 +235,10 @@ class AdminManager extends PDOManager
         $requete = $this->DB->prepare($sql);
 
         // Associates a value with parameters
-        $requete->bindValue(':title', $post['title'], \PDO::PARAM_STR);
-        $requete->bindValue(':post', $post['post'], \PDO::PARAM_STR);
-        $requete->bindValue(':status', $post['status'], \PDO::PARAM_STR);
-        $requete->bindValue(':id', $post['id'], \PDO::PARAM_INT);
+        $requete->bindValue(':title', $post->getTitle(), \PDO::PARAM_STR);
+        $requete->bindValue(':post', $post->getPost(), \PDO::PARAM_STR);
+        $requete->bindValue(':status', $post->getStatus(), \PDO::PARAM_STR);
+        $requete->bindValue(':id', $post->getPostID(), \PDO::PARAM_INT);
 
         // Execute the sql query and return bool
         return $requete->execute();
@@ -238,10 +246,10 @@ class AdminManager extends PDOManager
 
     /**
      * Insert a new post
-     * @param  array $post
-     * @return bool
+     * @param post $post
+     * @return bool|int the last insert id
      */
-    public function insertPost(array $post):bool
+    public function insertPost(post $post)
     {
         // SQL request
         $sql = "
@@ -254,13 +262,17 @@ class AdminManager extends PDOManager
         $requete = $this->DB->prepare($sql);
 
         // Associates a value with parameters
-        $requete->bindValue(':author_id', $post['author_id'], \PDO::PARAM_INT);
-        $requete->bindValue(':title', $post['title'], \PDO::PARAM_STR);
-        $requete->bindValue(':post', $post['post'], \PDO::PARAM_STR);
-        $requete->bindValue(':status', $post['status'], \PDO::PARAM_STR);
+        $requete->bindValue(':author_id', $post->getAuthor(), \PDO::PARAM_INT);
+        $requete->bindValue(':title', $post->getTitle(), \PDO::PARAM_STR);
+        $requete->bindValue(':post', $post->getPost(), \PDO::PARAM_STR);
+        $requete->bindValue(':status', $post->getStatus(), \PDO::PARAM_STR);
 
         // Execute the sql query and return bool
-        return $requete->execute();
+        $result = $requete->execute();
+        if ($result) {
+            return (int)$this->DB->lastInsertId();
+        }
+        return false;
     }
 
     /**
@@ -361,26 +373,5 @@ class AdminManager extends PDOManager
 
         // Return boolean
         return $answer['isWritten'];
-    }
-
-    /**
-     * Find the next id post
-     * @return int the next id post
-     */
-    public function getTheNewPostID():int
-    {
-        // SQL request
-        $sql = "SELECT id FROM `post` ORDER BY id DESC LIMIT 1";
-
-        // Retrieves information from DB
-        $id = $this->DB
-            ->query($sql)
-            ->fetch();
-
-        // The next id
-        $id = 1 + (int)$id['id'];
-
-        // return the next id post
-        return $id;
     }
 }
