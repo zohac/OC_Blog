@@ -112,7 +112,7 @@ class PostController extends Controller
         if (isset($_POST['comment'])) {
             // Sent comment control
             $comment = $this->container->get('CommentController');
-            $flash = $comment->CommentControl();
+            $this->flash = $comment->CommentControl();
         }
         // Adding flash message and parameters to return by the view
         $this->setParams($this->flash->getFlash());
