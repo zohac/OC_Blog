@@ -2,7 +2,6 @@
 namespace app;
 
 use ZCFram\Controller;
-use ZCFram\Container;
 use \app\Comment;
 
 /**
@@ -15,7 +14,7 @@ class CommentController extends Controller
      * Posted comment controller
      * @return array Returns flash messages
      */
-    public function commentControl():array
+    public function commentControl():Flash
     {
         //Retrieving the class that validates the token
         $token = Container::getToken();
@@ -68,6 +67,6 @@ class CommentController extends Controller
             $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'enregistrement du commentaire.');
         }
         // Returns flash messages
-        return $this->flash->getFlash();
+        return $this->flash;
     }
 }

@@ -2,7 +2,6 @@
 namespace app;
 
 use ZCFram\Controller;
-use ZCFram\Container;
 
 /**
  * Controller who manages the index and blog posts
@@ -17,21 +16,22 @@ class PostController extends Controller
     public function executeIndex()
     {
         //Retrieving the class that validates the token
-        $token = Container::getToken();
+        $token = $this->container->get('Token');
+
         // If variables exist in the post method
         if (!empty($_POST)) {
             // We're checking the validity of the token.
             if ($token->isTokenValid($_POST['token'])) {
-                $email = Container::getEmail();
-                $returnMessage = $email->validateAndSendEmail();
-                // Adding flash message and parameters to return by the view
-                $this->setParams($returnMessage);
+                $email = $this->container->get('Email');
+                $email->hydrate($data);
+
+                $this->flash = $email->validateAndSendEmail();
             } else {
                 $this->flash->addFlash('danger', 'Le formulaire n\est pas conforme.');
-                // Adding flash message and parameters to return by the view
-                $this->setParams($this->flash->getFlash());
             }
         }
+        // Adding flash message and parameters to return by the view
+        $this->setParams($this->flash->getFlash());
         //Retrieving the class that validates the token
         $token = $token->getToken();
         // Adding token to the parameters to return by the view
@@ -65,7 +65,6 @@ class PostController extends Controller
                 $listLeft[] = $list;
             }
         }
-
         // Adding parameters to return by the view
         $this->setParams([
             'left' => $listLeft,
@@ -88,7 +87,7 @@ class PostController extends Controller
         // Recovery of the manager returned by the router
         $manager = $this->getManager();
         // Get one post in DB
-        $Post = $manager->getPost($id);
+        $post = $manager->getPost($id);
 
         // We change the manager
         $this->setManager('Comment');
@@ -112,20 +111,21 @@ class PostController extends Controller
         // we control the commentary
         if (isset($_POST['comment'])) {
             // Sent comment control
-            $comment = new CommentController($this->router);
+            $comment = $this->container->get('CommentController');
             $flash = $comment->CommentControl();
-            $this->setParams($flash);
         }
+        // Adding flash message and parameters to return by the view
+        $this->setParams($this->flash->getFlash());
 
         //Retrieving the class that validates the token
-        $token = Container::getToken()->getToken();
+        $token = $this->container->get('Token');
 
         // Adding parameters to return by the view
         $this->setParams([
             'comments' => $comments,
             'numberOfComments' => $numberOfComments,
-            'token' => $token,
-            'post' => $Post
+            'token' => $token->getToken(),
+            'post' => $post
         ]);
 
         // View recovery and display

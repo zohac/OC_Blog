@@ -31,13 +31,15 @@ class ErrorController extends Controller
      * The status code
      * @var int
      */
-    public $errorCode;
+    protected $errorCode;
 
     /**
      * @var Exception $e
      */
-    public function __construct(\Exception $e)
+    public function __construct(\ZCFram\DIC $container, \Exception $e)
     {
+        parent::__construct($container);
+
         // We recover the execution
         $this->e = $e;
         // We define the view to call
@@ -66,7 +68,8 @@ class ErrorController extends Controller
         }
 
         // We define the status code to return to the user's browser.
-        Container::getHTTPResponse()->setStatus($this->errorCode);
+        $response = $this->container->get('HTTPResponse');
+        $response->setStatus($this->errorCode);
 
         // View recovery and display
         $this->getView();

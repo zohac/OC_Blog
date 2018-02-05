@@ -2,7 +2,6 @@
 namespace app;
 
 use ZCFram\Controller;
-use ZCFram\Container;
 use ZCFram\User;
 
 /**
@@ -18,7 +17,7 @@ class RegistrationController extends Controller
     public function executeRegistration()
     {
         //Retrieving the class that validates the token
-        $token = Container::getToken();
+        $token = $this->container->get('Token');
 
         // If variables exist in the post method
         if (!empty($_POST)) {
@@ -26,7 +25,7 @@ class RegistrationController extends Controller
             if ($token->isTokenValid($_POST['token'])) {
                 if ($this->samePassword($_POST['password'], $_POST['password2'])) {
                     //Retrieving the class that validates the data sent
-                    $Validator = Container::getValidator();
+                    $Validator = $this->container->get('Validator');
                     $Validator->required('pseudo', 'text');
                     $Validator->required('email', 'email');
                     $Validator->required('password', 'password');
@@ -40,7 +39,7 @@ class RegistrationController extends Controller
                         // Recovering validator data
                         $params = $Validator->getParams();
                         // password hashing
-                        $encryptedPassword = Container::getEncryption()->hash($params);
+                        $encryptedPassword = $this->container->get('Encryption')->hash($params);
 
                         $params = \array_merge(
                             $params,
@@ -77,7 +76,7 @@ class RegistrationController extends Controller
                                 'Vous êtes bien enregistré '. $params['pseudo'] .'! Veuillez Vous connecter.'
                             );
                             //Redirection to the login page
-                            $reponse = Container::getHTTPResponse();
+                            $reponse = $this->container->get('HTTPResponse');
                             $reponse->setStatus(301);
                             $reponse->redirection('/login');
                         }

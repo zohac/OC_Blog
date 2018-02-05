@@ -9,59 +9,71 @@ class Email
     use Hydrator;
 
     /**
-     * [protected description]
-     * @var [type]
+     * The host name for the server smtp
+     * @var string
      */
     protected $host;
 
+    /**
+     * The email address of where the mail is sent from
+     * @var string
+     */
     protected $from;
 
+    /**
+     * The email address where to send
+     * @var string
+     */
     protected $to;
 
+    /**
+     * The email address where to send
+     * @var string
+     */
     protected $serverName;
 
+    /**
+     * An instance of Flash message
+     * @var object $flash
+     */
     protected $flash;
 
-    public function __construct()
+    public function __construct(Flash $flash, Validator $Validator)
     {
-        // Get configuration
-        $mail = Container::getConfigurator('mail');
-
-        $this->hydrate($mail);
-
-        $this->flash = new Flash;
+        // The Flash object is assigned to the variable $flash
+        $this->flash = $flash;
+        $this->validator = $Validator;
     }
 
     /**
      * [validateAndSendEmail description]
      * @return string [description]
      */
-    public function validateAndSendEmail():array
+    public function validateAndSendEmail():Flash
     {
         //Retrieving the class that validates the data sent
-        $Validator = Container::getValidator();
-        $Validator->required('name', 'text');
-        $Validator->required('email', 'email');
-        $Validator->required('comments', 'text');
+        $this->validator->required('name', 'text');
+        $this->validator->required('email', 'email');
+        $this->validator->required('comments', 'text');
 
         // If the validator does not return an error,
         // else adding error flash message
-        if (!$Validator->hasError()) {
+        if (!$this->validator->hasError()) {
             // Recovery of validated data
-            $params = $Validator->getParams();
+            $params = $this->validator->getParams();
             // Send the mail
             $this->sendEmail($params);
         } else {
-            foreach ($Validator->getError() as $key => $value) {
+            foreach ($this->validator->getError() as $key => $value) {
                 $this->flash->addFlash('danger', $value);
             }
         }
         // Returns flash messages
-        return $this->flash->getFlash();
+        return $this->flash;
     }
 
     /**
-     * * Send an email
+     * Send an email
      * @param  array  $params [description]
      */
     private function sendEmail(array $params)

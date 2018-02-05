@@ -1,9 +1,7 @@
 <?php
 namespace app;
 
-use ZCFram\Router;
 use ZCFram\Controller;
-use ZCFram\Container;
 
 /**
  * Middelware
@@ -16,7 +14,7 @@ class AppConfigController extends Controller
      * An instance of the Router
      * @var object Router
      */
-    protected $router;
+    protected $container;
 
     /**
      * Basic blog configuration.
@@ -26,15 +24,14 @@ class AppConfigController extends Controller
 
     /**
      * Building the class.
-     * @param Router $router    An instance of the Router
+     * @param DIC $container    An instance of the DIC
      */
-    public function __construct(Router $router)
+    public function __construct(\ZCFram\DIC $container)
     {
-        // Router registration.
-        $this->router = $router;
-
+        $this->container = $container;
         // Recovery of the configuration.
-        $this->appConfig = Container::getConfigurator('blog');
+        $data = $this->container->get('Configurator');
+        $this->appConfig = $data->getConfig('blog');
     }
 
     /**
@@ -42,9 +39,12 @@ class AppConfigController extends Controller
      */
     public function execute()
     {
+        //We get the router back.
+        $router = $this->container->get('Router');
+
         //  We get the next controller
-        $controllerClass = 'app\\'.$this->router->getModule().'Controller';
-        $controller = new $controllerClass($this->router, $this->appConfig);
+        $controllerClass = 'app\\'.$router->getModule().'Controller';
+        $controller = new $controllerClass($this->container, $this->appConfig);
 
         // We execute it
         $controller->execute();

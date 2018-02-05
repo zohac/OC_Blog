@@ -7,36 +7,37 @@ namespace ZCFram;
  */
 class App
 {
+    /**
+     * An instance of the DIC
+     * @var object DIC
+     */
+    protected $container;
 
     /**
-     * Instance of the ServerRequest class
-     * @var ServerRequest
+     * An instance of HTTPRequest
+     * @var object HTTPRequest
      */
     protected $request;
-
-    /**
-     * Instance of the Response class
-     * @var HTTPResponse
-     */
-    protected $reponse;
 
     /**
      * Initializes the http request
      * Initializes the Response
      */
-    public function __construct()
+    public function __construct(DIC $container)
     {
+        $this->container = $container;
+
         // We're recovering the client request.
-        $this->request = new HTTPRequest();
+        $this->request = $this->container->get('HTTPRequest');
         $uri = $this->request->requestURI();
 
         // Ticket creation to prevent session theft
-        $ticket = new SessionTicket;
+        $ticket = $this->container->get('Ticket');
 
         // Check if the ticket is valid
         if (!$ticket->isTicketValid()) {
             // Deleting User Authentication
-            $user = Container::getUser();
+            $user = $this->container->get('User');
             $user->setAuthenticated(false);
         }
 
@@ -44,9 +45,9 @@ class App
         // and redirect to the correct url if necessary
         if (!empty($uri) && substr($uri, -1, 1) === '/' && strlen($uri) > 1) {
             // Redirection
-            $this->reponse = Container::getHTTPResponse();
-            $this->reponse->setStatus(301);
-            $this->reponse->redirection(substr($uri, 0, -1));
+            $reponse = $this->container->get('HTTPResponse');
+            $reponse->setStatus(301);
+            $reponse->redirection(substr($uri, 0, -1));
         }
     }
 
@@ -65,7 +66,7 @@ class App
             $controller->execute();
         } catch (\Exception $e) {
             // An instance of the error controller is created
-            $controller = new ErrorController($e);
+            $controller = new ErrorController($this->container, $e);
             // We execute it
             $controller->execute();
         }
@@ -80,7 +81,7 @@ class App
 
         // We instantiate the router, and we check if the url
         // corresponds to a route in the configuration file.
-        $router = new Router(realpath(__DIR__.'/../../app/config/routes.xml'));
+        $router = $this->container->get('Router');
         $router->match($this->request->requestURI());
 
         // We add the variables of the URL to the $_GET array.
@@ -96,6 +97,6 @@ class App
             $controllerClass = 'app\\'.$router->getModule().'Controller';
         }
         // We return an instance of the desired controller
-        return new $controllerClass($router);
+        return new $controllerClass($this->container);
     }
 }
