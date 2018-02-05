@@ -14,7 +14,7 @@ class CommentController extends Controller
      * Posted comment controller
      * @return array Returns flash messages
      */
-    public function commentControl():Flash
+    public function commentControl()
     {
         //Retrieving the class that validates the token
         $token = $this->container->get('Token');
