@@ -17,13 +17,13 @@ class CommentController extends Controller
     public function commentControl():Flash
     {
         //Retrieving the class that validates the token
-        $token = Container::getToken();
+        $token = $this->container->get('Token');
         if ($token->isTokenValid($_POST['token'])) {
             // we make sure that the variable $_GET['id'] is an integer
             $id = (int)$_GET['id'];
 
             //Retrieving the class that validates the data sent
-            $Validator = Container::getValidator();
+            $Validator = $this->container->get('Validator');
             $Validator->required('comment', 'text');
 
             // If the validator does not return an error,

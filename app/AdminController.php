@@ -466,7 +466,7 @@ class AdminController extends Controller
                 // We're checking the validity of the token.
                 if ($token->isTokenValid($_POST['token'])) {
                     //Retrieving the class that validates the data sent
-                    $Validator = Container::getValidator();
+                    $Validator = $this->container->get('Validator');
                     $Validator->check('id', 'integer');
 
                     // Recovery of validated data
@@ -498,7 +498,7 @@ class AdminController extends Controller
             }
             if (isset($_POST['No']) || isset($result)) {
                 // Redirection on the user page
-                $reponse = Container::getHTTPResponse();
+                $reponse = $this->container->get('HTTPResponse');
                 $reponse->setStatus(301);
                 $reponse->redirection('/admin');
             }
