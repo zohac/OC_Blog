@@ -53,13 +53,12 @@ class User
 
         // If the user is authenticated,
         // its information stored as a session variable is retrieved.
-        if ($this->isAuthenticated() && isset($_SESSION['user'])) {
-            //
-            $this->hydrate($_SESSION['user']);
-            $_SESSION['user'] = $this;
-        } elseif ($data) {
+        if ($data) {
             //
             $this->hydrate($data);
+        } elseif ($this->isAuthenticated() && isset($_SESSION['user'])) {
+            //
+            $this->hydrate($_SESSION['user']);
             $_SESSION['user'] = $this;
         } else {
             // Otherwise, the authentication is deleted.
@@ -89,6 +88,7 @@ class User
             throw new \InvalidArgumentException($message);
         }
         // Authentication is defined in a session variable
+        $_SESSION['user'] = $this;
         $_SESSION['auth'] = $authenticated;
     }
 

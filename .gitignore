@@ -9,3 +9,4 @@ vendor/swiftmailer
 composer.lock
 web/upload/*.jpg
 web/upload/*.png
+.vscode

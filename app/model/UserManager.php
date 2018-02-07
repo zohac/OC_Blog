@@ -18,7 +18,7 @@ class UserManager extends PDOManager
     {
         // SQL request
         $sql = "
-        SELECT id, pseudo, email, role
+        SELECT id AS userID, pseudo, email, role
         FROM blog.user
         WHERE status != 'banned'";
 
@@ -28,7 +28,7 @@ class UserManager extends PDOManager
             ->fetchAll();
 
         foreach ($listOfUsers as $key => $user) {
-            $listOfPosts[$key] = new User($user);
+            $listOfUsers[$key] = new User($user);
         }
         // Returns the information in array
         return $listOfUsers;

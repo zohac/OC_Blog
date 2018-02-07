@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <config>
+    <default.application.config>
+        <titleBlog>jouan</titleBlog>
+        <authorBlog>Simon JOUAN</authorBlog>
+        <descriptionBlog>Development of my own blog system in php.</descriptionBlog>
+        <twitter>https://twitter.com/fenrir0680</twitter>
+        <linkedin>https://www.linkedin.com/in/simon-jouan-b355a927/</linkedin>
+        <github>https://github.com/zohac</github>
+    </default.application.config>
     <database>
         <host>localhost</host>
         <dbname>blog</dbname>
@@ -13,12 +21,4 @@
         <to>fenrir0680@gmail.com</to>
         <dkimPath>/../../../dkim.private.key</dkimPath>
     </mail>
-    <blog>
-        <titleBlog>jouan</titleBlog>
-        <authorBlog>Simon JOUAN</authorBlog>
-        <descriptionBlog>Development of my own blog system in php.</descriptionBlog>
-        <twitter>https://twitter.com/fenrir0680</twitter>
-        <linkedin>https://www.linkedin.com/in/simon-jouan-b355a927/</linkedin>
-        <github>https://github.com/zohac</github>
-    </blog>
 </config>

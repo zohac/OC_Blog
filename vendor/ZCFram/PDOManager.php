@@ -8,7 +8,6 @@ use \PDO;
  */
 class PDOManager
 {
-
     /**
      * A PDO instance
      * @var PDO
@@ -40,14 +39,11 @@ class PDOManager
     private $password;
 
     /**
-     * [__construct description]
      * Retrieving DB connection configuration, and connection
+     * @param array $config
      */
-    public function __construct()
+    public function __construct(array $config)
     {
-        // The config for the connexion to the database
-        $config = Container::getConfigurator('database');
-
         // Recording DB connection data
         $this->host = $config['host'];
         $this->dbname = $config['dbname'];

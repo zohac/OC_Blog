@@ -50,22 +50,32 @@ abstract class Controller
     protected $router;
 
     /**
-     * Set the variable name
-     * @param string
+     * An instance of the DIC
+     * @var object DIC
      */
-    public function __construct(Router $router, array $params = null)
+    protected $container;
+
+    /**
+     * [__construct description]
+     * @param \ZCFram\DIC $container The container
+     * @param array       $params    parameter to send to view
+     */
+    public function __construct(\ZCFram\DIC $container)
     {
+        //
+        $this->container = $container;
 
-        $this->router = $router;
-        $this->setAction($router->getAction());
-        $this->setManager($router->getModule());
+        //
+        $this->router = $this->container->get('Router');
+        $this->flash = $this->container->get('Flash');
+        $this->user = $this->container->get('User');
+
+        $this->setAction($this->router->getAction());
+        $this->setManager($this->router->getModule());
         $this->setView($this->action);
-        if ($params) {
-            $this->setParams($params);
-        }
 
-        $this->flash = new Flash;
-        $this->user = new User;
+        $configurator = $this->container->get('Configurator');
+        $this->setParams($configurator->getConfig('default.application.config'));
         $this->setParams(['user' => $this->user]);
     }
 
@@ -164,8 +174,12 @@ abstract class Controller
     {
         // Definition of the manager path to be retrieved
         $managerClass = '\app\\model\\'.$this->manager.'Manager';
+
+        $data = $this->container->get('Configurator');
+        $data = $data->getConfig('database');
+
         // Return of an instance of a manager
-        return new $managerClass();
+        return new $managerClass($data);
     }
 
     /**
@@ -188,7 +202,7 @@ abstract class Controller
      */
     public function send()
     {
-        $response = Container::getHTTPResponse();
+        $response = $this->container->get('HTTPResponse');
         $response->send($this->view);
     }
 }

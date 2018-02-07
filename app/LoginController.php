@@ -2,7 +2,6 @@
 namespace app;
 
 use ZCFram\Controller;
-use ZCFram\Container;
 
 /**
  * Class to manage user authentication
@@ -17,13 +16,13 @@ class LoginController extends Controller
     public function executeLogin()
     {
         //Retrieving the class that validates the token
-        $token = Container::getToken();
+        $token = $this->container->get('Token');
         // If variables exist in the post method
         if (!empty($_POST)) {
             // We're checking the validity of the token.
             if ($token->isTokenValid($_POST['token'])) {
                 //Retrieving the class that validates the data sent
-                $Validator = Container::getValidator();
+                $Validator = $this->container->get('Validator');
                 $Validator->required('email', 'email');
                 $Validator->required('password', 'password');
 
@@ -36,7 +35,7 @@ class LoginController extends Controller
                     $params = $Validator->getParams();
 
                     // password hashing
-                    $encryptedPassword = Container::getEncryption()->hash($params);
+                    $encryptedPassword = $this->container->get('Encryption')->hash($params);
 
                     // Recovery of the manager returned by the router
                     // And check if the user is registered in DB
@@ -52,7 +51,7 @@ class LoginController extends Controller
                         $user->setAuthenticated();
 
                         //Redirection to the admin page
-                        $reponse = Container::getHTTPResponse();
+                        $reponse = $this->container->get('HTTPResponse');
                         $reponse->setStatus(301);
                         $reponse->redirection('/admin');
                     }
@@ -89,7 +88,7 @@ class LoginController extends Controller
         $this->user->setAuthenticated(false);
 
         // Redirection to the index page
-        $reponse = Container::getHTTPResponse();
+        $reponse = $this->container->get('HTTPResponse');
         $reponse->setStatus(301);
         $reponse->redirection('/');
     }
