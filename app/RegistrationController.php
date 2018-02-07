@@ -2,7 +2,7 @@
 namespace app;
 
 use ZCFram\Controller;
-use ZCFram\Container;
+use ZCFram\User;
 
 /**
  * Class managing DB registration of a new user
@@ -17,7 +17,7 @@ class RegistrationController extends Controller
     public function executeRegistration()
     {
         //Retrieving the class that validates the token
-        $token = Container::getToken();
+        $token = $this->container->get('Token');
 
         // If variables exist in the post method
         if (!empty($_POST)) {
@@ -25,7 +25,7 @@ class RegistrationController extends Controller
             if ($token->isTokenValid($_POST['token'])) {
                 if ($this->samePassword($_POST['password'], $_POST['password2'])) {
                     //Retrieving the class that validates the data sent
-                    $Validator = Container::getValidator();
+                    $Validator = $this->container->get('Validator');
                     $Validator->required('pseudo', 'text');
                     $Validator->required('email', 'email');
                     $Validator->required('password', 'password');
@@ -38,35 +38,47 @@ class RegistrationController extends Controller
                     if (!$Validator->hasError()) {
                         // Recovering validator data
                         $params = $Validator->getParams();
-
                         // password hashing
-                        $encryptedPassword = Container::getEncryption()->hash($params);
+                        $encryptedPassword = $this->container->get('Encryption')->hash($params);
 
-                        // We check that the user does not exist, or that the email address is not banned
-                        if (!$this->userExist($params['email']) || !$this->userBanned($params['email'])) {
-                            // Recovery of the manager returned by the router
-                            $manager = $this->getManager();
+                        $params = \array_merge(
+                            $params,
+                            ['password' => $encryptedPassword]
+                        );
+                        $user = new User($params);
 
+                        // Recovery of the manager returned by the router
+                        $manager = $this->getManager();
+
+                        if ($this->isFirstRegistration()) {
+                            $user->setRole('Administrator');
                             // User registration in DB
-                            $result = $manager->Registration($params['pseudo'], $params['email'], $encryptedPassword);
+                            $result = $manager->registration($user);
+                        } elseif (!$this->userExist($user) && !$this->userBanned($user)) {
+                            // We check that the user does not exist, and that the email address is not banned
+                            $user->setRole('Subscriber');
+                            // User registration in DB
+                            $result = $manager->registration($user);
+                        } else {
+                            $result = false;
+                        }
 
-                            // If the record failed, sends a flash message,
-                            // otherwise redirection
-                            if ($result === false) {
-                                $this->flash->addFlash(
-                                    'danger',
-                                    'Une erreur est survenu lors de votre inscription, veuillez réessayer!'
-                                );
-                            } else {
-                                $this->flash->addFlash(
-                                    'success',
-                                    'Vous êtes bien enregistré '. $params['pseudo'] .'! Veuillez Vous connecter.'
-                                );
-                                //Redirection to the login page
-                                $reponse = Container::getHTTPResponse();
-                                $reponse->setStatus(301);
-                                $reponse->redirection('/login');
-                            }
+                        // If the record failed, sends a flash message,
+                        // otherwise redirection
+                        if ($result === false) {
+                            $this->flash->addFlash(
+                                'danger',
+                                'Une erreur est survenu lors de votre inscription, veuillez réessayer!'
+                            );
+                        } else {
+                            $this->flash->addFlash(
+                                'success',
+                                'Vous êtes bien enregistré '. $params['pseudo'] .'! Veuillez Vous connecter.'
+                            );
+                            //Redirection to the login page
+                            $reponse = $this->container->get('HTTPResponse');
+                            $reponse->setStatus(301);
+                            $reponse->redirection('/login');
                         }
                     } else {
                         // adding error flash message
@@ -92,20 +104,18 @@ class RegistrationController extends Controller
         $this->send();
     }
 
-    // TODO : N'envoyer qu'un seul message flash si l'utilisateur exite et est banni
-
     /**
      * Check if a user exist in DB
      * @param  string $email
      * @return bool
      */
-    public function userExist(string $email):bool
+    public function userExist(User $user):bool
     {
         // Recovery of the manager returned by the router
         $manager = $this->getManager();
 
         // Check if a user exist in DB
-        if ($manager->userExist($email)) {
+        if ($manager->userExist($user)) {
             // If a user exists, send a flash message
             $this->flash->addFlash('danger', 'L\'utilisateur existe déjà!');
             return true;
@@ -119,13 +129,13 @@ class RegistrationController extends Controller
      * @param  string $email
      * @return bool
      */
-    public function userBanned(string $email):bool
+    public function userBanned(User $user):bool
     {
         // Recovery of the manager returned by the router
         $manager = $this->getManager();
 
         // Check if a user email is banned
-        if ($manager->userBanned($email)) {
+        if ($manager->userBanned($user)) {
             // If a user is banned, send a flash message
             $this->flash->addFlash('danger', 'L\'adresse email a été bannie!');
             return true;
@@ -149,5 +159,21 @@ class RegistrationController extends Controller
             return false;
         }
         return true;
+    }
+
+    /**
+     * Verify that it is the first user.
+     * @return bool
+     */
+    public function isFirstRegistration():bool
+    {
+        // Recovery of the manager returned by the router
+        $manager = $this->getManager();
+
+        // Check that it is the first user.
+        if ($manager->firstRegistration()) {
+            return true;
+        }
+        return false;
     }
 }

@@ -16,7 +16,7 @@
     {% endif %}
 
     <div class="commentys-form" id="commentys">
-        {% if isAuthenticated != 'true' %}
+        {% if user.userId is null %}
             <a href="/login">Vous devez être authentifié pour laisser un commentaire !</a>
         {% else %}
             <div class="row">
@@ -27,11 +27,12 @@
                     <div class="clearfix"></div>
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <label for="comment">
-                            <h4>{{ pseudo }}, laissez nous un commentaire</h4>
+                            <h4>{{ user.pseudo }}, laissez nous un commentaire</h4>
                         </label>
                         <textarea id="comment" name="comment" placeholder="Qu'avez vous en tête..."></textarea>
                     </div>
                     <div class="clearfix"></div>
+                    <input type="hidden" name="token" value="{{ token }}">
                     <input type="submit" value="Envoyer">
                 </form>
             </div>

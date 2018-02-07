@@ -77,15 +77,6 @@ class Router
     }
 
     /**
-     * Get the name of the middelware
-     * @return string
-     */
-    public function getMiddelware(): string
-    {
-        return $this->middelware;
-    }
-
-    /**
      * Check if a path exists in the configuration file
      * @param  string $uri path to test
      * @return boolean|object an exception if the route does not exist
@@ -106,10 +97,6 @@ class Router
                     // Saving the value
                     $vars[$route->getAttribute('vars')] = $id;
                     $this->vars = $vars;
-                }
-                // See if there's any middelware.
-                if ($route->hasAttribute('middelware')) {
-                    $this->middelware = $route->getAttribute('middelware');
                 }
                 // Saving variables
                 $this->module = $route->getAttribute('module');

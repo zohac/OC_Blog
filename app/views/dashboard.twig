@@ -6,7 +6,7 @@
 	<div class="row">
 		<div class="container-fluid">
 			<!-- Breadcrumbs-->
-			<div class="text-right">Bonjour {{ userInfo.pseudo }} | <a href="/logout">Déconnexion</a></div>
+			<div class="text-right">Bonjour {{ user.pseudo }} | <a href="/logout">Déconnexion</a></div>
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
 					<a href="/admin">Dashboard</a>
@@ -16,7 +16,7 @@
 		</div>
 		<!-- /.container-fluid-->
 	</div>
-{% if userRole == "Administrator" %}
+{% if user.role == "Administrator" %}
 	<div class="row">
 		<div class="container-fluid">
 			<!-- Icon Cards-->
@@ -80,10 +80,10 @@
 				<tbody>
 				{% for Post in listPosts %}
 					<tr>
-						<th scope="row">{{ Post.title }}</th>
-						<td>{{ Post.date }}</td>
-						<td><a href="/admin/post-{{ Post.id }}.html" class="btn btn-primary">Editer</a></td>
-						<td><a href="/admin/delete-post-{{ Post.id }}.html" class="btn btn-danger">Supprimer</a></td>
+						<th scope="row">{{ Post.title|raw|nl2br }}</th>
+						<td>{{ Post.modificationDate }}</td>
+						<td><a href="/admin/post-{{ Post.postID }}.html" class="btn btn-primary">Editer</a></td>
+						<td><a href="/admin/delete-post-{{ Post.postID }}.html" class="btn btn-danger">Supprimer</a></td>
 					</tr>
 				{% endfor %}
 				</tbody>
@@ -133,7 +133,7 @@
 					<tr>
 						<td>{{ Comment.date }}</td>
 						<td>{{ Comment.author }}</td>
-						<td><a href="/admin/post-{{ Comment.blog-id }}.html">{{ Comment.blogTitle }}</a></td>
+						<td><a href="/admin/post-{{ Comment.blog-id }}.html">{{ Comment.blogTitle|raw|nl2br }}</a></td>
 						<td><a href="/admin/validation-comment-{{ Comment.id }}.html#validComment" class="btn btn-primary">Valider</a></td>
 						<td><a href="/admin/delete-comment-{{ Comment.id }}.html#deleteComment" class="btn btn-danger">Supprimer</a></td>
 					</tr>
@@ -175,7 +175,7 @@
 				{% for Comment in myComments %}
 					<tr>
 						<td>{{ Comment.date }}</td>
-						<td><a href="/blog/post-{{ Comment.blog_id }}.html">{{ Comment.blogTitle }}</a></td>
+						<td><a href="/blog/post-{{ Comment.blog_id }}.html">{{ Comment.blogTitle|raw|nl2br }}</a></td>
 						<td>{{ Comment.status }}</td>
 						<td><a href="/admin/delete-comment-{{ Comment.id }}.html" class="btn btn-danger">Supprimer</a></td>
 					</tr>

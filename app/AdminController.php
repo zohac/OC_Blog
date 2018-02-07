@@ -1,9 +1,7 @@
 <?php
 namespace app;
 
-use ZCFram\Router;
 use ZCFram\Controller;
-use ZCFram\Container;
 
 /**
  * Class managing the actions of the administration panel
@@ -11,23 +9,23 @@ use ZCFram\Container;
 class AdminController extends Controller
 {
 
-    public function __construct(Router $router, array $params)
+    /**
+     * [__construct description]
+     * @param \ZCFram\DIC $container [description]
+     * @param array       $params    [description]
+     */
+    public function __construct(\ZCFram\DIC $container, array $params = [])
     {
-        parent::__construct($router, $params);
+        parent::__construct($container, $params);
 
         // Test if the user is authenticated
         if (!$this->user->isAuthenticated()) {
             // If it is not authenticated, redirection to the login page
-            $reponse = Container::getHTTPResponse();
+            $reponse = $this->container->get('HTTPResponse');
             $reponse->setStatus(301);
             $reponse->redirection('/login');
-        } else {
-            // Retrieving user information
-            $this->setParams(['userInfo' => [
-                    'pseudo' => $this->user->getUserInfo('pseudo'),
-                    'email' => $this->user->getUserInfo('email')
-                ]]);
         }
+        $this->setParams(['user' => $this->user]);
     }
 
     /**
@@ -37,7 +35,7 @@ class AdminController extends Controller
     public function executeDashboard()
     {
         // Retrieving the role of the user
-        $role = $this->user->getUserInfo('role');
+        $role = $this->user->getRole();
 
         // Depending on the role of the user,
         // we recover the dashboard 'Administrator', or 'user'
@@ -67,23 +65,22 @@ class AdminController extends Controller
         $manager = $this->getManager();
 
         // Retrieving info for displaying the dashboard
-        $listPosts = $manager->getList();
+        $listOfPost = $manager->getListOfPost();
         $numberOfUsers = $manager->getNumberOfUsers();
         $numberOfPosts = $manager->getNumberOfPosts();
         $numberOfComments = $manager->getNumberOfComments();
         $listOfComments = $manager->getListOfComments();
-        $myComments = $manager->getMyComments($this->user->getUserInfo('id'));
+        $myComments = $manager->getMyComments($this->user->getUserId());
 
         // Initializing the parameters to return to the view
         $this->setParams(
             array_merge(
-                ['listPosts' => $listPosts],
+                ['listPosts' => $listOfPost],
                 $numberOfUsers,
                 $numberOfPosts,
                 $numberOfComments,
                 ['listOfComment' => $listOfComments],
-                ['myComments' => $myComments],
-                ['userRole' => $this->user->getUserInfo('role')]
+                ['myComments' => $myComments]
             )
         );
     }
@@ -97,15 +94,10 @@ class AdminController extends Controller
         $manager = $this->getManager();
 
         // Retrieving info for displaying the dashboard
-        $myComments = $manager->getMyComments($this->user->getUserInfo('id'));
+        $myComments = $manager->getMyComments($this->user->getUserId());
 
         // Initializing the parameters to return to the view
-        $this->setParams(
-            array_merge(
-                ['myComments' => $myComments],
-                ['userRole' => $this->user->getUserInfo('role')]
-            )
-        );
+        $this->setParams(['myComments' => $myComments]);
     }
 
     /**
@@ -114,30 +106,25 @@ class AdminController extends Controller
     public function executeInsert()
     {
         // We verify that the user has the necessary rights
-        if ($this->user->getUserInfo('role') == 'Administrator') {
+        if ($this->user->getRole() == 'Administrator') {
             // Initializing the parameters to return to the view
             $this->setParams([
-                    'author_id' => $this->user->getUserInfo('id'),
-                    'author' => $this->user->getUserInfo('pseudo')
+                    'author_id' => $this->user->getUserId(),
+                    'author' => $this->user->getPseudo()
                 ]);
 
             // Recovery of the manager returned by the router
             $manager = $this->getManager();
 
             //Retrieving the class that validates the token
-            $token = Container::getToken();
+            $token = $this->container->get('Token');
 
             // If variables exist in the post method
             if (!empty($_POST)) {
                 // We're checking the validity of the token.
                 if ($token->isTokenValid($_POST['token'])) {
-                    // If there is a file to upload
-                    if (!empty($_FILES['upload'])) {
-                        $id = $manager->getTheNewPostID();
-                        $this->uploadFile($id);
-                    }
                     //Retrieving the class that validates the data sent
-                    $Validator = Container::getValidator();
+                    $Validator = $this->container->get('Validator');
                     $Validator->required('status', 'text');
                     $Validator->required('title', 'text');
                     $Validator->check('post', 'text');
@@ -148,11 +135,12 @@ class AdminController extends Controller
                     $params = \array_merge(
                         $Validator->getParams(),
                         [
-                            'author_id' => $this->user->getUserInfo('id'),
+                            'author' => $this->user->getUserId(),
                             'creationDate' => date('Y-m-d'),
                             'modificationDate' => date('Y-m-d')
                         ]
                     );
+                    $post = new Post($params);
 
                     /*
                      * If the validator does not return an error,
@@ -160,17 +148,21 @@ class AdminController extends Controller
                      */
                     if (!$Validator->hasError()) {
                         // And insert new post in DB
-                        $result = $manager->insertPost($params);
+                        $lastId = $manager->insertPost($post);
 
                         // Adding a flash message if successful or unsuccessful
-                        if ($result !== false) {
+                        if ($lastId) {
                             $this->flash->addFlash('success', 'Nouvel article enregistré.');
+                            // If there is a file to upload
+                            if ($_FILES['upload']['size']) {
+                                $this->uploadFile($lastId);
+                            }
                         } else {
                             $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'enregistrement.');
                         }
 
                         // redirection to the admin page
-                        $reponse = Container::getHTTPResponse();
+                        $reponse = $this->container->get('HTTPResponse');
                         $reponse->setStatus(301);
                         $reponse->redirection('/admin');
                     } else {
@@ -208,33 +200,25 @@ class AdminController extends Controller
     public function executeUpdate()
     {
         // We verify that the user has the necessary rights
-        if ($this->user->getUserInfo('role') == 'Administrator') {
+        if ($this->user->getRole() == 'Administrator') {
             // Recovery of the manager returned by the router
             $manager = $this->getManager();
 
             //Retrieving the class that validates the token
-            $token = Container::getToken();
+            $token = $this->container->get('Token');
 
             if (isset($_GET['id'])) {
                 // Retrieving the id of the post to delete and convert to integer
                 $id = (int)$_GET['id'];
-
-                // Displays a delete confirmation message
-                $this->setParams(['deletePost' => $id]);
             }
 
             // If variables exist in the post method
             // and the variable 'id' exist
-            // else recovery of the post in DB for display of the completed form
             if (!empty($_POST) && $id) {
                 // We're checking the validity of the token.
                 if ($token->isTokenValid($_POST['token'])) {
-                    // If there is a file to upload
-                    if (!empty($_FILES['upload'])) {
-                        $this->uploadFile($id);
-                    }
                     //Retrieving the class that validates the data sent
-                    $Validator = Container::getValidator();
+                    $Validator = $this->container->get('Validator');
                     $Validator->required('status', 'text');
                     $Validator->required('title', 'text');
                     $Validator->check('post', 'text');
@@ -246,29 +230,31 @@ class AdminController extends Controller
                     if (!$Validator->hasError()) {
                         // Creating a parameter table
                         // 1. For sending in DB
-                        $params = \array_merge($Validator->getParams(), ['id' => $_GET['id']]);
+                        $params = \array_merge($Validator->getParams(), ['postID' => $id]);
+                        $post = new Post($params);
 
                         // Update the post
-                        $result = $manager->updatePost($params);
+                        $result = $manager->updatePost($post);
 
                         // Adding a flash message if successful or unsuccessful
                         if ($result !== false) {
                             $this->flash->addFlash('success', 'Article mis à jour.');
+                            // If there is a file to upload
+                            if ($_FILES['upload']['size']) {
+                                $this->uploadFile($id);
+                            }
                         } else {
                             $this->flash->addFlash('danger', 'Une erreur est survenu lors de la mise à jour.');
                         }
-
-                        // Recovery the Post in DB
-                        $Post = $manager->getPost($_GET['id']);
-                        $this->setParams($Post);
                     }
                 } else {
                     $this->flash->addFlash('danger', 'Une erreur est survenu lors de la mise à jour.');
                 }
-            } elseif (isset($_GET['id'])) { // if $token->isTokenValid
-                    $Post = $manager->getPost($_GET['id']);
-                    $this->setParams($Post);
             }
+            // Recovery the Post in DB
+            $Post = $manager->getPost($id);
+            $this->setParams(['post' => $Post]);
+
             //Retrieving the class that validates the token
             $token = $token->getToken();
             // Adding token to the parameters to return by the view
@@ -293,13 +279,13 @@ class AdminController extends Controller
     public function executeDeletePost()
     {
         // We verify that the user has the necessary rights
-        if ($this->user->getUserInfo('role') == 'Administrator') {
+        if ($this->user->getRole() == 'Administrator') {
             // admin dashboard recovery
             $this->getAdminDashboard();
             $this->setView('dashboard');
 
             //Retrieving the class that validates the token
-            $token = Container::getToken();
+            $token = $this->container->get('Token');
 
             if (isset($_GET['id'])) {
                 // Retrieving the id of the post to delete and convert to integer
@@ -315,7 +301,7 @@ class AdminController extends Controller
                 // We're checking the validity of the token.
                 if ($token->isTokenValid($_POST['token'])) {
                     //Retrieving the class that validates the data sent
-                    $Validator = Container::getValidator();
+                    $Validator = $this->container->get('Validator');
                     $Validator->check('id', 'integer');
 
                     // Recovery of validated data
@@ -329,7 +315,7 @@ class AdminController extends Controller
                     if (!$Validator->hasError() && $params['id'] == $id) {
                         // Recovery of the manager returned by the router
                         $manager = $this->getManager();
-                        $result = $manager->deletePost($params['id']);
+                        $result = $manager->deletePost($id);
 
                         // Adding a flash message if successful or unsuccessful
                         if ($result !== false) {
@@ -346,7 +332,7 @@ class AdminController extends Controller
             }
             if (isset($_POST['No']) || isset($result)) {
                 // Redirection on the user page
-                $reponse = Container::getHTTPResponse();
+                $reponse = $this->container->get('HTTPResponse');
                 $reponse->setStatus(301);
                 $reponse->redirection('/admin');
             }
@@ -368,7 +354,7 @@ class AdminController extends Controller
     public function executeValidComment()
     {
         // We verify that the user has the necessary rights
-        if ($this->user->getUserInfo('role') == 'Administrator') {
+        if ($this->user->getRole() == 'Administrator') {
             // admin dashboard recovery
             $this->getAdminDashboard();
             $this->setView('dashboard');
@@ -386,15 +372,15 @@ class AdminController extends Controller
             }
 
             //Retrieving the class that validates the token
-            $token = Container::getToken();
+            $token = $this->container->get('Token');
 
             // If variables exist in the post method
             // and the variable 'Yes' existe
-            if (!empty($_POST) && isset($_POST['Yes'])) {
+            if (isset($_POST['Yes'])) {
                 // We're checking the validity of the token.
                 if ($token->isTokenValid($_POST['token'])) {
                     //Retrieving the class that validates the data sent
-                    $Validator = Container::getValidator();
+                    $Validator = $this->container->get('Validator');
                     $Validator->check('id', 'integer');
 
                     // Recovery of validated data
@@ -408,7 +394,7 @@ class AdminController extends Controller
                     if (!$Validator->hasError() && $params['id'] == $id) {
                         // Recovery of the manager returned by the router
                         $manager = $this->getManager();
-                        $result = $manager->validComment($params['id']);
+                        $result = $manager->validComment($id);
 
                         // Adding a flash message if successful or unsuccessful
                         if ($result !== false) {
@@ -428,7 +414,7 @@ class AdminController extends Controller
             }
             if (isset($_POST['No']) || isset($result)) {
                 // Redirection on the user page
-                $reponse = Container::getHTTPResponse();
+                $reponse = $this->container->get('HTTPResponse');
                 $reponse->setStatus(301);
                 $reponse->redirection('/admin');
             }
@@ -465,11 +451,10 @@ class AdminController extends Controller
         $manager = $this->getManager();
 
         //Retrieving the class that validates the token
-        $token = Container::getToken();
+        $token = $this->container->get('Token');
 
         // We verify that the user has the necessary rights
-        if (
-            $this->user->getUserInfo('role') == 'Administrator' ||
+        if ($this->user->getRole() == 'Administrator' ||
             $manager->isWrittenByTheUser($id, $this->user->getUserInfo('id'))
         ) {
             // admin dashboard recovery
@@ -482,7 +467,7 @@ class AdminController extends Controller
                 // We're checking the validity of the token.
                 if ($token->isTokenValid($_POST['token'])) {
                     //Retrieving the class that validates the data sent
-                    $Validator = Container::getValidator();
+                    $Validator = $this->container->get('Validator');
                     $Validator->check('id', 'integer');
 
                     // Recovery of validated data
@@ -514,7 +499,7 @@ class AdminController extends Controller
             }
             if (isset($_POST['No']) || isset($result)) {
                 // Redirection on the user page
-                $reponse = Container::getHTTPResponse();
+                $reponse = $this->container->get('HTTPResponse');
                 $reponse->setStatus(301);
                 $reponse->redirection('/admin');
             }
@@ -535,7 +520,6 @@ class AdminController extends Controller
      */
     public function uploadFile(int $id)
     {
-
         $error = false;
 
         // We define our constants
@@ -548,7 +532,7 @@ class AdminController extends Controller
         $file = $_FILES['upload'];
         $actualName = $file['tmp_name'];
         $actualSize = $file['size'];
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
         // Make sure the file is not empty
         if ($actualName === 0 || $actualSize == 0) {

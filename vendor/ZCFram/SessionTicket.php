@@ -6,6 +6,11 @@ namespace ZCFram;
  */
 class SessionTicket
 {
+    /**
+     * An instance of HTTPResponse
+     * @var object HTTPResponse
+     */
+    protected $response;
 
     /**
      * A ticket
@@ -19,8 +24,16 @@ class SessionTicket
      */
     protected $lifetime;
 
-    public function __construct()
+    /**
+     * An instance of the DIC
+     * @var object DIC
+     */
+    protected $container;
+
+    public function __construct(HTTPResponse $response)
     {
+        $this->response = $response;
+
         // Test if a session is started.
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -49,8 +62,7 @@ class SessionTicket
         $this->lifetime = time()+600;
 
         // Send the ticket as a cookie
-        $response = Container::getHTTPResponse();
-        $response->setCookie('ticket', $this->ticket, $this->lifetime, '/');
+        $this->response->setCookie('ticket', $this->ticket, $this->lifetime, '/');
 
         // Creating the corresponding session variables
         $_SESSION['lifetimeTicket'] = $this->lifetime;

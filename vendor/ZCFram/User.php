@@ -6,25 +6,64 @@ namespace ZCFram;
  */
 class User
 {
-    /**
-     * Represents a user.
-     * @var $userInfo
-     */
-    private $userInfo;
+    use Hydrator;
 
-    public function __construct()
+    /**
+     * The id user
+     * @var int
+     */
+    private $userId;
+
+    /**
+     * The pseudo of the user
+     * @var string
+     */
+    private $pseudo;
+
+    /**
+     * The email of the user
+     * @var string
+     */
+    private $email;
+
+    /**
+     * The password of the user
+     * @var string
+     */
+    private $password;
+
+    /**
+     * The role of the user
+     * @var string
+     */
+    private $role;
+
+    /**
+     * The status of the user
+     * @var string
+     */
+    private $status;
+
+    public function __construct(array $data = [])
     {
         // Test if a session is started.
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
+
         // If the user is authenticated,
         // its information stored as a session variable is retrieved.
-        if ($this->isAuthenticated() && isset($_SESSION['user'])) {
-            $this->userInfo = $_SESSION['user'];
+        if ($data) {
+            //
+            $this->hydrate($data);
+        } elseif ($this->isAuthenticated() && isset($_SESSION['user'])) {
+            //
+            $this->hydrate($_SESSION['user']);
+            $_SESSION['user'] = $this;
         } else {
             // Otherwise, the authentication is deleted.
             $this->setAuthenticated(false);
+            unset($_SESSION['user']);
         }
     }
 
@@ -49,66 +88,79 @@ class User
             throw new \InvalidArgumentException($message);
         }
         // Authentication is defined in a session variable
+        $_SESSION['user'] = $this;
         $_SESSION['auth'] = $authenticated;
     }
 
     /**
-     * Session variable authenticating a user role
-     * @param string $role
+     * Set the User id
+     * @param int $id
      */
-    public function hydrateUser(array $userInfo)
+    public function setUserId(int $id)
     {
-        // TODO : Refaire l'hydratation de l'utilisateur
-        //TODO
-        if (!is_array($userInfo)) {
-            $message = 'La valeur spécifiée à la méthode User::hydrateUser() n\'est pas conforme.';
-            throw new \InvalidArgumentException($message);
-        }
-        $this->userInfo = $userInfo;
-        $_SESSION['user'] = $userInfo;
+        $this->userId = $id;
     }
 
     /**
-     * Retrieves the info of the current user.
-     * @param  string $value Information to recover
-     * @return string        The requested info
+     * Set the pseudo User
+     * @param string $pseudo
      */
-    public function getUserInfo(string $value):string
+    public function setPseudo(string $pseudo)
     {
-        // If the variable is not defined, an exception is called.
-        if (!in_array($value, ['id', 'pseudo', 'email', 'role'])) {
-            $message = 'La valeur spécifiée à la méthode User::getUserInfo() n\'est pas conforme.';
-            throw new \InvalidArgumentException($message);
-        }
-        // Returns the requested information.
-        return $this->userInfo[$value];
+        $this->pseudo = $pseudo;
     }
 
     /**
-     * Session variable authenticating a user role
-     * @param string $role
-     *
-    public function setRole(string $role = 'Subscriber')
+     * Set the email of the user
+     * @param string $email
+     */
+    public function setEmail(string $email)
     {
-        if (!in_array($role, ['Subscriber', 'Administrator'])) {
-            $message = 'La valeur spécifiée à la méthode User::setRole() n\'est pas conforme.';
-            throw new \InvalidArgumentException($message);
-        }
-        $_SESSION['role'] = $role;
+        $this->email = $email;
     }
 
-    /**
-     * Session variable authenticating a user role
-     * @return string $role
-     *
+    public function setPassword(string $password)
+    {
+        $this->password = $password;
+    }
+
+    public function setRole(string $role)
+    {
+        $this->role = $role;
+    }
+
+    public function setStatus(string $status)
+    {
+        $this->status = $status;
+    }
+
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    public function getPseudo()
+    {
+        return $this->pseudo;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
     public function getRole()
     {
-        $role = (isset($_SESSION['role'])) ? $_SESSION['role'] : false;
-        if (!in_array($role, ['Subscriber', 'Administrator'])) {
-            $message = 'La variable de session \'role\' n\'est pas conforme.';
-            unset($_SESSION['role']);
-            throw new \InvalidArgumentException($message);
-        }
-        return $role;
-    }*/
+        return $this->role;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
 }

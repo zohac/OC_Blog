@@ -14,7 +14,7 @@
                         {% for colLeft in left %}
                         <li>
                             <section class="blog-content">
-                                <a href="/blog/post-{{ colLeft.id }}.html">
+                                <a href="/blog/post-{{ colLeft.postID }}.html">
                                     <figure>
                                         <div class="post-date">
                                             <span>{{ colLeft.day }}</span> {{ colLeft.monthYear }}
@@ -23,7 +23,7 @@
                                     </figure>
                                 </a>
                                 <article>
-                                    <h2>{{ colLeft.title }}</h2>
+                                    <h2>{{ colLeft.title|raw|nl2br }}</h2>
                                     <p>{{ colLeft.chapo|raw|nl2br }}...</p>
                                 </article>
                             </section>
@@ -36,7 +36,7 @@
                         {% for colRight in right %}
                         <li>
                             <section class="blog-content">
-                                <a href="/blog/post-{{ colRight.id }}.html">
+                                <a href="/blog/post-{{ colRight.postID }}.html">
                                     <figure>
                                         <div class="post-date">
                                             <span>{{ colRight.day }}</span> {{ colRight.monthYear }}
@@ -45,7 +45,7 @@
                                     </figure>
                                 </a>
                                 <article>
-                                    <h2>{{ colRight.title }}</h2>
+                                    <h2>{{ colRight.title|raw|nl2br }}</h2>
                                     <p>{{ colRight.chapo|raw|nl2br }}...</p>
                                 </article>
                             </section>

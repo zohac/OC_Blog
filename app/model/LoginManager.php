@@ -2,18 +2,27 @@
 namespace app\model;
 
 use \ZCFram\PDOManager;
+use \ZCFram\User;
 
 /**
- *
+ * The login Manager
  */
 class LoginManager extends PDOManager
 {
 
+    /**
+     * Verify that the user is registered, and retrieve this is information
+     * @param  string $email
+     * @param  string $password
+     * @return array            The user information
+     */
     public function getUser(string $email, string $password)
     {
         // SQL request
         $sql = "
-        SELECT *
+        SELECT
+            *,
+            id AS userId
         FROM blog.user
         WHERE user.email = :email
             AND user.password = :password
@@ -33,7 +42,10 @@ class LoginManager extends PDOManager
         // Retrieves information
         $userInfo = $requete->fetch();
 
+        if ($userInfo === false) {
+            return false;
+        }
         // Returns the information
-        return $userInfo;
+        return new User($userInfo);
     }
 }

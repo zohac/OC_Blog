@@ -2,27 +2,27 @@
 namespace app\model;
 
 use \ZCFram\PDOManager;
+use \app\Post;
 
 /**
  * Class allowing the call to the DB concerning the Post, using PDO
  */
 class PostManager extends PDOManager
 {
-
     /**
      * The list of all publish Post
      * @return array The list of all publish Post
      */
-    public function getList()
+    public function getList():array
     {
         // SQL request
         $sql = "
         SELECT
-            id,
+            id AS postID,
+            id AS imgPath,
             title,
-            SUBSTRING(post FROM 1 FOR 160) AS chapo,
-            DATE_FORMAT(modificationDate, '%e') AS day,
-            DATE_FORMAT(modificationDate, '%M %Y') AS monthYear
+            SUBSTRING(post FROM 1 FOR 120) AS chapo,
+            DATE_FORMAT(modificationDate, '%e-%M %Y') AS modificationDate
         FROM blog.post
         WHERE post.status = 'Publish'
         ORDER BY id DESC";
@@ -31,30 +31,33 @@ class PostManager extends PDOManager
         $this->DB->query("SET lc_time_names = 'fr_FR'");
 
         // Retrieves information from DB
-        $listPosts = $this->DB
+        $listOfPosts = $this->DB
             ->query($sql)
             ->fetchAll();
 
+        foreach ($listOfPosts as $key => $comment) {
+            $listOfPosts[$key] = new Post($comment);
+        }
         // Returns the information in array
-        return $listPosts;
+        return $listOfPosts;
     }
 
     /**
      * A publish Post
      * @param  int    $id The id of a post
-     * @return array The publish Post
+     * @return object The publish Post
      */
     public function getPost(int $id)
     {
         // SQL request
         $sql = "
         SELECT
-            post.id,
+            post.id AS postID,
+            post.id AS imgPath,
             title,
-            SUBSTRING(post FROM 1 FOR 160) AS chapo,
+            SUBSTRING(post FROM 1 FOR 120) AS chapo,
             post,
-            DATE_FORMAT(modificationDate, '%e') AS day,
-            DATE_FORMAT(modificationDate, '%M %Y') AS monthYear,
+            DATE_FORMAT(modificationDate, '%e-%M %Y') AS modificationDate,
             user.pseudo AS author
         FROM blog.post
         INNER JOIN user
@@ -76,36 +79,10 @@ class PostManager extends PDOManager
         // Retrieves information from a post
         $PostInfo = $requete->fetch();
 
-        // Returns the information of a post in array
-        return $PostInfo;
-    }
+        // Create new post object
+        $post = new Post($PostInfo);
 
-    /**
-     * Check if the post has comment
-     * @param  int    $id The id of a post
-     * @return bool
-     */
-    public function postHasComment(int $id):int
-    {
-        // SQL request
-        $sql = "
-        SELECT COUNT(*) AS nbComments
-        FROM blog.comment
-        WHERE comment.status = 'approve' AND comment.post_id = :id";
-
-        // Preparing the sql query
-        $requete = $this->DB->prepare($sql);
-
-        // Associates a value with the id parameter
-        $requete->bindValue(':id', $id, \PDO::PARAM_INT);
-
-        // Execute the sql query and return a bool
-        $requete->execute();
-
-        // Retrieves information
-        $result = $requete->fetch();
-
-        // return ths number of comments as integer
-        return (int)$result['nbComments'];
+        // Return the information of an object post
+        return $post;
     }
 }

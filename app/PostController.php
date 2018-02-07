@@ -2,7 +2,6 @@
 namespace app;
 
 use ZCFram\Controller;
-use ZCFram\Container;
 
 /**
  * Controller who manages the index and blog posts
@@ -17,60 +16,24 @@ class PostController extends Controller
     public function executeIndex()
     {
         //Retrieving the class that validates the token
-        $token = Container::getToken();
+        $token = $this->container->get('Token');
+
         // If variables exist in the post method
         if (!empty($_POST)) {
             // We're checking the validity of the token.
             if ($token->isTokenValid($_POST['token'])) {
-                //Retrieving the class that validates the data sent
-                $Validator = Container::getValidator();
-                $Validator->required('name', 'text');
-                $Validator->required('email', 'email');
-                $Validator->required('comments', 'text');
-
-                /*
-                 * If the validator does not return an error,
-                 * else adding error flash message
-                 */
-                if (!$Validator->hasError()) {
-                    // Recovery of classes managing swiftMailer
-                    $mailer = Container::getMailer();
-                    $message = Container::getSwiftMessage();
-
-                    // Recovery of validated data
-                    $params = $Validator->getParams();
-
-                    // Create the message
-                    $message->setBody('
-                        De : '.$params['name'].'
-                        Email : '.$params['email'].'
-                        Content : '.$params['comments']);
-
-                    // Send the message
-                    $result = $mailer->send($message);
-
-                    // Adding a flash message if successful or unsuccessful
-                    if ($result > 0) {
-                        $this->flash->addFlash('success', 'E-mail envoyé avec succès. Merci '.$params['name'].'!');
-                    } else {
-                        $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'envoi de mail.');
-                    }
-                } else {
-                    foreach ($Validator->getError() as $key => $value) {
-                        $this->flash->addFlash('danger', $value);
-                    }
-                }
+                $email = $this->container->get('Email');
+                $this->flash = $email->validateAndSendEmail();
             } else {
-                $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'envoi de mail.');
+                $this->flash->addFlash('danger', 'Le formulaire n\est pas conforme.');
             }
         }
+        // Adding flash message and parameters to return by the view
+        $this->setParams($this->flash->getFlash());
         //Retrieving the class that validates the token
         $token = $token->getToken();
         // Adding token to the parameters to return by the view
         $this->setParams(['token' => $token]);
-
-        // Adding flash message and parameters to return by the view
-        $this->setParams($this->flash->getFlash());
 
         // View recovery and display
         $this->getView();
@@ -92,19 +55,14 @@ class PostController extends Controller
         $listLeft = [];
         $listRight = [];
 
+        // For each post, the linked image is retrieved for each post, otherwise a default one is displayed.
         foreach ($listPosts as $key => $list) {
-            if (file_exists(__DIR__.'/../web/upload/blog-'.$list['id'].'.jpg')) {
-                $list = \array_merge($list, ['imgPath' => '/upload/blog-'.$list['id'].'.jpg']);
-            } else {
-                $list = \array_merge($list, ['imgPath' => '/upload/default.jpg']);
-            }
             if (($key % 2) == 0) {
                 $listRight[] = $list;
             } else {
                 $listLeft[] = $list;
             }
         }
-
         // Adding parameters to return by the view
         $this->setParams([
             'left' => $listLeft,
@@ -127,53 +85,46 @@ class PostController extends Controller
         // Recovery of the manager returned by the router
         $manager = $this->getManager();
         // Get one post in DB
-        $Post = $manager->getPost($id);
+        $post = $manager->getPost($id);
 
-        if (file_exists(__DIR__.'/../web/upload/blog-'.$Post['id'].'.jpg')) {
-            $Post = \array_merge($Post, ['imgPath' => '/upload/blog-'.$Post['id'].'.jpg']);
+        // We change the manager
+        $this->setManager('Comment');
+        $manager = $this->getManager();
+
+        // We retrieve comments
+        $comments = $manager->getComment($id);
+
+        $numberOfComments = count($comments);
+
+        if ($numberOfComments > 0) {
+            $numberOfComments = ($numberOfComments > 1) ?
+                $numberOfComments.' Commentaires.' :
+                $numberOfComments.' Commentaire.' ;
         } else {
-            $Post = \array_merge($Post, ['imgPath' => '/upload/default.jpg']);
-        }
-
-        // We check the post for comments?
-        if ($numberOfComments = $manager->postHasComment($id)) {
-            $comment = ($numberOfComments > 1) ? ' Commentaires.' : ' Commentaire.' ;
-            $this->setParams(['numberOfComments' => $numberOfComments.$comment]);
-
-            // We change the manager
-            $this->setManager('Comment');
-            $manager = $this->getManager();
-
-            // We retrieve comments
-            $comments = $manager->getComment($id);
-            $this->setParams(['comments' => $comments]);
-        } else {
-            $this->setParams(['numberOfComments' => '0 Commentaire']);
+            // If there is no comment.
+            $numberOfComments = '0 Commentaire.' ;
         }
 
         // If the variable $_POST['comment'] exist
         // we control the commentary
         if (isset($_POST['comment'])) {
             // Sent comment control
-            $comment = new CommentController($this->router);
-            $comment->CommentControl();
+            $comment = $this->container->get('CommentController');
+            $this->flash = $comment->CommentControl();
         }
-
-        if ($this->user->isAuthenticated()) {
-            $this->setParams([
-                'post_id' => $id,
-                'isAuthenticated' => true,
-                'pseudo' => \ucfirst($this->user->getUserInfo('pseudo'))
-            ]);
-        }
-        //Retrieving the class that validates the token
-        $token = Container::getToken()->getToken();
-        // Adding token to the parameters to return by the view
-        $this->setParams(['token' => $token]);
-
         // Adding flash message and parameters to return by the view
         $this->setParams($this->flash->getFlash());
-        $this->setParams($Post);
+
+        //Retrieving the class that validates the token
+        $token = $this->container->get('Token');
+
+        // Adding parameters to return by the view
+        $this->setParams([
+            'comments' => $comments,
+            'numberOfComments' => $numberOfComments,
+            'token' => $token->getToken(),
+            'post' => $post
+        ]);
 
         // View recovery and display
         $this->getView();

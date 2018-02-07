@@ -1,9 +1,7 @@
 <?php
 namespace app;
 
-use ZCFram\Router;
 use ZCFram\Controller;
-use ZCFram\Container;
 
 /**
  * Class that manages users by administrators
@@ -15,14 +13,14 @@ class UserController extends Controller
      * Uses the parent constructor and adds the user role check
      * @param Router
      */
-    public function __construct(Router $router, array $params)
+    public function __construct(\ZCFram\DIC $container, array $params)
     {
-        parent::__construct($router, $params);
+        parent::__construct($container, $params);
 
         // Check the role of the user.
-        if ($this->user->getUserInfo('role') != 'Administrator') {
+        if ($this->user->getRole() != 'Administrator') {
             // If it is not an administrator, redirection to the admin page
-            $reponse = Container::getHTTPResponse();
+            $reponse = $this->container->get('HTTPResponse');
             $reponse->setStatus(301);
             $reponse->redirection('/admin');
         }
@@ -74,14 +72,14 @@ class UserController extends Controller
         }
 
         //Retrieving the class that validates the token
-        $token = Container::getToken();
+        $token = $this->container->get('Token');
 
         // If variables exist in the post method
         // and the variable 'Yes' existe
         if (!empty($_POST) && isset($_POST['Yes'])) {
-            if (!$token->isTokenValid($_POST['token'])) {
+            if ($token->isTokenValid($_POST['token'])) {
                 //Retrieving the class that validates the data sent
-                $Validator = Container::getValidator();
+                $Validator = $this->container->get('Validator');
                 $Validator->check('id', 'integer');
 
                 //Recovery of validated data
@@ -95,7 +93,7 @@ class UserController extends Controller
                 if (!$Validator->hasError() && $params['id'] == $id) {
                     // Recovery of the manager returned by the router
                     $manager = $this->getManager();
-                    $result = $manager->deleteUser($params['id']);
+                    $result = $manager->deleteUser($id);
 
                     // Adding a flash message if successful or unsuccessful
                     if ($result !== false) {
@@ -118,7 +116,7 @@ class UserController extends Controller
         // and the variable 'No' OR '$result' exist
         if (isset($_POST['No']) || isset($result)) {
             // Redirection on the user page
-            $reponse = Container::getHTTPResponse();
+            $reponse = $this->container->get('HTTPResponse');
             $reponse->setStatus(301);
             $reponse->redirection('/admin/user.html');
         }

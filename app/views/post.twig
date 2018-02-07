@@ -6,19 +6,19 @@
             <div class="blog-details">
                 <article class="post-details" id="post-details">
                     <header role="bog-header" class="bog-header text-center">
-                        <h3><span>{{ title }}</span> par {{ author }}</h3>
-                        <h2>{{ chapo|raw|nl2br }}...</h2>
+                        <h3><span>{{ post.title|raw|nl2br }}</span> par {{ post.author }}</h3>
+                        <h2>{{ post.chapo|raw|nl2br }}...</h2>
                     </header>
                     <section class="blog-content">
                         <figure>
                             <div class="post-date">
-                                <span>{{ day }}</span> {{ monthYear }}
+                                <span>{{ post.day }}</span> {{ post.monthYear }}
                             </div>
-                            <img src="{{ app.request.server.get('SERVER_NAME') }}{{ imgPath }}" alt="" class="img-responsive"/>
+                            <img src="{{ app.request.server.get('SERVER_NAME') }}{{ post.imgPath }}" alt="" class="img-responsive"/>
                         </figure>
                     </section>
                     <div class="enter-content">
-                        <p>{{ post|raw|nl2br }}</p>
+                        <p>{{ post.post|raw|nl2br }}</p>
                     </div>
                 </article>
 {% include 'comment.twig' %}
