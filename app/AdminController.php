@@ -10,8 +10,9 @@ class AdminController extends Controller
 {
 
     /**
-     * @param Router $router
-     * @param array  $params
+     * [__construct description]
+     * @param \ZCFram\DIC $container [description]
+     * @param array       $params    [description]
      */
     public function __construct(\ZCFram\DIC $container, array $params = [])
     {

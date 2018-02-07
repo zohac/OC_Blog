@@ -18,7 +18,7 @@ class UserManager extends PDOManager
     {
         // SQL request
         $sql = "
-        SELECT id, pseudo, email, role
+        SELECT id AS userID, pseudo, email, role
         FROM blog.user
         WHERE status != 'banned'";
 

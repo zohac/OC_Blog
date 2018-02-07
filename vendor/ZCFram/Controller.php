@@ -56,16 +56,19 @@ abstract class Controller
     protected $container;
 
     /**
-     * Set the variable name
-     * @param string
+     * [__construct description]
+     * @param \ZCFram\DIC $container The container
+     * @param array       $params    parameter to send to view
      */
-    public function __construct(\ZCFram\DIC $container, array $params = [])
+    public function __construct(\ZCFram\DIC $container, $params = [])
     {
+        //
         $this->container = $container;
 
+        //
         $this->router = $this->container->get('Router');
-        $this->flash =  $this->container->get('Flash');
-        $this->user =  $this->container->get('User');
+        $this->flash = $this->container->get('Flash');
+        $this->user = $this->container->get('User');
 
         $this->setAction($this->router->getAction());
         $this->setManager($this->router->getModule());
@@ -74,8 +77,6 @@ abstract class Controller
         if ($params) {
             $this->setParams($params);
         }
-
-
 
         $this->setParams(['user' => $this->user]);
     }

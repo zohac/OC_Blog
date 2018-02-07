@@ -27,7 +27,7 @@ class Email
     protected $to;
 
     /**
-     * The email address where to send
+     *
      * @var string
      */
     protected $serverName;
@@ -38,16 +38,25 @@ class Email
      */
     protected $flash;
 
-    public function __construct(Flash $flash, Validator $Validator)
+    /**
+     * An instance of Validator
+     * @var object $Validator
+     */
+    protected $Validator;
+
+    public function __construct(Flash $flash, Validator $Validator, Configurator $config)
     {
         // The Flash object is assigned to the variable $flash
         $this->flash = $flash;
         $this->validator = $Validator;
+
+        // Hydrate the Email class
+        $this->hydrate($config->getConfig('mail'));
     }
 
     /**
      * [validateAndSendEmail description]
-     * @return string [description]
+     * @return Flash [description]
      */
     public function validateAndSendEmail():Flash
     {
@@ -78,8 +87,24 @@ class Email
      */
     private function sendEmail(array $params)
     {
-        $mailer = $this->getMailer();
-        $message = $this->getSwiftMessage();
+        // Create the Transport
+        $transport = (new \Swift_SmtpTransport($this->host, 25));
+
+        // Create the Mailer using your created Transport
+        $mailer = new \Swift_Mailer($transport);
+
+        // Recovery of a DKIM private key, to secure the mails.
+        //$privatekey = \file_get_contents(__DIR__.$mail['dkimPath']);
+        // Creating a signature by SwiftMailer
+        //$signer = new \Swift_Signers_DKIMSigner($privatekey, $mail['serverName'], 'default');
+
+        // Creating the message header
+        $message =  new \Swift_Message();
+        //$message->attachSigner($signer);
+        $message
+            ->setSubject('Demande de contact')
+            ->setFrom([$this->from => $this->serverName])
+            ->setTo([$this->to => $this->serverName]);
 
         // Create the message
         $message->setBody('
@@ -96,41 +121,6 @@ class Email
         } else {
             $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'envoi de mail.');
         }
-    }
-
-    /**
-     * Return an instance of Swift_Mailer
-     * @return object Swift_Mailer
-     */
-    public function getMailer()
-    {
-        // Create the Transport
-        $transport = (new \Swift_SmtpTransport($this->host, 25));
-
-        // Create the Mailer using your created Transport
-        return new \Swift_Mailer($transport);
-    }
-
-    /**
-     * Return an instance of Swift_Message
-     * @return object Swift_Message
-     */
-    public function getSwiftMessage()
-    {
-        // Recovery of a DKIM private key, to secure the mails.
-        //$privatekey = \file_get_contents(__DIR__.$mail['dkimPath']);
-        // Creating a signature by SwiftMailer
-        //$signer = new \Swift_Signers_DKIMSigner($privatekey, $mail['serverName'], 'default');
-
-        // Creating the message header
-        $message =  new \Swift_Message();
-        //$message->attachSigner($signer);
-        $message
-            ->setSubject('Demande de contact')
-            ->setFrom([$this->from => $this->serverName])
-            ->setTo([$this->to => $this->serverName]);
-        // Returns the prepared message
-        return $message;
     }
 
     /**

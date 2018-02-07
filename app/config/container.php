@@ -20,7 +20,7 @@ $config = [
         return new \ZCFram\User();
     },
     'Configurator' => function () {
-        return new \ZCFram\Configurator();
+        return new \ZCFram\Configurator(realpath(__DIR__.'/../../app/config/config.xml'));
     },
     'Token' => function () {
         return new \ZCFram\Token();
@@ -39,7 +39,7 @@ $container->set('Ticket', function () use ($container) {
     return new \ZCFram\SessionTicket($container->get('HTTPResponse'));
 });
 $container->set('Email', function () use ($container) {
-    return new \ZCFram\Email($container->get('Flash'), $container->get('Validator'));
+    return new \ZCFram\Email($container->get('Flash'), $container->get('Validator'), $container->get('Configurator'));
 });
 $container->set('CommentController', function () use ($container) {
     return new \ZCFram\CommentController($container->get('Router'));

@@ -23,8 +23,6 @@ class PostController extends Controller
             // We're checking the validity of the token.
             if ($token->isTokenValid($_POST['token'])) {
                 $email = $this->container->get('Email');
-                $email->hydrate($data);
-
                 $this->flash = $email->validateAndSendEmail();
             } else {
                 $this->flash->addFlash('danger', 'Le formulaire n\est pas conforme.');

@@ -77,7 +77,7 @@ class UserController extends Controller
         // If variables exist in the post method
         // and the variable 'Yes' existe
         if (!empty($_POST) && isset($_POST['Yes'])) {
-            if (!$token->isTokenValid($_POST['token'])) {
+            if ($token->isTokenValid($_POST['token'])) {
                 //Retrieving the class that validates the data sent
                 $Validator = $this->container->get('Validator');
                 $Validator->check('id', 'integer');
