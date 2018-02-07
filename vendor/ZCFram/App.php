@@ -78,7 +78,6 @@ class App
      */
     public function getController()
     {
-
         // We instantiate the router, and we check if the url
         // corresponds to a route in the configuration file.
         $router = $this->container->get('Router');
@@ -87,15 +86,10 @@ class App
         // We add the variables of the URL to the $_GET array.
         $_GET = array_merge($_GET, $router->getVars());
 
-        // If there's a middelware, we go through it,
-        // otherwise we get the module.
-        if ($router->getMiddelware()) {
-            // We instantiate the controller.
-            $controllerClass = 'app\\'.$router->getMiddelware().'Controller';
-        } else {
-            // We instantiate the controller.
-            $controllerClass = 'app\\'.$router->getModule().'Controller';
-        }
+        // we get the module.
+        // We instantiate the controller.
+        $controllerClass = 'app\\'.$router->getModule().'Controller';
+
         // We return an instance of the desired controller
         return new $controllerClass($this->container);
     }

@@ -60,7 +60,7 @@ abstract class Controller
      * @param \ZCFram\DIC $container The container
      * @param array       $params    parameter to send to view
      */
-    public function __construct(\ZCFram\DIC $container, $params = [])
+    public function __construct(\ZCFram\DIC $container)
     {
         //
         $this->container = $container;
@@ -74,10 +74,8 @@ abstract class Controller
         $this->setManager($this->router->getModule());
         $this->setView($this->action);
 
-        if ($params) {
-            $this->setParams($params);
-        }
-
+        $configurator = $this->container->get('Configurator');
+        $this->setParams($configurator->getConfig('default.application.config'));
         $this->setParams(['user' => $this->user]);
     }
 
