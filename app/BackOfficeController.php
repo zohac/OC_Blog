@@ -6,7 +6,7 @@ use ZCFram\Controller;
 /**
  * Class managing the actions of the administration panel
  */
-class AdminController extends Controller
+class BackOfficeController extends Controller
 {
 
     /**

@@ -6,7 +6,7 @@ use ZCFram\Controller;
 /**
  * Controller who manages the index and blog posts
  */
-class PostController extends Controller
+class FrontOfficeController extends Controller
 {
 
     /**
