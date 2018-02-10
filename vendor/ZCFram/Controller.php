@@ -32,15 +32,8 @@ abstract class Controller
     protected $params = [];
 
     /**
-     * An instance of the DIC
-     * @var object DIC
-     */
-    protected $container;
-
-    /**
      * [__construct description]
-     * @param \ZCFram\DIC $container The container
-     * @param array       $params    parameter to send to view
+     * @param \ZCFram\Router $router
      */
     public function __construct(\ZCFram\Router $router)
     {
