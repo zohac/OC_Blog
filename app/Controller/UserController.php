@@ -8,22 +8,48 @@ use ZCFram\Controller;
  */
 class UserController extends Controller
 {
+    /**
+     * Represents flash messages
+     * @var object flash
+     */
+    protected $flash;
+
+    /**
+     * An instance of the DIC
+     * @var object DIC
+     */
+    protected $container;
 
     /**
      * Uses the parent constructor and adds the user role check
      * @param Router
+     * @param DIC
      */
-    public function __construct(\ZCFram\DIC $container)
+    public function __construct(\ZCFram\Router $router, \ZCFram\DIC $container)
     {
-        parent::__construct($container);
+        parent::__construct($router);
+
+        // Register of the container through the parameters
+        $this->container = $container;
+
+        // Get Message flash
+        $this->flash = $container->get('Flash');
+        
+        // Get the default Config
+        $configurator = $container->get('Configurator');
+        $this->setParams($configurator->getConfig('default.application.config'));
+
+        // Get the user
+        $user = $this->container->get('User');
 
         // Check the role of the user.
-        if ($this->user->getRole() != 'Administrator') {
+        if ($user->getRole() != 'Administrator') {
             // If it is not an administrator, redirection to the admin page
             $reponse = $this->container->get('HTTPResponse');
             $reponse->setStatus(301);
             $reponse->redirection('/admin');
         }
+        
     }
 
     /**

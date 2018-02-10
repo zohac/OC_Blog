@@ -9,6 +9,32 @@ use \app\Entity\User;
  */
 class RegistrationController extends Controller
 {
+    /**
+     * Represents flash messages
+     * @var object flash
+     */
+    protected $flash;
+
+    /**
+     * An instance of the DIC
+     * @var object DIC
+     */
+    protected $container;
+
+    public function __construct(\ZCFram\Router $router, \ZCFram\DIC $container)
+    {
+        parent::__construct($router);
+
+        // Register of the container through the parameters
+        $this->container = $container;
+
+        // Get Message flash
+        $this->flash = $container->get('Flash');
+
+        // Get the default Config
+        $configurator = $container->get('Configurator');
+        $this->setParams($configurator->getConfig('default.application.config'));
+    }
 
     /**
      * Method registering in DB a new user

@@ -24,12 +24,6 @@ class SessionTicket
      */
     protected $lifetime;
 
-    /**
-     * An instance of the DIC
-     * @var object DIC
-     */
-    protected $container;
-
     public function __construct(HTTPResponse $response)
     {
         $this->response = $response;
