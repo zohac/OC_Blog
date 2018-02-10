@@ -1,5 +1,5 @@
 <?php
-namespace app;
+namespace app\Controller;
 
 use ZCFram\Controller;
 
@@ -13,9 +13,9 @@ class UserController extends Controller
      * Uses the parent constructor and adds the user role check
      * @param Router
      */
-    public function __construct(\ZCFram\DIC $container, array $params)
+    public function __construct(\ZCFram\DIC $container)
     {
-        parent::__construct($container, $params);
+        parent::__construct($container);
 
         // Check the role of the user.
         if ($this->user->getRole() != 'Administrator') {

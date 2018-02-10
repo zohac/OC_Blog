@@ -4,7 +4,7 @@ namespace ZCFram;
 /**
  *  Class representing a user.
  */
-class User
+class Guest
 {
     use Hydrator;
 
@@ -54,10 +54,10 @@ class User
         // If the user is authenticated,
         // its information stored as a session variable is retrieved.
         if ($data) {
-            //
+            // Hydrate the class
             $this->hydrate($data);
         } elseif ($this->isAuthenticated() && isset($_SESSION['user'])) {
-            //
+            // Hydrate the class
             $this->hydrate($_SESSION['user']);
             $_SESSION['user'] = $this;
         } else {
@@ -119,46 +119,88 @@ class User
         $this->email = $email;
     }
 
+    /**
+     * Set the Password of the user
+     * @param string $password
+     */
     public function setPassword(string $password)
     {
         $this->password = $password;
     }
 
+    /**
+     * Set the Role of the user
+     * @param string $role
+     */
     public function setRole(string $role)
     {
         $this->role = $role;
     }
 
+    /**
+     * Set the Status of the user
+     * @param string $passstatusword
+     */
     public function setStatus(string $status)
     {
         $this->status = $status;
     }
 
+    /**
+     * Get the user id
+     *
+     * @return integer
+     */
     public function getUserId()
     {
         return $this->userId;
     }
 
+    /**
+     * Get the pseudo of the user
+     *
+     * @return string
+     */
     public function getPseudo()
     {
         return $this->pseudo;
     }
 
+    /**
+     * Get the email of the user
+     *
+     * @return string
+     */
     public function getEmail()
     {
         return $this->email;
     }
 
+    /**
+     * Get The password of the user
+     *
+     * @return string
+     */
     public function getPassword()
     {
         return $this->password;
     }
 
+    /**
+     * Get the role of the user
+     *
+     * @return string
+     */
     public function getRole()
     {
         return $this->role;
     }
 
+    /**
+     * Get the status of the user
+     *
+     * @return string
+     */
     public function getStatus()
     {
         return $this->status;

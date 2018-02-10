@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<routes>
+    <route url="/" module="FrontOffice" action="Index"/>
+    <route url="/blog" module="FrontOffice" action="ListPost"/>
+    <route url="/blog/post-([0-9]+)\.html" module="FrontOffice" action="Post" vars="id"/>
+    <route url="/login" module="Login" action="Login"/>
+    <route url="/logout" module="Login" action="Logout"/>
+	<route url="/registration" module="Registration" action="Registration"/>
+    <route url="/admin" module="BackOffice" action="Dashboard"/>
+    <route url="/admin/post\.html" module="BackOffice" action="Insert"/>
+    <route url="/admin/post-([0-9]+)\.html" module="BackOffice" action="Update"  vars="id"/>
+	<route url="/admin/delete-post-([0-9]+)\.html" module="BackOffice" action="DeletePost"  vars="id"/>
+    <route url="/admin/validation-comment-([0-9]+)\.html" module="BackOffice" action="ValidComment"  vars="id"/>
+    <route url="/admin/delete-comment-([0-9]+)\.html" module="BackOffice" action="DeleteComment"  vars="id"/>
+    <route url="/admin/user.html" module="User" action="ListUser"/>
+    <route url="/admin/delete-user-([0-9]+)\.html" module="User" action="DeleteUser"  vars="id"/>
+</routes>

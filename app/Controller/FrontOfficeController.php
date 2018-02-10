@@ -1,5 +1,5 @@
 <?php
-namespace app;
+namespace app\Controller;
 
 use ZCFram\Controller;
 
@@ -9,6 +9,13 @@ use ZCFram\Controller;
 class FrontOfficeController extends Controller
 {
 
+    public function __construct(\ZCFram\DIC $container)
+    {
+        parent::__construct($container);
+
+        // Set the manager
+        $manager = $this->setManager('Post');
+    }
     /**
      * Execute the index page
      * Validation of the contact form.

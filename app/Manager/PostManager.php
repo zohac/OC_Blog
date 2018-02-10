@@ -1,8 +1,8 @@
 <?php
-namespace app\model;
+namespace app\Manager;
 
 use \ZCFram\PDOManager;
-use \app\Post;
+use \app\Entity\Post;
 
 /**
  * Class allowing the call to the DB concerning the Post, using PDO

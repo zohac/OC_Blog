@@ -1,13 +1,13 @@
 <?php
-namespace app\model;
+namespace app\Manager;
 
 use \ZCFram\PDOManager;
-use \app\Post;
+use \app\Entity\Post;
 
 /**
  * Manager for the admin section
  */
-class AdminManager extends PDOManager
+class BackOfficeManager extends PDOManager
 {
 
     /**

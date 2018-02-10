@@ -1,8 +1,8 @@
 <?php
-namespace app;
+namespace app\Controller;
 
-use ZCFram\Controller;
-use \app\Comment;
+use \ZCFram\Controller;
+use \app\Entity\Comment;
 
 /**
  * Controller who manages the comments in the blog post page
@@ -34,7 +34,7 @@ class CommentController extends Controller
                 $params = array_merge(
                     $Validator->getParams(),
                     ['idPost' => $id,
-                    'author' => $this->user->getUserInfo('id')]
+                    'author' => $this->user->getUserId()]
                 );
 
                 $comment = new Comment($params);
@@ -48,7 +48,7 @@ class CommentController extends Controller
                 if ($result > 0) {
                     $this->flash->addFlash(
                         'success',
-                        'Commentaire en attente de validation. Merci '.$this->user->getUserInfo('pseudo').'!'
+                        'Commentaire en attente de validation. Merci '.$this->user->getPseudo().'!'
                     );
                 } else {
                     $this->flash->addFlash(

@@ -25,6 +25,7 @@ class App
      */
     public function __construct(DIC $container)
     {
+        // Register of the container through the parameters
         $this->container = $container;
 
         // We're recovering the client request.
@@ -88,7 +89,7 @@ class App
 
         // we get the module.
         // We instantiate the controller.
-        $controllerClass = 'app\\'.$router->getModule().'Controller';
+        $controllerClass = 'app\\Controller\\'.$router->getModule().'Controller';
 
         // We return an instance of the desired controller
         return new $controllerClass($this->container);

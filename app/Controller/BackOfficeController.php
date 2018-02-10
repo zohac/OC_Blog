@@ -1,7 +1,8 @@
 <?php
-namespace app;
+namespace app\Controller;
 
 use ZCFram\Controller;
+use \app\Entity\Post;
 
 /**
  * Class managing the actions of the administration panel
@@ -12,11 +13,10 @@ class BackOfficeController extends Controller
     /**
      * [__construct description]
      * @param \ZCFram\DIC $container [description]
-     * @param array       $params    [description]
      */
-    public function __construct(\ZCFram\DIC $container, array $params = [])
+    public function __construct(\ZCFram\DIC $container)
     {
-        parent::__construct($container, $params);
+        parent::__construct($container);
 
         // Test if the user is authenticated
         if (!$this->user->isAuthenticated()) {
@@ -524,7 +524,7 @@ class BackOfficeController extends Controller
 
         // We define our constants
         $newName = 'blog-'.$id;
-        $path = __DIR__.'/../web/upload';
+        $path = __DIR__.'/../../web/upload';
         $legalExtensions = array("jpg", "png", "gif");
         $legalSize = "4000000"; // 4 MO
 
@@ -542,8 +542,8 @@ class BackOfficeController extends Controller
 
         // We verify that a file with the same name is not present on the server
         if (file_exists($path.'/'.$newName.'.'.$extension)) {
-            $this->flash->addFlash('danger', 'Un fichier portant le même nom est présent sur le serveur.');
-            $error = true;
+            // The file is deleted from the server
+            @unlink($path.'/'.$newName.'.'.$extension);
         }
 
         // We conduct our regulatory audits
@@ -553,10 +553,10 @@ class BackOfficeController extends Controller
                     // Upload the file
                     move_uploaded_file($actualName, $path.'/'.$newName.'.'.$extension);
                 }
+            } else {
+                $this->flash->addFlash('danger', 'Le fichier doit avoir une taille inférieure à 4Mo.');
             }
         } else {
-            // The file is deleted from the server
-            @unlink($path.'/'.$newName.'.'.$extension);
             $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'upload de l\'image.');
         }
     }
