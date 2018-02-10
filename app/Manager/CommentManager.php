@@ -85,10 +85,10 @@ class CommentManager extends PDOManager
     /**
      * Retrieves the list of user comments
      *
-     * @param Guest     $user the user
+     * @param User     $user the user
      * @return array    the list of user comments
      */
-    public function getUserComments(Guest $user): array
+    public function getUserComments(User $user): array
     {
         // SQL request
         $sql = "

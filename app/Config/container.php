@@ -39,5 +39,5 @@ $container->set('Email', function () use ($container) {
     return new \ZCFram\Email($container->get('Flash'), $container->get('Validator'), $container->get('Configurator'));
 });
 $container->set('CommentController', function () use ($container) {
-    return new \app\Controller\CommentController($container);
+    return new \app\Controller\CommentController($container->get('Router'), $container);
 });

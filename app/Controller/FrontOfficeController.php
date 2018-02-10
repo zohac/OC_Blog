@@ -8,14 +8,36 @@ use ZCFram\Controller;
  */
 class FrontOfficeController extends Controller
 {
+    /**
+     * Represents flash messages
+     * @var object flash
+     */
+    protected $flash;
 
-    public function __construct(\ZCFram\DIC $container)
+    /**
+     * An instance of the DIC
+     * @var object DIC
+     */
+    protected $container;
+
+    public function __construct(\ZCFram\Router $router, \ZCFram\DIC $container)
     {
-        parent::__construct($container);
+        parent::__construct($router);
+
+        // Register of the container through the parameters
+        $this->container = $container;
+
+        // Get Message flash
+        $this->flash = $container->get('Flash');
+
+        // Get the default Config
+        $configurator = $container->get('Configurator');
+        $this->setParams($configurator->getConfig('default.application.config'));
 
         // Set the manager
         $this->setManager('Post');
     }
+    
     /**
      * Execute the index page
      * Validation of the contact form.

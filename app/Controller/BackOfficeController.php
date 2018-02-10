@@ -16,12 +16,34 @@ class BackOfficeController extends Controller
     protected $user;
 
     /**
+     * Represents flash messages
+     * @var object flash
+     */
+    protected $flash;
+
+    /**
+     * An instance of the DIC
+     * @var object DIC
+     */
+    protected $container;
+
+    /**
      * [__construct description]
      * @param \ZCFram\DIC $container [description]
      */
-    public function __construct(\ZCFram\DIC $container)
+    public function __construct(\ZCFram\Router $router, \ZCFram\DIC $container)
     {
-        parent::__construct($container);
+        parent::__construct($router, $container);
+
+        // Register of the container through the parameters
+        $this->container = $container;
+
+        // Get Message flash
+        $this->flash = $container->get('Flash');
+
+        // Get the default Config
+        $configurator = $container->get('Configurator');
+        $this->setParams($configurator->getConfig('default.application.config'));
 
         $this->user = $this->container->get('User');
 
