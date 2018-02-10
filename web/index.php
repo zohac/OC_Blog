@@ -5,7 +5,7 @@
 
 // We load the autolaoder of Composer
 require '../vendor/autoload.php';
-require '../app/config/container.php';
+require '../app/Config/container.php';
 
 $app = new \ZCFram\App($container);
 $app->run();

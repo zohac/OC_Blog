@@ -1,8 +1,8 @@
 <?php
-namespace app\model;
+namespace app\Manager;
 
 use \ZCFram\PDOManager;
-use \ZCFram\User;
+use \app\Entity\User;
 
 /**
  * Class allowing the call to the DB concerning the user, using PDO
