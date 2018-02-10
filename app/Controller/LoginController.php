@@ -85,7 +85,8 @@ class LoginController extends Controller
     public function executeLogout()
     {
         // We cancel the authentication
-        $this->user->setAuthenticated(false);
+        $user = $this->container->get('User');
+        $user->setAuthenticated(false);
 
         // Redirection to the index page
         $reponse = $this->container->get('HTTPResponse');

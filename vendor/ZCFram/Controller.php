@@ -32,12 +32,6 @@ abstract class Controller
     protected $params = [];
 
     /**
-     * Represents a user.
-     * @var object user
-     */
-    protected $user;
-
-    /**
      * Represents flash messages
      * @var object flash
      */
@@ -68,7 +62,6 @@ abstract class Controller
         // Register Flash, Router and User class
         $this->router = $this->container->get('Router');
         $this->flash = $this->container->get('Flash');
-        $this->user = $this->container->get('Guest');
 
         // Register Action, Manager and the view
         $this->setAction($this->router->getAction());
@@ -78,9 +71,6 @@ abstract class Controller
         // Get the default Config
         $configurator = $this->container->get('Configurator');
         $this->setParams($configurator->getConfig('default.application.config'));
-
-        // Get the user
-        $this->setParams(['user' => $this->user]);
     }
 
     /**

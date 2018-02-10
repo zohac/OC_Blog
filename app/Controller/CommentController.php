@@ -9,6 +9,25 @@ use \app\Entity\Comment;
  */
 class CommentController extends Controller
 {
+    /**
+     * Represents a user.
+     * @var object user
+     */
+    protected $user;
+
+    /**
+     * [__construct description]
+     * @param \ZCFram\DIC $container [description]
+     */
+    public function __construct(\ZCFram\DIC $container)
+    {
+        parent::__construct($container);
+
+        $this->user = $this->container->get('User');
+
+        // Get the user
+        $this->setParams(['user' => $this->user]);
+    }
 
     /**
      * Posted comment controller

@@ -14,7 +14,7 @@ class FrontOfficeController extends Controller
         parent::__construct($container);
 
         // Set the manager
-        $manager = $this->setManager('Post');
+        $this->setManager('Post');
     }
     /**
      * Execute the index page
@@ -130,7 +130,8 @@ class FrontOfficeController extends Controller
             'comments' => $comments,
             'numberOfComments' => $numberOfComments,
             'token' => $token->getToken(),
-            'post' => $post
+            'post' => $post,
+            'user' => $this->container->get('User')
         ]);
 
         // View recovery and display

@@ -15,26 +15,29 @@ Development of my own blog system in php.
 ## Installation
 
 ### Git Clone
+
 You can also download the OC_Blog source directly from the Git clone:
 
     git clone https://github.com/zohac/OC_Blog.git
     cd OC_Blog
     composer update
 
-Setting up the database by importing the blog.sql file (in the /app/config/ folder).
-Update the /app/config/config.xml file accordingly.
+Setting up the database by importing the blog.sql file (in the /app/Config/ folder).
+Update the /app/Config/config.xml file accordingly.
 
 Then register to the address /registration.
 The first registered user gets the Administrator role, the next ones will have the Subscriber role.
 
+Remember to give write permissions in the /web/upload folder.
+
 ## Dependency
 
-* Twig: https://twig.symfony.com/
-* swiftmailer: https://swiftmailer.symfony.com/
+* Twig: <https://twig.symfony.com/>
+* swiftmailer: <https://swiftmailer.symfony.com/>
 
 ## Issues
 
-Bug reports and feature requests can be submitted on the [Github Issue Tracker] (https://github.com/zohac/OC_Blog/issues).
+Bug reports and feature requests can be submitted on the [Github Issue Tracker](https://github.com/zohac/OC_Blog/issues)
 
 ## Author
 

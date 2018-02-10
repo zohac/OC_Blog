@@ -25,9 +25,6 @@ $config = [
     'Encryption' => function () {
         return new \ZCFram\Encryption();
     },
-    'Guest' => function () {
-        return new \ZCFram\Guest();
-    },
     'User' => function () {
         return new \app\Entity\User();
     }

@@ -8,7 +8,6 @@ use ZCFram\Controller;
  */
 class UserController extends Controller
 {
-
     /**
      * Uses the parent constructor and adds the user role check
      * @param Router
@@ -17,13 +16,16 @@ class UserController extends Controller
     {
         parent::__construct($container);
 
+        $user = $this->container->get('User');
+
         // Check the role of the user.
-        if ($this->user->getRole() != 'Administrator') {
+        if ($user->getRole() != 'Administrator') {
             // If it is not an administrator, redirection to the admin page
             $reponse = $this->container->get('HTTPResponse');
             $reponse->setStatus(301);
             $reponse->redirection('/admin');
         }
+        
     }
 
     /**
