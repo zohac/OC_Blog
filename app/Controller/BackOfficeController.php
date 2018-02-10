@@ -9,6 +9,11 @@ use \app\Entity\Post;
  */
 class BackOfficeController extends Controller
 {
+    /**
+     * Represents a user.
+     * @var object user
+     */
+    protected $user;
 
     /**
      * [__construct description]
@@ -18,6 +23,8 @@ class BackOfficeController extends Controller
     {
         parent::__construct($container);
 
+        $this->user = $this->container->get('User');
+
         // Test if the user is authenticated
         if (!$this->user->isAuthenticated()) {
             // If it is not authenticated, redirection to the login page
@@ -25,6 +32,7 @@ class BackOfficeController extends Controller
             $reponse->setStatus(301);
             $reponse->redirection('/login');
         }
+        // Get the user
         $this->setParams(['user' => $this->user]);
     }
 

@@ -4,7 +4,7 @@ namespace ZCFram;
 /**
  *  Class representing a user.
  */
-class Guest
+abstract class Guest
 {
     use Hydrator;
 
