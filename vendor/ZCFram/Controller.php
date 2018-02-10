@@ -32,45 +32,15 @@ abstract class Controller
     protected $params = [];
 
     /**
-     * Represents flash messages
-     * @var object flash
-     */
-    protected $flash;
-
-    /**
-     * An instance of the Router
-     * @var objet
-     */
-    protected $router;
-
-    /**
-     * An instance of the DIC
-     * @var object DIC
-     */
-    protected $container;
-
-    /**
      * [__construct description]
-     * @param \ZCFram\DIC $container The container
-     * @param array       $params    parameter to send to view
+     * @param \ZCFram\Router $router
      */
-    public function __construct(\ZCFram\DIC $container)
+    public function __construct(\ZCFram\Router $router)
     {
-        // Register of the container through the parameters
-        $this->container = $container;
-
-        // Register Flash, Router and User class
-        $this->router = $this->container->get('Router');
-        $this->flash = $this->container->get('Flash');
-
         // Register Action, Manager and the view
-        $this->setAction($this->router->getAction());
-        $this->setManager($this->router->getModule());
+        $this->setAction($router->getAction());
+        $this->setManager($router->getModule());
         $this->setView($this->action);
-
-        // Get the default Config
-        $configurator = $this->container->get('Configurator');
-        $this->setParams($configurator->getConfig('default.application.config'));
     }
 
     /**

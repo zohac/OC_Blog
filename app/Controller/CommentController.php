@@ -19,10 +19,17 @@ class CommentController extends Controller
      * [__construct description]
      * @param \ZCFram\DIC $container [description]
      */
-    public function __construct(\ZCFram\DIC $container)
+    public function __construct(\ZCFram\Router $router, \ZCFram\DIC $container)
     {
-        parent::__construct($container);
+        parent::__construct($router);
 
+        // Register of the container through the parameters
+        $this->container = $container;
+
+        // Get Message flash
+        $this->flash = $container->get('Flash');
+
+        // Register the user
         $this->user = $this->container->get('User');
 
         // Get the user

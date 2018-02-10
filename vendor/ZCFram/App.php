@@ -92,6 +92,6 @@ class App
         $controllerClass = 'app\\Controller\\'.$router->getModule().'Controller';
 
         // We return an instance of the desired controller
-        return new $controllerClass($this->container);
+        return new $controllerClass($router, $this->container);
     }
 }
