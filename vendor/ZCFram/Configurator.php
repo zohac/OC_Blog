@@ -27,17 +27,21 @@ class Configurator
         foreach ($childNodes as $value) {
             //$this->config = \array_merge($this->config, [$value->nodeName => $value->nodeValue]);
             if ($value->nodeName != '#text') {
+                // Load the childNode
                 $item = $xml->getElementsByTagName($value->nodeName)->item(0);
                 $child = $item->childNodes;
 
+                // table containing the node name and its value
                 $var=[];
 
                 // For each child node, the value is recovered
                 foreach ($child as $val) {
                     if ($val->nodeName != '#text') {
+                        // Adding the node to the variable array
                         $var = \array_merge($var, [$val->nodeName => $val->nodeValue]);
                     }
                 }
+                // Adding the children's board to the parent key
                 $this->config[$value->nodeName] = $var;
             }
         }

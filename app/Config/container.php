@@ -8,7 +8,7 @@ $config = [
         return new \ZCFram\HTTPResponse();
     },
     'Router' => function () {
-        return new \ZCFram\Router(realpath(__DIR__.'/../../app/config/routes.xml'));
+        return new \ZCFram\Router(realpath(__DIR__.'/../../app/Config/routes.xml'));
     },
     'Validator' => function () {
         return new \ZCFram\Validator();
@@ -16,11 +16,8 @@ $config = [
     'Flash' => function () {
         return new \ZCFram\Flash();
     },
-    'User' => function () {
-        return new \ZCFram\User();
-    },
     'Configurator' => function () {
-        return new \ZCFram\Configurator(realpath(__DIR__.'/../../app/config/config.xml'));
+        return new \ZCFram\Configurator(realpath(__DIR__.'/../../app/Config/config.xml'));
     },
     'Token' => function () {
         return new \ZCFram\Token();
@@ -28,8 +25,11 @@ $config = [
     'Encryption' => function () {
         return new \ZCFram\Encryption();
     },
-    'Post' => function () {
-        return new \App\Post();
+    'Guest' => function () {
+        return new \ZCFram\Guest();
+    },
+    'User' => function () {
+        return new \app\Entity\User();
     }
 ];
 
@@ -42,5 +42,5 @@ $container->set('Email', function () use ($container) {
     return new \ZCFram\Email($container->get('Flash'), $container->get('Validator'), $container->get('Configurator'));
 });
 $container->set('CommentController', function () use ($container) {
-    return new \ZCFram\CommentController($container->get('Router'));
+    return new \app\Controller\CommentController($container);
 });

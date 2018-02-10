@@ -1,8 +1,8 @@
 <?php
-namespace app;
+namespace app\Controller;
 
-use ZCFram\Controller;
-use ZCFram\User;
+use \ZCFram\Controller;
+use \app\Entity\User;
 
 /**
  * Class managing DB registration of a new user

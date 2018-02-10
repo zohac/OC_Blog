@@ -1,22 +1,22 @@
 <?php
-namespace app;
+namespace app\Controller;
 
 use ZCFram\Controller;
+use \app\Entity\Post;
 
 /**
  * Class managing the actions of the administration panel
  */
-class AdminController extends Controller
+class BackOfficeController extends Controller
 {
 
     /**
      * [__construct description]
      * @param \ZCFram\DIC $container [description]
-     * @param array       $params    [description]
      */
-    public function __construct(\ZCFram\DIC $container, array $params = [])
+    public function __construct(\ZCFram\DIC $container)
     {
-        parent::__construct($container, $params);
+        parent::__construct($container);
 
         // Test if the user is authenticated
         if (!$this->user->isAuthenticated()) {
@@ -61,24 +61,29 @@ class AdminController extends Controller
      */
     public function getAdminDashboard()
     {
-        // Recovery of the manager returned by the router
+        // Set of the manager User
+        $manager = $this->setManager('User');
         $manager = $this->getManager();
+        $numberOfUsers = count($manager->getListUser());
 
-        // Retrieving info for displaying the dashboard
+        // Set of the manager Post
+        $manager = $this->setManager('Post');
+        $manager = $this->getManager();
         $listOfPost = $manager->getListOfPost();
-        $numberOfUsers = $manager->getNumberOfUsers();
-        $numberOfPosts = $manager->getNumberOfPosts();
-        $numberOfComments = $manager->getNumberOfComments();
+        $numberOfPosts = count($listOfPost);
+
+        // Set of the manager Comment
+        $manager = $this->setManager('Comment');
+        $manager = $this->getManager();
         $listOfComments = $manager->getListOfComments();
-        $myComments = $manager->getMyComments($this->user->getUserId());
+        $myComments = $manager->getUserComments($this->user);
 
         // Initializing the parameters to return to the view
         $this->setParams(
             array_merge(
                 ['listPosts' => $listOfPost],
-                $numberOfUsers,
-                $numberOfPosts,
-                $numberOfComments,
+                ['numberOfUsers' => $numberOfUsers],
+                ['numberOfPosts' => $numberOfPosts],
                 ['listOfComment' => $listOfComments],
                 ['myComments' => $myComments]
             )
@@ -90,11 +95,12 @@ class AdminController extends Controller
      */
     public function getUserDashboard()
     {
-        // Recovery of the manager returned by the router
+        // Recovery of the manager Comment
+        $this->setManager('Comment');
         $manager = $this->getManager();
 
         // Retrieving info for displaying the dashboard
-        $myComments = $manager->getMyComments($this->user->getUserId());
+        $myComments = $manager->getUserComments($this->user);
 
         // Initializing the parameters to return to the view
         $this->setParams(['myComments' => $myComments]);
@@ -113,7 +119,8 @@ class AdminController extends Controller
                     'author' => $this->user->getPseudo()
                 ]);
 
-            // Recovery of the manager returned by the router
+            // Recovery of the manager Post
+            $this->setManager('Post');
             $manager = $this->getManager();
 
             //Retrieving the class that validates the token
@@ -201,7 +208,8 @@ class AdminController extends Controller
     {
         // We verify that the user has the necessary rights
         if ($this->user->getRole() == 'Administrator') {
-            // Recovery of the manager returned by the router
+            // Recovery of the manager Post
+            $this->setManager('Post');
             $manager = $this->getManager();
 
             //Retrieving the class that validates the token
@@ -233,7 +241,6 @@ class AdminController extends Controller
                         $params = \array_merge($Validator->getParams(), ['postID' => $id]);
                         $post = new Post($params);
 
-                        // Update the post
                         $result = $manager->updatePost($post);
 
                         // Adding a flash message if successful or unsuccessful
@@ -313,7 +320,8 @@ class AdminController extends Controller
                      * Otherwise sending a flash message in case of error
                      */
                     if (!$Validator->hasError() && $params['id'] == $id) {
-                        // Recovery of the manager returned by the router
+                        // Recovery of the manager Post
+                        $this->setManager('Post');
                         $manager = $this->getManager();
                         $result = $manager->deletePost($id);
 
@@ -392,7 +400,8 @@ class AdminController extends Controller
                      * Otherwise sending a flash message in case of error
                      */
                     if (!$Validator->hasError() && $params['id'] == $id) {
-                        // Recovery of the manager returned by the router
+                        // Recovery of the manager Comment
+                        $this->setManager('Comment');
                         $manager = $this->getManager();
                         $result = $manager->validComment($id);
 
@@ -447,7 +456,8 @@ class AdminController extends Controller
             $id = false;
         }
 
-        // Recovery of the manager returned by the router
+        // Recovery of the manager Comment
+        $this->setManager('Comment');
         $manager = $this->getManager();
 
         //Retrieving the class that validates the token
@@ -455,7 +465,7 @@ class AdminController extends Controller
 
         // We verify that the user has the necessary rights
         if ($this->user->getRole() == 'Administrator' ||
-            $manager->isWrittenByTheUser($id, $this->user->getUserInfo('id'))
+            $manager->isWrittenByTheUser($id, $this->user)
         ) {
             // admin dashboard recovery
             $this->getAdminDashboard();
@@ -524,7 +534,7 @@ class AdminController extends Controller
 
         // We define our constants
         $newName = 'blog-'.$id;
-        $path = __DIR__.'/../web/upload';
+        $path = __DIR__.'/../../web/upload';
         $legalExtensions = array("jpg", "png", "gif");
         $legalSize = "4000000"; // 4 MO
 
@@ -542,8 +552,8 @@ class AdminController extends Controller
 
         // We verify that a file with the same name is not present on the server
         if (file_exists($path.'/'.$newName.'.'.$extension)) {
-            $this->flash->addFlash('danger', 'Un fichier portant le même nom est présent sur le serveur.');
-            $error = true;
+            // The file is deleted from the server
+            @unlink($path.'/'.$newName.'.'.$extension);
         }
 
         // We conduct our regulatory audits
@@ -553,10 +563,10 @@ class AdminController extends Controller
                     // Upload the file
                     move_uploaded_file($actualName, $path.'/'.$newName.'.'.$extension);
                 }
+            } else {
+                $this->flash->addFlash('danger', 'Le fichier doit avoir une taille inférieure à 4Mo.');
             }
         } else {
-            // The file is deleted from the server
-            @unlink($path.'/'.$newName.'.'.$extension);
             $this->flash->addFlash('danger', 'Une erreur est survenu lors de l\'upload de l\'image.');
         }
     }

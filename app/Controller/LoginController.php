@@ -1,5 +1,5 @@
 <?php
-namespace app;
+namespace app\Controller;
 
 use ZCFram\Controller;
 

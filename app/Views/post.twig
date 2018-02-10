@@ -12,7 +12,7 @@
                     <section class="blog-content">
                         <figure>
                             <div class="post-date">
-                                <span>{{ post.day }}</span> {{ post.monthYear }}
+                                {{ post.datePost|raw }}
                             </div>
                             <img src="{{ app.request.server.get('SERVER_NAME') }}{{ post.imgPath }}" alt="" class="img-responsive"/>
                         </figure>

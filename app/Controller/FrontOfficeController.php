@@ -1,14 +1,21 @@
 <?php
-namespace app;
+namespace app\Controller;
 
 use ZCFram\Controller;
 
 /**
  * Controller who manages the index and blog posts
  */
-class PostController extends Controller
+class FrontOfficeController extends Controller
 {
 
+    public function __construct(\ZCFram\DIC $container)
+    {
+        parent::__construct($container);
+
+        // Set the manager
+        $manager = $this->setManager('Post');
+    }
     /**
      * Execute the index page
      * Validation of the contact form.
@@ -48,7 +55,7 @@ class PostController extends Controller
         // Recovery of the manager returned by the router
         $manager = $this->getManager();
         // Get the list of all post in DB
-        $listPosts = $manager->getList();
+        $listPosts = $manager->getListOfPost();
 
         // Division in 2 of the list of posts
         // it's just necessary for the bootstrap theme used
@@ -92,7 +99,7 @@ class PostController extends Controller
         $manager = $this->getManager();
 
         // We retrieve comments
-        $comments = $manager->getComment($id);
+        $comments = $manager->getComment($post);
 
         $numberOfComments = count($comments);
 
