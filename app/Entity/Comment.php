@@ -23,6 +23,13 @@ class Comment
      */
     protected $idPost;
 
+
+    /**
+     * The title of the post to which the comment is attached
+     * @var string
+     */
+    protected $blogTitle;
+
     /**
      * The identifier of the author who write the comment
      * @var string
@@ -88,6 +95,15 @@ class Comment
     {
         $this->idPost = $id;
     }
+    
+    /**
+     * Storing the title of the post to which the comment is attached
+     * @var string $blogTitle
+     */
+    public function setBlogTitle(string $blogTitle)
+    {
+        $this->blogTitle = $blogTitle;
+    }
 
     /**
      * Storing the author
@@ -114,9 +130,6 @@ class Comment
     public function setCreationDate(string $creationDate)
     {
         $this->creationDate = $creationDate;
-        $date = \explode('-', $creationDate);
-        $this->day = $date['0'];
-        $this->monthYear = $date['1'];
     }
 
     /**
@@ -144,6 +157,15 @@ class Comment
     public function getIdPost(): int
     {
         return $this->idPost;
+    }
+
+    /**
+     * Get the title of the post to which the comment is attached
+     * @return string $blogTitle
+     */
+    public function getBlogTitle(): string
+    {
+        return $this->blogTitle;
     }
 
     /**

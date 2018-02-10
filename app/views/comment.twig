@@ -7,7 +7,7 @@
                 <li>
                     <section>
                         <h4>{{ comment.author }}</h4>
-                        <div class="date-pan">{{ comment.day }} {{ comment.monthYear }}</div>
+                        <div class="date-pan">{{ comment.creationDate }}</div>
                         {{ comment.comment|raw|nl2br }}
                     </section>
                 </li>

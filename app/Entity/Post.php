@@ -78,6 +78,12 @@ class Post
     protected $monthYear;
 
     /**
+     * The date of the post formatted for posting
+     * @var string
+     */
+    protected $datePost;
+
+    /**
      * Construction and hydration of the commentary
      * @var array $data
      */
@@ -152,9 +158,18 @@ class Post
         $this->modificationDate = $modificationDate;
         $date = \explode('-', $modificationDate);
         if (\count($date) > 1) {
-            $this->day = $date['0'];
-            $this->monthYear = $date['1'];
+            $this->day = $date['2'];
+            $this->monthYear = $date['1'].' '.$date['0'];
         }
+    }
+
+    /**
+     * Storing the modification Date, Day and MonthYear of the post
+     * @var string $modificationDate
+     */
+    public function setDatePost(string $datePost)
+    {
+        $this->datePost = $datePost;
     }
 
     /**
@@ -262,6 +277,15 @@ class Post
     public function getMonthYear(): string
     {
         return $this->monthYear;
+    }
+
+    /**
+     * Storing the modification Date, Day and MonthYear of the post
+     * @return string
+     */
+    public function getDatePost(): string
+    {
+        return $this->datePost;
     }
 
     /**

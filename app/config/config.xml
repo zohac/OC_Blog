@@ -18,7 +18,7 @@
         <host>localhost</host>
         <serverName>jouan.ovh</serverName>
         <from>contact@jouan.ovh</from>
-        <to>web-7n9se@mail-tester.com</to>
+        <to>fenrir0680@gmail.com</to>
         <dkimPath>/../../../dkim.private.key</dkimPath>
     </mail>
 </config>

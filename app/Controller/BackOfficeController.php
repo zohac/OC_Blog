@@ -61,24 +61,29 @@ class BackOfficeController extends Controller
      */
     public function getAdminDashboard()
     {
-        // Recovery of the manager returned by the router
+        // Set of the manager User
+        $manager = $this->setManager('User');
         $manager = $this->getManager();
+        $numberOfUsers = count($manager->getListUser());
 
-        // Retrieving info for displaying the dashboard
+        // Set of the manager Post
+        $manager = $this->setManager('Post');
+        $manager = $this->getManager();
         $listOfPost = $manager->getListOfPost();
-        $numberOfUsers = $manager->getNumberOfUsers();
-        $numberOfPosts = $manager->getNumberOfPosts();
-        $numberOfComments = $manager->getNumberOfComments();
+        $numberOfPosts = count($listOfPost);
+
+        // Set of the manager Comment
+        $manager = $this->setManager('Comment');
+        $manager = $this->getManager();
         $listOfComments = $manager->getListOfComments();
-        $myComments = $manager->getMyComments($this->user->getUserId());
+        $myComments = $manager->getUserComments($this->user);
 
         // Initializing the parameters to return to the view
         $this->setParams(
             array_merge(
                 ['listPosts' => $listOfPost],
-                $numberOfUsers,
-                $numberOfPosts,
-                $numberOfComments,
+                ['numberOfUsers' => $numberOfUsers],
+                ['numberOfPosts' => $numberOfPosts],
                 ['listOfComment' => $listOfComments],
                 ['myComments' => $myComments]
             )
@@ -90,11 +95,12 @@ class BackOfficeController extends Controller
      */
     public function getUserDashboard()
     {
-        // Recovery of the manager returned by the router
+        // Recovery of the manager Comment
+        $this->setManager('Comment');
         $manager = $this->getManager();
 
         // Retrieving info for displaying the dashboard
-        $myComments = $manager->getMyComments($this->user->getUserId());
+        $myComments = $manager->getUserComments($this->user);
 
         // Initializing the parameters to return to the view
         $this->setParams(['myComments' => $myComments]);
@@ -113,7 +119,8 @@ class BackOfficeController extends Controller
                     'author' => $this->user->getPseudo()
                 ]);
 
-            // Recovery of the manager returned by the router
+            // Recovery of the manager Post
+            $this->setManager('Post');
             $manager = $this->getManager();
 
             //Retrieving the class that validates the token
@@ -201,7 +208,8 @@ class BackOfficeController extends Controller
     {
         // We verify that the user has the necessary rights
         if ($this->user->getRole() == 'Administrator') {
-            // Recovery of the manager returned by the router
+            // Recovery of the manager Post
+            $this->setManager('Post');
             $manager = $this->getManager();
 
             //Retrieving the class that validates the token
@@ -233,7 +241,6 @@ class BackOfficeController extends Controller
                         $params = \array_merge($Validator->getParams(), ['postID' => $id]);
                         $post = new Post($params);
 
-                        // Update the post
                         $result = $manager->updatePost($post);
 
                         // Adding a flash message if successful or unsuccessful
@@ -313,7 +320,8 @@ class BackOfficeController extends Controller
                      * Otherwise sending a flash message in case of error
                      */
                     if (!$Validator->hasError() && $params['id'] == $id) {
-                        // Recovery of the manager returned by the router
+                        // Recovery of the manager Post
+                        $this->setManager('Post');
                         $manager = $this->getManager();
                         $result = $manager->deletePost($id);
 
@@ -392,7 +400,8 @@ class BackOfficeController extends Controller
                      * Otherwise sending a flash message in case of error
                      */
                     if (!$Validator->hasError() && $params['id'] == $id) {
-                        // Recovery of the manager returned by the router
+                        // Recovery of the manager Comment
+                        $this->setManager('Comment');
                         $manager = $this->getManager();
                         $result = $manager->validComment($id);
 
@@ -447,7 +456,8 @@ class BackOfficeController extends Controller
             $id = false;
         }
 
-        // Recovery of the manager returned by the router
+        // Recovery of the manager Comment
+        $this->setManager('Comment');
         $manager = $this->getManager();
 
         //Retrieving the class that validates the token
@@ -455,7 +465,7 @@ class BackOfficeController extends Controller
 
         // We verify that the user has the necessary rights
         if ($this->user->getRole() == 'Administrator' ||
-            $manager->isWrittenByTheUser($id, $this->user->getUserInfo('id'))
+            $manager->isWrittenByTheUser($id, $this->user)
         ) {
             // admin dashboard recovery
             $this->getAdminDashboard();

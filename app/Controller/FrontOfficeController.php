@@ -55,7 +55,7 @@ class FrontOfficeController extends Controller
         // Recovery of the manager returned by the router
         $manager = $this->getManager();
         // Get the list of all post in DB
-        $listPosts = $manager->getList();
+        $listPosts = $manager->getListOfPost();
 
         // Division in 2 of the list of posts
         // it's just necessary for the bootstrap theme used
@@ -99,7 +99,7 @@ class FrontOfficeController extends Controller
         $manager = $this->getManager();
 
         // We retrieve comments
-        $comments = $manager->getComment($id);
+        $comments = $manager->getComment($post);
 
         $numberOfComments = count($comments);
 
