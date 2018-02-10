@@ -14,7 +14,7 @@ class FrontOfficeController extends Controller
         parent::__construct($container);
 
         // Set the manager
-        $manager = $this->setManager('Post');
+        $this->setManager('Post');
     }
     /**
      * Execute the index page
