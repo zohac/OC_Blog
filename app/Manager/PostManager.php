@@ -30,7 +30,9 @@ class PostManager extends PDOManager
             title,
             SUBSTRING(post FROM 1 FOR 120) AS chapo,
             DATE_FORMAT(modificationDate, '%Y-%M-%d') AS modificationDate
-        FROM blog.post".$status;
+        FROM blog.post";
+
+        $sql = $sql.$status;
 
         //transition from date to french
         $this->DB->query("SET lc_time_names = 'fr_FR'");
