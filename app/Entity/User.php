@@ -1,7 +1,7 @@
 <?php
 namespace app\Entity;
 
-use ZCFram\Hydrator;
+use \ZCFram\Hydrator;
 
 /**
  * Class representing a user

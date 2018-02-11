@@ -34,13 +34,21 @@ class ErrorController extends Controller
     protected $errorCode;
 
     /**
+     * An instance of the DIC
+     * @var object DIC
+     */
+    protected $container;
+
+    /**
      * @var Exception $e
      */
     public function __construct(\ZCFram\DIC $container, \Exception $e)
     {
-        parent::__construct($container);
+        parent::__construct($container->get('Router'));
 
-        // We recover the execution
+        // We recover the container
+        $this->container = $container;
+        // We recover the exception
         $this->e = $e;
         // We define the view to call
         $this->setView('error');

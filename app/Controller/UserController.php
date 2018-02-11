@@ -49,7 +49,6 @@ class UserController extends Controller
             $reponse->setStatus(301);
             $reponse->redirection('/admin');
         }
-        
     }
 
     /**

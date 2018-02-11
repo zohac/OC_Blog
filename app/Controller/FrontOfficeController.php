@@ -77,7 +77,7 @@ class FrontOfficeController extends Controller
         // Recovery of the manager returned by the router
         $manager = $this->getManager();
         // Get the list of all post in DB
-        $listPosts = $manager->getListOfPost();
+        $listPosts = $manager->getListOfPost('Publish');
 
         // Division in 2 of the list of posts
         // it's just necessary for the bootstrap theme used
@@ -114,7 +114,7 @@ class FrontOfficeController extends Controller
         // Recovery of the manager returned by the router
         $manager = $this->getManager();
         // Get one post in DB
-        $post = $manager->getPost($id);
+        $post = $manager->getPublishPost($id);
 
         // We change the manager
         $this->setManager('Comment');
